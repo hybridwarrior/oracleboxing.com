@@ -31,7 +31,7 @@ const nextConfig: NextConfig = {
 
       // YouTube VSL (Main Video) Short Links
       {
-        source: '/6wc-yt-main1-main1',
+        source: '/6wc-yt-main',
         destination: '/6wc?utm_source=youtube&utm_medium=vsl&utm_content=description',
         permanent: false,
       },
