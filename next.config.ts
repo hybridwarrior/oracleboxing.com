@@ -28,6 +28,47 @@ const nextConfig: NextConfig = {
         destination: '/membership?utm_source=youtube&utm_medium=bio&utm_content=membership',
         permanent: false,
       },
+
+      // YouTube VSL (Main Video) Short Links
+      {
+        source: '/6wc-yt-main1-main1',
+        destination: '/6wc?utm_source=youtube&utm_medium=vsl&utm_content=description',
+        permanent: false,
+      },
+
+      // YouTube Description (Generic) Short Links
+      {
+        source: '/6wc-yt-desc',
+        destination: '/6wc?utm_source=youtube&utm_medium=description&utm_content=challenge',
+        permanent: false,
+      },
+      {
+        source: '/course-yt-desc',
+        destination: '/courses/bundle?utm_source=youtube&utm_medium=description&utm_content=course',
+        permanent: false,
+      },
+      {
+        source: '/membership-yt-desc',
+        destination: '/membership?utm_source=youtube&utm_medium=description&utm_content=membership',
+        permanent: false,
+      },
+
+      // Instagram Bio Short Links
+      {
+        source: '/6wc-ig-bio',
+        destination: '/6wc?utm_source=instagram&utm_medium=bio&utm_content=challenge',
+        permanent: false,
+      },
+      {
+        source: '/course-ig-bio',
+        destination: '/courses/bundle?utm_source=instagram&utm_medium=bio&utm_content=course',
+        permanent: false,
+      },
+      {
+        source: '/membership-ig-bio',
+        destination: '/membership?utm_source=instagram&utm_medium=bio&utm_content=membership',
+        permanent: false,
+      },
     ];
   },
 };
