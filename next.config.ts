@@ -53,6 +53,13 @@ const nextConfig: NextConfig = {
         permanent: false,
       },
 
+      // YouTube Comment Short Links
+      {
+        source: '/6wc-yt-comment',
+        destination: '/6wc?utm_source=youtube&utm_medium=comment&utm_content=challenge',
+        permanent: false,
+      },
+
       // Instagram Bio Short Links
       {
         source: '/6wc-ig-bio',
