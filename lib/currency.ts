@@ -55,6 +55,9 @@ export const PRODUCT_PRICES: Record<string, Record<Currency, number>> = {
   mema: { USD: 897, GBP: 715, EUR: 828, AUD: 1352, CAD: 1215, AED: 3301 },
   // Monthly billing option (post-purchase switch)
   mem_monthly: { USD: 97, GBP: 77, EUR: 90, AUD: 146, CAD: 131, AED: 357 },
+  // Black Friday Challenge products
+  bfc: { USD: 97, GBP: 78, EUR: 89, AUD: 146, CAD: 132, AED: 358 },
+  bfc_vip: { USD: 397, GBP: 317, EUR: 365, AUD: 595, CAD: 538, AED: 1465 },
 };
 
 // Membership products - now support multi-currency

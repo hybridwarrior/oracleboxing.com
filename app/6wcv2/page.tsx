@@ -1,9 +1,10 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { Header } from '@/components/Header'
 import { Footer } from '@/components/Footer'
 import { EpicCTAButton } from '@/components/EpicCTAButton'
+import { detectUserCurrency, formatPrice, getProductPrice, type Currency } from '@/lib/currency'
 
 export default function BlackFridayChallengePage() {
   const [timeLeft, setTimeLeft] = useState({
@@ -14,11 +15,62 @@ export default function BlackFridayChallengePage() {
   })
 
   const [spotsRemaining, setSpotsRemaining] = useState(30)
+  const [currency, setCurrency] = useState<Currency>('USD')
+  const [isLoadingCurrency, setIsLoadingCurrency] = useState(true)
+  const videoRefs = useRef<(HTMLVideoElement | null)[]>([])
+  const [videosLoaded, setVideosLoaded] = useState(false)
+
+  // Video autoplay on scroll
+  useEffect(() => {
+    if (!videosLoaded) return
+
+    const observers: IntersectionObserver[] = []
+
+    videoRefs.current.forEach((video) => {
+      if (!video) return
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            const target = entry.target as HTMLVideoElement
+            if (entry.isIntersecting && entry.intersectionRatio > 0.75) {
+              target.play().catch((err) => {
+                console.log('Video play prevented:', err)
+              })
+            } else {
+              target.pause()
+            }
+          })
+        },
+        {
+          threshold: [0, 0.25, 0.5, 0.75, 1],
+          rootMargin: '0px'
+        }
+      )
+
+      observer.observe(video)
+      observers.push(observer)
+    })
+
+    return () => {
+      observers.forEach(observer => observer.disconnect())
+    }
+  }, [videosLoaded])
+
+  // Currency detection
+  useEffect(() => {
+    const loadCurrency = async () => {
+      const detectedCurrency = await detectUserCurrency()
+      setCurrency(detectedCurrency)
+      setIsLoadingCurrency(false)
+    }
+    loadCurrency()
+  }, [])
 
   // Quota meter - deterministic spot countdown
   useEffect(() => {
     const TOTAL_SPOTS = 30
-    const WINDOWS = [
+    const WINDOWS: [string, string, number][] = [
       ['2025-11-23T00:00:00+00:00', '2025-11-24T00:00:00+00:00', 10], // spike 1
       ['2025-11-24T00:00:00+00:00', '2025-11-30T22:00:00+00:00', 8],  // mid
       ['2025-11-30T22:00:00+00:00', '2025-12-02T22:00:00+00:00', 12], // spike 2
@@ -110,20 +162,48 @@ export default function BlackFridayChallengePage() {
 
   const faqs = [
     {
-      question: 'Do I really get my money back?',
-      answer: 'Yes, complete the checklist and you\'ll be refunded in full.'
+      question: 'Do I really get my money back if I finish?',
+      answer: 'Yes! Finish all four things on the checklist by the end of the 6 weeks, and we send you your full payment back. No tricks, no fine print. Just do the work and get your money back.'
     },
     {
-      question: 'What if I\'m a beginner?',
-      answer: 'Perfect, we\'ll teach you the right way from the start.'
+      question: 'What happens after the 6 weeks?',
+      answer: 'After the challenge ends, you can upgrade to a full Oracle Boxing membership. This lets you keep training with our coaches, join live calls, get video feedback, and continue improving your skills for as long as you want. Many people do the challenge, love it, and then join the full community to keep going.'
     },
     {
-      question: 'What if I miss a week?',
-      answer: 'Stay consistent — you only get refunded if you finish strong.'
+      question: 'What if I\'m a complete beginner?',
+      answer: 'Even better. We teach you the correct boxing technique from day one. Most beginners pick up bad habits from YouTube or random gym trainers. We fix that. You\'ll learn proper footwork, punch technique, and movement from coaches who actually know what they\'re doing.'
     },
     {
-      question: 'How long will I have access?',
-      answer: 'You keep the lessons for 12 months, and forever if you grab the Roadmap bump.'
+      question: 'What happens if I miss a coaching call?',
+      answer: 'Every call gets recorded and uploaded to the Recordings Vault. You can watch it anytime. But to get your refund, you need to join at least 2 calls per week live. Watching replays doesn\'t count toward your refund checklist.'
+    },
+    {
+      question: 'How long do I keep access to the course?',
+      answer: 'The standard challenge gives you 6 weeks of access to everything. If you upgrade to VIP at checkout, you get lifetime access to all courses and content forever. After the challenge ends, you can also upgrade to a full membership to keep learning and training with the coaches long term.'
+    },
+    {
+      question: 'What equipment do I need?',
+      answer: 'Just boxing gloves and some space to move. If you have a heavy bag, great. If not, shadowboxing works too. You don\'t need a fancy gym or expensive gear. Most people train at home and get amazing results.'
+    },
+    {
+      question: 'When does the challenge start?',
+      answer: 'We kick off December 2nd at 10 PM UK time. That\'s when doors close and we start the challenge together. You\'ll get access to everything right away, your first coaching call, and the full course library.'
+    },
+    {
+      question: 'What if I can\'t keep up?',
+      answer: 'The challenge is designed for real people with real lives. You don\'t need to train for hours every day. Most workouts are 20 to 30 minutes. Join 2 calls per week, post 1 feedback video, finish the course, and attend 2 special calls. That\'s it.'
+    },
+    {
+      question: 'Can I still join if I live in a different time zone?',
+      answer: 'Yes! We have members all over the world. Every coaching call is recorded, so even if you can\'t make it live, you can watch the replay. Just remember, you need to attend at least 2 live calls per week to qualify for the refund.'
+    },
+    {
+      question: 'What makes this different from YouTube tutorials?',
+      answer: 'YouTube gives you random videos with no structure. This is a complete system. You get a step by step course, live coaching twice a week, personal feedback on your videos, and a whole community pushing you forward. Plus, you can actually ask questions and get real answers from expert coaches.'
+    },
+    {
+      question: 'Is this actually worth it?',
+      answer: 'Look at the 16 transformation videos on this page. Real people, real results. You get professional coaching, a proven training system, and if you complete it, you get your money back anyway. The only way you lose is if you quit.'
     }
   ]
 
@@ -203,14 +283,13 @@ export default function BlackFridayChallengePage() {
 
             {/* CTA Button */}
             <div className="flex justify-center px-4 mt-8 mb-8">
-              <EpicCTAButton
-                size="lg"
-                className="w-full sm:w-auto max-w-md sm:max-w-none"
-                trackingName="hero-bfc"
+              <button
                 onClick={scrollToPricing}
+                className="w-full sm:w-auto max-w-md sm:max-w-none px-8 py-4 bg-yellow-100 text-black font-black text-xl rounded-xl uppercase tracking-wide shadow-lg hover:bg-white transition-all duration-200"
+                style={{ fontFamily: 'Satoshi' }}
               >
                 JOIN THE CHALLENGE →
-              </EpicCTAButton>
+              </button>
             </div>
 
             {/* Timer */}
@@ -474,8 +553,127 @@ export default function BlackFridayChallengePage() {
         </div>
       </section>
 
-      {/* How the Refund Works */}
+      {/* Community & Proof */}
       <section className="py-12 sm:py-16 lg:py-20 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Transformation Carousel */}
+          <div className="mb-10 sm:mb-12">
+            <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2 sm:mb-3 text-center">
+              Does 16 transformations prove that this works?
+            </h3>
+            <p className="text-sm sm:text-base lg:text-xl text-gray-600 text-center max-w-3xl mx-auto mb-6 sm:mb-8 lg:mb-12">
+              See what happens when you show up and do the work
+            </p>
+
+            {/* Desktop: 4x4 Grid layout */}
+            <div className="hidden lg:grid lg:grid-cols-4 gap-4 mb-8">
+              {[
+                { video: 'andre.webm', poster: 'andre_poster.webp' },
+                { video: 'sha-lyn.webm', poster: 'sha-lyn_poster.webp' },
+                { video: 'jordan.webm', poster: 'jordan_poster.webp' },
+                { video: 'charlie.webm', poster: 'charlie_poster.webp' },
+                { video: 'Niclas.webm', poster: 'Niclas_poster.webp' },
+                { video: 'rod.webm', poster: 'rod_poster.webp' },
+                { video: 'nico.webm', poster: 'nico_poster.webp' },
+                { video: 'keli.webm', poster: 'keli_poster.webp' },
+                { video: 'balal.webm', poster: 'balal_poster.webp' },
+                { video: 'Beat.webm', poster: 'Beat_poster.webp' },
+                { video: 'Bruno.webm', poster: 'Bruno_poster.webp' },
+                { video: 'daniel.webm', poster: 'daniel_poster.webp' },
+                { video: 'David.webm', poster: 'David_poster.webp' },
+                { video: 'iilya.webm', poster: 'iilya_poster.webp' },
+                { video: 'kris.webm', poster: 'kris_poster.webp' },
+                { video: 'Maria.webm', poster: 'Maria_poster.webp' }
+              ].map((item, index) => (
+                <div key={index} className="relative aspect-[9/16] rounded-xl overflow-hidden">
+                  <video
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    poster={`https://media.oracleboxing.com/Website/transfo/${item.poster}`}
+                    className="w-full h-full object-cover"
+                  >
+                    <source src={`https://media.oracleboxing.com/Website/transfo/${item.video}`} type="video/webm" />
+                  </video>
+                </div>
+              ))}
+            </div>
+
+            {/* Mobile: Scrollable carousel with snap */}
+            <div className="lg:hidden overflow-x-auto scrollbar-hide snap-x snap-mandatory -mx-4 px-4">
+              <div className="flex gap-4 pb-4">
+                {[
+                  { video: 'andre.webm', poster: 'andre_poster.webp' },
+                  { video: 'sha-lyn.webm', poster: 'sha-lyn_poster.webp' },
+                  { video: 'jordan.webm', poster: 'jordan_poster.webp' },
+                  { video: 'charlie.webm', poster: 'charlie_poster.webp' },
+                  { video: 'Niclas.webm', poster: 'Niclas_poster.webp' },
+                  { video: 'rod.webm', poster: 'rod_poster.webp' },
+                  { video: 'nico.webm', poster: 'nico_poster.webp' },
+                  { video: 'keli.webm', poster: 'keli_poster.webp' },
+                  { video: 'balal.webm', poster: 'balal_poster.webp' },
+                  { video: 'Beat.webm', poster: 'Beat_poster.webp' },
+                  { video: 'Bruno.webm', poster: 'Bruno_poster.webp' },
+                  { video: 'daniel.webm', poster: 'daniel_poster.webp' },
+                  { video: 'David.webm', poster: 'David_poster.webp' },
+                  { video: 'iilya.webm', poster: 'iilya_poster.webp' },
+                  { video: 'kris.webm', poster: 'kris_poster.webp' },
+                  { video: 'Maria.webm', poster: 'Maria_poster.webp' },
+                  { video: 'zyginta.webm', poster: 'zyginta_poster.webp' }
+                ].map((item, index) => (
+                  <div key={index} className="relative flex-shrink-0 w-[70vw] sm:w-[320px] aspect-[9/16] rounded-xl overflow-hidden snap-center">
+                    <video
+                      ref={(el) => {
+                        videoRefs.current[index] = el
+                        if (el && !videosLoaded) {
+                          setVideosLoaded(true)
+                        }
+                      }}
+                      loop
+                      muted
+                      playsInline
+                      poster={`https://media.oracleboxing.com/Website/transfo/${item.poster}`}
+                      className="w-full h-full object-cover"
+                      preload="metadata"
+                    >
+                      <source src={`https://media.oracleboxing.com/Website/transfo/${item.video}`} type="video/webm" />
+                    </video>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <p className="text-xl sm:text-2xl font-bold text-center mb-10" style={{ fontFamily: 'Satoshi' }}>
+            300+ boxers have already transformed inside Oracle. You're next.
+          </p>
+
+          <div className="flex justify-center">
+            <button
+              onClick={scrollToPricing}
+              className="w-full sm:w-auto max-w-md sm:max-w-none px-8 py-4 bg-yellow-100 text-black font-black text-xl rounded-xl uppercase tracking-wide shadow-lg hover:bg-white transition-all duration-200"
+              style={{ fontFamily: 'Satoshi' }}
+            >
+              JOIN THE CHALLENGE →
+            </button>
+          </div>
+        </div>
+
+        {/* Hide scrollbar */}
+        <style jsx global>{`
+          .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+          }
+          .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+          }
+        `}</style>
+      </section>
+
+      {/* How the Refund Works */}
+      <section className="py-12 sm:py-16 lg:py-20 bg-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-center mb-6 sm:mb-8" style={{ fontFamily: 'Satoshi' }}>
             Finish it, get your money back.
@@ -484,7 +682,7 @@ export default function BlackFridayChallengePage() {
           <div className="prose prose-lg max-w-3xl mx-auto mb-8">
             <p className="text-base sm:text-lg text-gray-700 leading-relaxed text-center mb-8">
               This challenge isn't easy, but it's simple.
-              If you show up, do the work, and complete the checklist, you'll earn your $97 back at the end.
+              If you show up, do the work, and complete the checklist, you'll earn your {isLoadingCurrency ? '$97' : formatPrice(getProductPrice('bfc', currency) || 97, currency)} back at the end.
             </p>
           </div>
 
@@ -532,100 +730,11 @@ export default function BlackFridayChallengePage() {
         </div>
       </section>
 
-      {/* Community & Proof */}
-      <section className="py-12 sm:py-16 lg:py-20 bg-gray-50">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-center mb-6 sm:mb-8" style={{ fontFamily: 'Satoshi' }}>
-            You won't do this alone.
-          </h2>
-
-          <p className="text-base sm:text-lg text-gray-700 text-center max-w-3xl mx-auto mb-10">
-            You'll train with other boxers around the world, all pushing through December together.
-            Share progress, get feedback, and keep each other accountable.
-          </p>
-
-          {/* Testimonials */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-5 items-start mb-10">
-            {/* Left Column */}
-            <div className="flex flex-col gap-3 sm:gap-5">
-              <div className="bg-white border-4 border-black px-3 sm:px-5 py-2.5 sm:py-4 rounded-lg shadow-md">
-                <div className="flex gap-0.5 sm:gap-1 mb-1.5 sm:mb-2">
-                  {[...Array(5)].map((_, i) => (
-                    <svg key={i} className="w-3.5 h-3.5 sm:w-5 sm:h-5 text-black fill-black" viewBox="0 0 24 24" strokeWidth={2}>
-                      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-                    </svg>
-                  ))}
-                </div>
-                <p className="text-xs sm:text-base text-black font-bold mb-1.5 sm:mb-3 leading-relaxed">
-                  "This course showed me where my power comes from. I can't thank you enough for helping me box better! It was the best choice I ever made - the "aha!" moments are amazing!"
-                </p>
-                <div className="text-left">
-                  <div className="font-bold text-xs sm:text-base text-black">Niclas Laux</div>
-                  <div className="text-xs sm:text-sm text-gray-600">Founder of Samurai Movement Academy</div>
-                </div>
-              </div>
-
-              <div className="bg-white border-4 border-black px-3 sm:px-5 py-2.5 sm:py-4 rounded-lg shadow-md">
-                <div className="flex gap-0.5 sm:gap-1 mb-1.5 sm:mb-2">
-                  {[...Array(5)].map((_, i) => (
-                    <svg key={i} className="w-3.5 h-3.5 sm:w-5 sm:h-5 text-black fill-black" viewBox="0 0 24 24" strokeWidth={2}>
-                      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-                    </svg>
-                  ))}
-                </div>
-                <p className="text-xs sm:text-base text-black font-bold mb-1.5 sm:mb-3 leading-relaxed">
-                  "Being part of this community has changed my life. Joining the live Zoom calls almost every day has helped me lose weight, box better, and feel more confident. The help, support, and friendship here have made a real difference in how I box."
-                </p>
-                <div className="text-left">
-                  <div className="font-bold text-xs sm:text-base text-black">Balal Hanif</div>
-                  <div className="text-xs sm:text-sm text-gray-600">Community Member</div>
-                </div>
-              </div>
-            </div>
-
-            {/* Right Column */}
-            <div className="flex flex-col gap-3 sm:gap-5">
-              <div className="bg-white border-4 border-black px-3 sm:px-5 py-2.5 sm:py-4 rounded-lg shadow-md">
-                <div className="flex gap-0.5 sm:gap-1 mb-1.5 sm:mb-2">
-                  {[...Array(5)].map((_, i) => (
-                    <svg key={i} className="w-3.5 h-3.5 sm:w-5 sm:h-5 text-black fill-black" viewBox="0 0 24 24" strokeWidth={2}>
-                      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-                    </svg>
-                  ))}
-                </div>
-                <p className="text-xs sm:text-base text-black font-bold mb-1.5 sm:mb-3 leading-relaxed">
-                  "I came back to this community and already made big progress on Toni and Oliver's Zoom calls. I have to say - you guys are really good at coaching online. I learn so much about boxing technique every time I join a call."
-                </p>
-                <div className="text-left">
-                  <div className="font-bold text-xs sm:text-base text-black">Torey Goodall</div>
-                  <div className="text-xs sm:text-sm text-gray-600">Boxing Enthusiast</div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <p className="text-xl sm:text-2xl font-bold text-center mb-10" style={{ fontFamily: 'Satoshi' }}>
-            300+ boxers have already transformed inside Oracle. You're next.
-          </p>
-
-          <div className="flex justify-center">
-            <EpicCTAButton
-              size="lg"
-              className="w-full sm:w-auto max-w-md sm:max-w-none"
-              trackingName="community-bfc"
-              onClick={scrollToPricing}
-            >
-              JOIN THE CHALLENGE →
-            </EpicCTAButton>
-          </div>
-        </div>
-      </section>
-
       {/* Pricing & Offer */}
       <section id="pricing" className="py-12 sm:py-16 lg:py-20 bg-white">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-center mb-10 sm:mb-12" style={{ fontFamily: 'Satoshi' }}>
-            Black Friday Entry — 6 Weeks for $97
+            Black Friday Entry — 6 Weeks for {formatPrice(getProductPrice('bfc', currency) || 97, currency)}
           </h2>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
@@ -644,7 +753,9 @@ export default function BlackFridayChallengePage() {
               </h3>
 
               <div className="text-center mb-6">
-                <div className="text-5xl sm:text-6xl font-black mb-2">$97</div>
+                <div className="text-5xl sm:text-6xl font-black mb-2">
+                  {isLoadingCurrency ? '$97' : formatPrice(getProductPrice('bfc', currency) || 97, currency)}
+                </div>
                 <div className="text-sm text-white/80">incl. all taxes</div>
               </div>
 
@@ -676,7 +787,7 @@ export default function BlackFridayChallengePage() {
               </div>
 
               <a
-                href="/checkout?product=6wc&source=bfc-page"
+                href="/checkout?product=bfc&source=bfc-page"
                 className="w-full py-4 sm:py-5 px-6 sm:px-8 bg-yellow-100 text-black font-black text-xl sm:text-2xl rounded-xl uppercase tracking-wide shadow-lg hover:bg-white transition-all duration-200 flex items-center justify-center gap-2"
                 style={{ fontFamily: 'Satoshi' }}
               >
@@ -693,8 +804,12 @@ export default function BlackFridayChallengePage() {
               </h3>
 
               <div className="text-center mb-8">
-                <div className="text-lg text-gray-500 line-through mb-1">$638 value</div>
-                <div className="text-5xl sm:text-6xl font-black mb-2">$397</div>
+                <div className="text-lg text-gray-500 line-through mb-1">
+                  {isLoadingCurrency ? '$638 value' : `${formatPrice((getProductPrice('bfc', currency) || 97) + 541, currency)} value`}
+                </div>
+                <div className="text-5xl sm:text-6xl font-black mb-2">
+                  {isLoadingCurrency ? '$397' : formatPrice(getProductPrice('bfc_vip', currency) || 397, currency)}
+                </div>
                 <div className="text-sm text-gray-600">one-time payment</div>
               </div>
 
@@ -726,7 +841,7 @@ export default function BlackFridayChallengePage() {
               </div>
 
               <a
-                href="/checkout?product=6wc&source=bfc-vip"
+                href="/checkout?product=bfc&source=bfc-vip"
                 className="w-full py-4 sm:py-5 px-6 sm:px-8 bg-yellow-100 text-black font-black text-xl sm:text-2xl rounded-xl uppercase tracking-wide shadow-lg hover:bg-white transition-all duration-200 flex items-center justify-center gap-2 mb-3"
                 style={{ fontFamily: 'Satoshi' }}
               >
@@ -806,14 +921,13 @@ export default function BlackFridayChallengePage() {
             This is your window to step up and set the tone for 2026.
           </p>
 
-          <EpicCTAButton
-            size="lg"
-            className="w-full sm:w-auto"
-            trackingName="urgency-bfc"
-            href="/checkout?product=6wc&source=bfc-page"
+          <a
+            href="/checkout?product=bfc&source=bfc-page"
+            className="inline-block w-full sm:w-auto px-8 py-4 bg-yellow-100 text-black font-black text-xl rounded-xl uppercase tracking-wide shadow-lg hover:bg-white transition-all duration-200"
+            style={{ fontFamily: 'Satoshi' }}
           >
             JOIN THE CHALLENGE →
-          </EpicCTAButton>
+          </a>
         </div>
       </section>
 
@@ -847,18 +961,17 @@ export default function BlackFridayChallengePage() {
           </h2>
 
           <p className="text-xl sm:text-2xl mb-8 text-gray-700">
-            6 weeks. $97. Money back if you finish.<br/>
+            6 weeks. {isLoadingCurrency ? '$97' : formatPrice(getProductPrice('bfc', currency) || 97, currency)}. Money back if you finish.<br/>
             Starts December 2nd. Ends 2026 strong.
           </p>
 
-          <EpicCTAButton
-            size="lg"
-            className="w-full sm:w-auto mb-8"
-            trackingName="final-bfc"
-            href="/checkout?product=6wc&source=bfc-page"
+          <a
+            href="/checkout?product=bfc&source=bfc-page"
+            className="inline-block w-full sm:w-auto px-8 py-4 bg-yellow-100 text-black font-black text-xl rounded-xl uppercase tracking-wide shadow-lg hover:bg-white transition-all duration-200 mb-8"
+            style={{ fontFamily: 'Satoshi' }}
           >
-            JOIN THE BLACK FRIDAY CHALLENGE →
-          </EpicCTAButton>
+            JOIN THE CHALLENGE →
+          </a>
 
           <p className="text-base sm:text-lg font-bold text-gray-600" style={{ fontFamily: 'Satoshi' }}>
             While everyone else slows down, we rise up.

@@ -115,6 +115,7 @@ export default function CheckoutPage() {
       //
       // Routing rules:
       //    - 6WC → Order bumps (Recordings Vault + Lifetime BFFP)
+      //    - BFC (bfc, bfc-vip) → BFC Upgrade page (Standard → VIP upgrade)
       //    - Course (BFFP, Roadmap, Vault) → Order bumps (6-Week Membership)
       //    - Membership (monthly, 6month, annual) → Direct to Stripe
       //    - Bundle → Direct to Stripe
@@ -131,6 +132,36 @@ export default function CheckoutPage() {
       // Don't track InitiateCheckout here - it will be tracked on:
       // 1. Order bumps page (for 6wc and courses)
       // 2. When creating Stripe session (for bundle/membership direct-to-Stripe)
+
+      // BFC → BFC Upgrade page
+      if (['bfc', 'bfc-vip'].includes(productParam)) {
+        console.log('→ Routing to BFC upgrade page')
+        const upgradeUrl = new URL('/checkout/bfc-upgrade', window.location.origin)
+        upgradeUrl.searchParams.set('email', email)
+        upgradeUrl.searchParams.set('name', fullName)
+        upgradeUrl.searchParams.set('currency', currency)
+        if (sourceParam) upgradeUrl.searchParams.set('source', sourceParam)
+
+        // Pass tracking params
+        upgradeUrl.searchParams.set('referrer', trackingParams.referrer)
+        // First Touch
+        if (trackingParams.first_utm_source) upgradeUrl.searchParams.set('first_utm_source', trackingParams.first_utm_source)
+        if (trackingParams.first_utm_medium) upgradeUrl.searchParams.set('first_utm_medium', trackingParams.first_utm_medium)
+        if (trackingParams.first_utm_campaign) upgradeUrl.searchParams.set('first_utm_campaign', trackingParams.first_utm_campaign)
+        if (trackingParams.first_utm_term) upgradeUrl.searchParams.set('first_utm_term', trackingParams.first_utm_term)
+        if (trackingParams.first_utm_content) upgradeUrl.searchParams.set('first_utm_content', trackingParams.first_utm_content)
+        if (trackingParams.first_referrer_time) upgradeUrl.searchParams.set('first_referrer_time', trackingParams.first_referrer_time)
+        // Last Touch
+        if (trackingParams.last_utm_source) upgradeUrl.searchParams.set('last_utm_source', trackingParams.last_utm_source)
+        if (trackingParams.last_utm_medium) upgradeUrl.searchParams.set('last_utm_medium', trackingParams.last_utm_medium)
+        if (trackingParams.last_utm_campaign) upgradeUrl.searchParams.set('last_utm_campaign', trackingParams.last_utm_campaign)
+        if (trackingParams.last_utm_term) upgradeUrl.searchParams.set('last_utm_term', trackingParams.last_utm_term)
+        if (trackingParams.last_utm_content) upgradeUrl.searchParams.set('last_utm_content', trackingParams.last_utm_content)
+        if (trackingParams.last_referrer_time) upgradeUrl.searchParams.set('last_referrer_time', trackingParams.last_referrer_time)
+
+        router.push(upgradeUrl.pathname + upgradeUrl.search)
+        return
+      }
 
       // 6WC → Order bumps
       if (productParam === '6wc') {
@@ -220,6 +251,8 @@ export default function CheckoutPage() {
           funnelType = 'membership'
         } else if (productParam === '6wc') {
           funnelType = '6wc'
+        } else if (['bfc', 'bfc-vip'].includes(productParam)) {
+          funnelType = 'bfc'
         } else if (productParam === 'bundle') {
           funnelType = 'bundle'
         } else if (['bffp', 'roadmap', 'vault'].includes(productParam)) {

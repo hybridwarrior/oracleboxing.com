@@ -382,6 +382,71 @@ Access to selected 1-on-1 coaching call recordings for study and learning.
     shortDescription: 'Study Archive of Past 1-on-1 Sessions',
     perfectFor: 'Learners who study best through observation',
   },
+  {
+    id: 'bfc',
+    title: 'Black Friday Challenge',
+    price: 97,
+    type: 'course',
+    metadata: 'bfc',
+    stripe_product_id: 'prod_TNwT73GrjCaz3r',
+    stripe_price_id: 'price_1SRAaaKPvH4Ddlg1uX0nwIuj',
+    price_ids: {
+      multicurrency: 'price_1SRAaaKPvH4Ddlg1uX0nwIuj',
+    },
+    image: 'https://media.oracleboxing.com/Website/6wc_tn.png',
+    description: `**Black Friday Challenge — 6 Weeks for $97**
+
+Complete the challenge, get your money back. Simple as that.
+
+**What you get:**
+• 6-Week program with live coaching
+• Full access to Boxing Masterclass course
+• Weekly live coaching calls with Oliver & Toni
+• Private community access and feedback
+• Structured accountability system
+• 100% refund when you complete all requirements
+
+**Requirements:**
+• Attend 2 live calls per week (or watch replays)
+• Submit 1 training video per week
+• Complete all course modules
+• Attend mid-point and graduation check-ins
+
+Perfect for beginners or boxers who want rapid improvement with accountability.`,
+    shortDescription: 'Black Friday Entry — 6 Weeks for $97',
+    perfectFor: 'Beginners who want structure and accountability',
+    weeks: 6,
+    lessonCount: 26,
+  },
+  {
+    id: 'bfc-vip',
+    title: 'Black Friday Challenge VIP',
+    price: 397,
+    type: 'course',
+    metadata: 'bfc_vip',
+    stripe_product_id: 'prod_TNwYt9qDOIofyA',
+    stripe_price_id: 'price_1SRAfeKPvH4Ddlg1CfFDPDFN',
+    price_ids: {
+      multicurrency: 'price_1SRAfeKPvH4Ddlg1CfFDPDFN',
+    },
+    image: 'https://media.oracleboxing.com/Website/6wc_tn.png',
+    description: `**Black Friday Challenge VIP — $397**
+
+Everything in the Challenge plus lifetime access and VIP perks.
+
+**What you get:**
+• Everything in the Black Friday Challenge
+• Lifetime Access to All Course Content
+• Priority Onboarding Call (Instant Access)
+• Exclusive Early Access to Oracle Boxing Apparel (Releasing Before Christmas)
+• Keep everything forever
+
+**Note:** VIP members get permanent ownership of all course materials and priority support.`,
+    shortDescription: 'VIP Package with Lifetime Access',
+    perfectFor: 'Serious boxers who want lifetime ownership',
+    weeks: 6,
+    lessonCount: 26,
+  },
 ]
 
 // Combine all products for internal lookups
