@@ -38,7 +38,7 @@ export default function BlackFridayChallengePage() {
         (entries) => {
           entries.forEach((entry) => {
             const target = entry.target as HTMLVideoElement
-            if (entry.isIntersecting && entry.intersectionRatio > 0.75) {
+            if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
               target.play().catch((err) => {
                 console.log('Video play prevented:', err)
               })
@@ -49,7 +49,7 @@ export default function BlackFridayChallengePage() {
         },
         {
           threshold: [0, 0.25, 0.5, 0.75, 1],
-          rootMargin: '0px'
+          rootMargin: '50px'
         }
       )
 
@@ -696,7 +696,7 @@ export default function BlackFridayChallengePage() {
                   { video: 'Maria.webm', poster: 'Maria_poster.webp' },
                   { video: 'zyginta.webm', poster: 'zyginta_poster.webp' }
                 ].map((item, index) => (
-                  <div key={index} className="relative flex-shrink-0 w-[70vw] sm:w-[320px] aspect-[9/16] rounded-xl overflow-hidden snap-center">
+                  <div key={index} className="relative flex-shrink-0 w-[70vw] sm:w-[320px] aspect-[9/16] rounded-xl overflow-hidden snap-center bg-black">
                     <video
                       ref={(el) => {
                         videoRefs.current[index] = el
@@ -708,8 +708,8 @@ export default function BlackFridayChallengePage() {
                       muted
                       playsInline
                       poster={`https://media.oracleboxing.com/Website/transfo/${item.poster}`}
-                      className="w-full h-full object-cover"
-                      preload="metadata"
+                      className="w-full h-full object-cover bg-black"
+                      preload="auto"
                     >
                       <source src={`https://media.oracleboxing.com/Website/transfo/${item.video}`} type="video/webm" />
                     </video>
