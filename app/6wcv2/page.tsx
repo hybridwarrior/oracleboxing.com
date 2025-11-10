@@ -24,6 +24,9 @@ export default function BlackFridayChallengePage() {
   const [isLoadingCurrency, setIsLoadingCurrency] = useState(true)
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([])
   const [videosLoaded, setVideosLoaded] = useState(false)
+  const [currentMessageIndex, setCurrentMessageIndex] = useState(0)
+  const [isAnimating, setIsAnimating] = useState(false)
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
 
   // Video autoplay on scroll
   useEffect(() => {
@@ -70,6 +73,48 @@ export default function BlackFridayChallengePage() {
       setIsLoadingCurrency(false)
     }
     loadCurrency()
+  }, [])
+
+  // Rotating header messages with emojis
+  const rotatingMessages = [
+    { emoji: '🔥', text: '50% OFF FOR BLACK FRIDAY' },
+    { emoji: '⚡', text: `ONLY ${spotsRemaining} SPOTS REMAINING` },
+    { emoji: '💎', text: 'GET LIFETIME ACCESS TO ALL COURSE CONTENT WITH THE VIP' }
+  ]
+
+  // Rotate messages every 3 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIsAnimating(true)
+      setTimeout(() => {
+        setCurrentMessageIndex((prev) => (prev + 1) % rotatingMessages.length)
+        setIsAnimating(false)
+      }, 500) // Half-second for the slide-up animation
+    }, 3000)
+
+    return () => clearInterval(interval)
+  }, [spotsRemaining])
+
+  // Detect sidebar open state by listening for hamburger menu clicks
+  useEffect(() => {
+    const handleClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement
+      // Check if click is on hamburger menu button or sidebar close button
+      const isMenuButton = target.closest('button[aria-label="Toggle menu"]') ||
+                          target.closest('button[aria-label="Close menu"]')
+      if (isMenuButton) {
+        setIsSidebarOpen(prev => !prev)
+      }
+      // Check if click is on overlay (closes sidebar)
+      const isOverlay = target.classList.contains('fixed') &&
+                       target.classList.contains('bg-black/50')
+      if (isOverlay) {
+        setIsSidebarOpen(false)
+      }
+    }
+
+    document.addEventListener('click', handleClick)
+    return () => document.removeEventListener('click', handleClick)
   }, [])
 
   // Quota meter - deterministic spot countdown
@@ -281,38 +326,31 @@ export default function BlackFridayChallengePage() {
 
       <Header />
 
-      {/* Sticky Scrolling Banner */}
-      <div className="sticky top-0 z-50 bg-black text-white py-3 overflow-hidden">
-        <div className="animate-marquee whitespace-nowrap">
-          {/* Repeat the text multiple times for continuous scroll */}
-          {[...Array(3)].map((_, i) => (
-            <span key={i} className="inline-block">
-              <span className="mx-8 font-bold text-sm sm:text-base">
-                50% off for Black Friday
-              </span>
-              <span className="mx-8 font-bold text-sm sm:text-base">
-                •
-              </span>
-              <span className="mx-8 font-bold text-sm sm:text-base">
-                Only {spotsRemaining} spots remaining
-              </span>
-              <span className="mx-8 font-bold text-sm sm:text-base">
-                •
-              </span>
-              <span className="mx-8 font-bold text-sm sm:text-base">
-                Get lifetime access to all course content with the VIP
-              </span>
-              <span className="mx-8 font-bold text-sm sm:text-base">
-                •
-              </span>
-            </span>
-          ))}
+      {/* Rotating Text Header - Fixed to top, hides when sidebar opens */}
+      {!isSidebarOpen && (
+        <div className="fixed top-16 sm:top-20 left-0 right-0 z-40 bg-black text-white py-4 overflow-hidden">
+          <div className="relative h-8 sm:h-10 flex items-center justify-center">
+            <div
+              className={`absolute inset-0 flex items-center justify-center transition-all duration-500 ${
+                isAnimating ? '-translate-y-full opacity-0' : 'translate-y-0 opacity-100'
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <span className="text-2xl sm:text-3xl">
+                  {rotatingMessages[currentMessageIndex].emoji}
+                </span>
+                <span className="font-black text-sm sm:text-base md:text-lg tracking-wide">
+                  {rotatingMessages[currentMessageIndex].text}
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-white">
-        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8 lg:pt-10 pb-12 sm:pb-16 lg:pb-20">
+      <section className="relative overflow-hidden bg-white pt-24 sm:pt-32">
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 pb-12 sm:pb-16 lg:pb-20">
           {/* Badge */}
           <div className="text-center mb-6">
             <span className="inline-flex items-center gap-3 px-4 py-2 bg-black text-white text-xs sm:text-sm font-bold uppercase tracking-wide rounded-full">
@@ -763,7 +801,7 @@ export default function BlackFridayChallengePage() {
           </div>
         </div>
 
-        {/* Hide scrollbar and marquee animation */}
+        {/* Hide scrollbar */}
         <style jsx global>{`
           .scrollbar-hide::-webkit-scrollbar {
             display: none;
@@ -771,24 +809,6 @@ export default function BlackFridayChallengePage() {
           .scrollbar-hide {
             -ms-overflow-style: none;
             scrollbar-width: none;
-          }
-
-          @keyframes marquee {
-            0% {
-              transform: translateX(0);
-            }
-            100% {
-              transform: translateX(-33.333%);
-            }
-          }
-
-          .animate-marquee {
-            display: inline-block;
-            animation: marquee 30s linear infinite;
-          }
-
-          .animate-marquee:hover {
-            animation-play-state: paused;
           }
         `}</style>
       </section>
