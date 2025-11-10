@@ -27,6 +27,31 @@ export default function BlackFridayChallengePage() {
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0)
   const [isAnimating, setIsAnimating] = useState(false)
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
+  const [isHeaderVisible, setIsHeaderVisible] = useState(true)
+  const [lastScrollY, setLastScrollY] = useState(0)
+
+  // Header visibility on scroll (syncs with main Header component)
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY
+
+      if (currentScrollY > lastScrollY && currentScrollY > 100) {
+        // Scrolling down - hide header
+        setIsHeaderVisible(false)
+      } else if (currentScrollY < lastScrollY) {
+        // Scrolling up - show header
+        setIsHeaderVisible(true)
+      } else if (currentScrollY === 0) {
+        // At the very top - show header
+        setIsHeaderVisible(true)
+      }
+
+      setLastScrollY(currentScrollY)
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [lastScrollY])
 
   // Video autoplay on scroll
   useEffect(() => {
@@ -79,7 +104,8 @@ export default function BlackFridayChallengePage() {
   const rotatingMessages = [
     { emoji: '🔥', text: '50% OFF FOR BLACK FRIDAY' },
     { emoji: '⚡', text: `ONLY ${spotsRemaining} SPOTS REMAINING` },
-    { emoji: '💎', text: 'GET LIFETIME ACCESS TO ALL COURSE CONTENT WITH THE VIP' }
+    { emoji: '💎', text: 'GET LIFETIME ACCESS TO ALL COURSE CONTENT WITH VIP' },
+    { emoji: '⏰', text: 'DOORS CLOSE DECEMBER 2ND, 10PM UK TIME' }
   ]
 
   // Rotate messages every 3 seconds
@@ -326,20 +352,24 @@ export default function BlackFridayChallengePage() {
 
       <Header />
 
-      {/* Rotating Text Header - Fixed to top, hides when sidebar opens */}
+      {/* Rotating Text Header - Moves with main header */}
       {!isSidebarOpen && (
-        <div className="fixed top-16 sm:top-20 left-0 right-0 z-40 bg-black text-white py-4 overflow-hidden">
-          <div className="relative h-8 sm:h-10 flex items-center justify-center">
+        <div
+          className={`fixed left-0 right-0 z-50 bg-black text-white py-2 sm:py-3 overflow-hidden transition-all duration-300 ${
+            isHeaderVisible ? 'top-16 sm:top-20' : 'top-0'
+          }`}
+        >
+          <div className="relative h-6 sm:h-7 flex items-center justify-center">
             <div
               className={`absolute inset-0 flex items-center justify-center transition-all duration-500 ${
                 isAnimating ? '-translate-y-full opacity-0' : 'translate-y-0 opacity-100'
               }`}
             >
-              <div className="flex items-center gap-3">
-                <span className="text-2xl sm:text-3xl">
+              <div className="flex items-center gap-2">
+                <span className="text-lg sm:text-xl">
                   {rotatingMessages[currentMessageIndex].emoji}
                 </span>
-                <span className="font-black text-sm sm:text-base md:text-lg tracking-wide">
+                <span className="font-black text-xs sm:text-sm tracking-wide">
                   {rotatingMessages[currentMessageIndex].text}
                 </span>
               </div>
@@ -349,7 +379,7 @@ export default function BlackFridayChallengePage() {
       )}
 
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-white pt-24 sm:pt-32">
+      <section className="relative overflow-hidden bg-white pt-28 sm:pt-36">
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 pb-12 sm:pb-16 lg:pb-20">
           {/* Badge */}
           <div className="text-center mb-6">

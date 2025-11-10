@@ -70,7 +70,7 @@ export function Header() {
   return (
     <>
       <header
-        className={`shadow-lg z-50 transition-all duration-300 ${
+        className={`shadow-lg z-40 transition-all duration-300 ${
           isHomePage ? 'fixed top-0 left-0 right-0' : 'sticky top-0'
         } ${
           isVisible ? 'translate-y-0' : '-translate-y-full'
