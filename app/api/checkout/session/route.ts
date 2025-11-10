@@ -7,7 +7,12 @@ import { getProductById } from '@/lib/products'
 
 export async function POST(req: NextRequest) {
   try {
+    console.log('🚀 ABANDONED CART: /api/checkout/session endpoint HIT at', new Date().toISOString());
+
     const body = await req.json()
+
+    console.log('🚀 ABANDONED CART: Request body received, parsing...');
+
     const { items, customerInfo, currency, trackingParams, cookieData }: {
       items: CartItem[],
       customerInfo?: any,
