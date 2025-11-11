@@ -68,75 +68,33 @@ export default function ChallengeComingSoonPage() {
     }
   }
 
-  const testimonials = [
-    {
-      name: "Niclas Laux",
-      role: "Founder of Samurai Movement Academy, BJJ Purple Belt, Self-Defense Instructor",
-      image: "https://media.oracleboxing.com/webp/Website/niclas.webp",
-      quote: "This course showed me where my power comes from. I can't thank you enough for helping me box better! It was the best choice I ever made - the \"aha!\" moments are amazing!"
-    },
-    {
-      name: "Torey Goodall",
-      role: "Community Member & Boxing Enthusiast",
-      image: "https://media.oracleboxing.com/webp/Website/torey.webp",
-      quote: "I came back to this community and already made big progress on Toni and Oliver's Zoom calls. I have to say - you guys are really good at coaching online. I learn so much about boxing technique every time I join a call."
-    },
-    {
-      name: "Balal Hanif",
-      role: "Community Member & Boxing Enthusiast",
-      image: "https://media.oracleboxing.com/webp/Website/balal.webp",
-      quote: "Being part of this community has changed my life. Joining the live Zoom calls almost every day has helped me lose weight, box better, and feel more confident. The help, support, and friendship here have made a real difference in how I box."
-    },
-    {
-      name: "Bruno Martins",
-      role: "Community Member",
-      image: "https://media.oracleboxing.com/webp/Website/bruno.webp",
-      quote: "The value that the coaches bring is WAY BEYOND what I ever expected when I joined this challenge. I can genuinely SEE and FEEL the shift happening."
-    },
-    {
-      name: "Daniel Ramirez",
-      role: "Community Member",
-      image: "https://media.oracleboxing.com/webp/Website/daniel.webp",
-      quote: "The Boxing Masterclass course was a huge rewiring of my thinking. You could be training here and learning new things for months, maybe years!"
-    },
-    {
-      name: "Illya",
-      role: "Community Member",
-      image: "https://media.oracleboxing.com/webp/Website/illya.webp",
-      quote: "I am truly humbled by the passion, dedication and depth of analysis exemplified by our coaches here. You have every asset necessary to become a real boxer and change your life forever."
-    }
-  ]
-
   return (
     <>
       <Header />
 
-      {/* Consolidated Hero Section with VSL and Signup */}
-      <section className="relative overflow-hidden bg-white pt-6 sm:pt-8 lg:pt-12 pb-12 sm:pb-16 lg:pb-20">
+      {/* VSL Video */}
+      <section className="pt-6 sm:pt-8 lg:pt-12 pb-6 sm:pb-8 lg:pb-12 bg-white">
         <div className="w-full lg:max-w-[80%] mx-auto px-4 sm:px-6 lg:px-8">
+          <WistiaVideo />
+        </div>
+      </section>
 
-          {/* VSL Video */}
-          <div className="mb-8 sm:mb-12">
-            <WistiaVideo />
-          </div>
+      {/* Two-Column Challenge Section */}
+      <section className="pt-6 sm:pt-8 lg:pt-12 pb-6 sm:pb-8 lg:pb-12 bg-white border-b border-gray-200">
+        <div className="w-full lg:max-w-[80%] mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 items-center">
+            {/* Left Side - Image with Countdown */}
+            <div className="order-2 lg:order-1">
+              <div className="relative rounded-2xl overflow-hidden shadow-xl mb-6">
+                <img
+                  src="https://media.oracleboxing.com/Website/skool_art.webp"
+                  alt="6-Week Challenge"
+                  className="w-full h-auto object-cover"
+                />
+              </div>
 
-          {/* Reopening Notice with Countdown */}
-          <div className="bg-black text-white rounded-2xl p-8 sm:p-12 lg:p-16 mb-8 sm:mb-12">
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 text-center" style={{ fontFamily: 'Satoshi' }}>
-              Six Week Challenge
-            </h2>
-
-            <p className="text-xl sm:text-2xl lg:text-3xl mb-8 text-yellow-100 font-bold text-center" style={{ fontFamily: 'Satoshi' }}>
-              Temporarily Closed Due to High Demand
-            </p>
-
-            <p className="text-lg sm:text-xl text-white mb-8 text-center max-w-3xl mx-auto">
-              Reopening November 23rd
-            </p>
-
-            {/* Countdown Timer */}
-            <div className="max-w-2xl mx-auto">
-              <div className="bg-white text-black rounded-2xl p-6 sm:p-8">
+              {/* Countdown Timer */}
+              <div className="bg-white border-4 border-black rounded-2xl p-6 sm:p-8 shadow-lg">
                 <div className="text-sm sm:text-base font-bold uppercase tracking-wide mb-4 text-center">
                   OPENS IN:
                 </div>
@@ -168,92 +126,115 @@ export default function ChallengeComingSoonPage() {
                 </div>
               </div>
             </div>
-          </div>
 
-          {/* Email Signup Form */}
-          <div className="max-w-2xl mx-auto">
-            <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-center mb-4 sm:mb-6" style={{ fontFamily: 'Satoshi' }}>
-              For Guaranteed Access
-            </h3>
+            {/* Right Side - Content and Signup Form */}
+            <div className="order-1 lg:order-2 text-center lg:text-left">
+              {/* Badge */}
+              <div className="inline-block mb-4 sm:mb-6 px-3 sm:px-4 py-1.5 sm:py-2 bg-yellow-100 text-black border border-gray-300 rounded-lg font-black text-xs sm:text-sm uppercase tracking-wider">
+                Temporarily Closed
+              </div>
 
-            <p className="text-base sm:text-lg text-gray-700 text-center mb-8">
-              Please enter your details below and we'll send you an email with an invitation before November 23rd
-            </p>
+              {/* Headline */}
+              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-3 sm:mb-4" style={{ fontFamily: 'Satoshi' }}>
+                Six Week Challenge
+              </h2>
 
-            {!submitSuccess ? (
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label htmlFor="firstName" className="block text-sm font-bold text-gray-900 mb-2">
-                      First Name
-                    </label>
-                    <input
-                      type="text"
-                      id="firstName"
-                      value={firstName}
-                      onChange={(e) => setFirstName(e.target.value)}
-                      required
-                      className="w-full px-4 py-3 border-2 border-black rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
-                      placeholder="John"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="lastName" className="block text-sm font-bold text-gray-900 mb-2">
-                      Last Name
-                    </label>
-                    <input
-                      type="text"
-                      id="lastName"
-                      value={lastName}
-                      onChange={(e) => setLastName(e.target.value)}
-                      required
-                      className="w-full px-4 py-3 border-2 border-black rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
-                      placeholder="Doe"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label htmlFor="email" className="block text-sm font-bold text-gray-900 mb-2">
-                    Email Address
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                    className="w-full px-4 py-3 border-2 border-black rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
-                    placeholder="john@example.com"
-                  />
-                </div>
-
-                {submitError && (
-                  <div className="p-4 bg-red-50 border-2 border-red-500 rounded-lg text-red-700 text-sm">
-                    {submitError}
-                  </div>
-                )}
-
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="w-full py-4 px-8 bg-yellow-100 text-black border-4 border-black font-black text-xl rounded-xl uppercase tracking-wide shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:bg-white transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                  style={{ fontFamily: 'Satoshi' }}
-                >
-                  {isSubmitting ? 'SUBMITTING...' : 'NOTIFY ME →'}
-                </button>
-              </form>
-            ) : (
-              <div className="p-6 sm:p-8 bg-green-50 border-4 border-green-500 rounded-2xl text-center">
-                <div className="text-4xl mb-4">✓</div>
-                <h4 className="text-xl sm:text-2xl font-bold text-green-900 mb-2" style={{ fontFamily: 'Satoshi' }}>
-                  You're on the list!
-                </h4>
-                <p className="text-base sm:text-lg text-green-800">
-                  We'll email you an invitation before November 23rd
+              {/* Description */}
+              <div className="space-y-3 sm:space-y-4 mb-6 sm:mb-8">
+                <p className="text-base sm:text-lg md:text-xl text-gray-700 leading-relaxed">
+                  Temporarily closed due to high demand
+                </p>
+                <p className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900">
+                  Reopening November 23rd
                 </p>
               </div>
-            )}
+
+              {/* Signup Form */}
+              <div className="max-w-xl">
+                <h3 className="text-xl sm:text-2xl font-bold mb-4" style={{ fontFamily: 'Satoshi' }}>
+                  For Guaranteed Access
+                </h3>
+
+                <p className="text-sm sm:text-base text-gray-700 mb-6">
+                  Please enter your details below and we'll send you an email with an invitation before November 23rd
+                </p>
+
+                {!submitSuccess ? (
+                  <form onSubmit={handleSubmit} className="space-y-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label htmlFor="firstName" className="block text-sm font-bold text-gray-900 mb-2">
+                          First Name
+                        </label>
+                        <input
+                          type="text"
+                          id="firstName"
+                          value={firstName}
+                          onChange={(e) => setFirstName(e.target.value)}
+                          required
+                          className="w-full px-4 py-3 border-2 border-black rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
+                          placeholder="John"
+                        />
+                      </div>
+                      <div>
+                        <label htmlFor="lastName" className="block text-sm font-bold text-gray-900 mb-2">
+                          Last Name
+                        </label>
+                        <input
+                          type="text"
+                          id="lastName"
+                          value={lastName}
+                          onChange={(e) => setLastName(e.target.value)}
+                          required
+                          className="w-full px-4 py-3 border-2 border-black rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
+                          placeholder="Doe"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label htmlFor="email" className="block text-sm font-bold text-gray-900 mb-2">
+                        Email Address
+                      </label>
+                      <input
+                        type="email"
+                        id="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                        className="w-full px-4 py-3 border-2 border-black rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
+                        placeholder="john@example.com"
+                      />
+                    </div>
+
+                    {submitError && (
+                      <div className="p-4 bg-red-50 border-2 border-red-500 rounded-lg text-red-700 text-sm">
+                        {submitError}
+                      </div>
+                    )}
+
+                    <button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="w-full py-4 px-8 bg-yellow-100 text-black border-4 border-black font-black text-xl rounded-xl uppercase tracking-wide shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:bg-white transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                      style={{ fontFamily: 'Satoshi' }}
+                    >
+                      {isSubmitting ? 'SUBMITTING...' : 'SECURE MY SPOT'}
+                    </button>
+                  </form>
+                ) : (
+                  <div className="p-6 sm:p-8 bg-green-50 border-4 border-green-500 rounded-2xl text-center">
+                    <div className="text-4xl mb-4">✓</div>
+                    <h4 className="text-xl sm:text-2xl font-bold text-green-900 mb-2" style={{ fontFamily: 'Satoshi' }}>
+                      You're on the list!
+                    </h4>
+                    <p className="text-base sm:text-lg text-green-800">
+                      We'll email you an invitation before November 23rd
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -287,40 +268,6 @@ export default function ChallengeComingSoonPage() {
                 Full Access Membership →
               </a>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonials */}
-      <section className="py-12 sm:py-16 lg:py-20 bg-white">
-        <div className="w-full lg:max-w-[80%] mx-auto px-4 sm:px-6 lg:px-8">
-          <h3 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-center mb-12 sm:mb-16" style={{ fontFamily: 'Satoshi' }}>
-            What Our Members Say
-          </h3>
-
-          <div className="max-w-4xl mx-auto space-y-8 sm:space-y-12">
-            {testimonials.map((testimonial, index) => (
-              <div key={index} className="bg-white border-4 border-black rounded-2xl p-6 sm:p-8 shadow-lg">
-                <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-6 mb-4">
-                  <img
-                    src={testimonial.image}
-                    alt={testimonial.name}
-                    className="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover flex-shrink-0 border-2 border-black"
-                  />
-                  <div className="flex-1">
-                    <div className="font-bold text-xl sm:text-2xl text-black mb-1" style={{ fontFamily: 'Satoshi' }}>
-                      {testimonial.name}
-                    </div>
-                    <div className="text-sm sm:text-base text-gray-600 mb-4">
-                      {testimonial.role}
-                    </div>
-                    <blockquote className="text-base sm:text-lg text-gray-900 leading-relaxed">
-                      "{testimonial.quote}"
-                    </blockquote>
-                  </div>
-                </div>
-              </div>
-            ))}
           </div>
         </div>
       </section>
