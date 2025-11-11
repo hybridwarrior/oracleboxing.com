@@ -43,6 +43,14 @@ interface InitiatedCheckoutData {
     utmCampaign?: string;
     fbclid?: string;
   };
+  cookieData?: any; // Full cookie tracking data
+  facebookParams?: { // Facebook parameters from Parameter Builder
+    fbc?: string;
+    fbp?: string;
+    client_ip_address?: string;
+    client_user_agent?: string;
+    fbclid?: string;
+  };
 }
 
 /**
@@ -131,10 +139,22 @@ export async function sendInitiatedCheckout(data: InitiatedCheckoutData): Promis
       item_count: data.cart.items.length,
 
       // Tracking data (optional)
+      tracking_session_id: data.tracking?.sessionId || '',
+      tracking_event_id: data.tracking?.eventId || '',
       utm_source: data.tracking?.utmSource || '',
       utm_medium: data.tracking?.utmMedium || '',
       utm_campaign: data.tracking?.utmCampaign || '',
       fbclid: data.tracking?.fbclid || '',
+
+      // Facebook Parameters (from Parameter Builder)
+      fb_fbc: data.facebookParams?.fbc || '',
+      fb_fbp: data.facebookParams?.fbp || '',
+      fb_client_ip: data.facebookParams?.client_ip_address || '',
+      fb_user_agent: data.facebookParams?.client_user_agent || '',
+      fb_fbclid: data.facebookParams?.fbclid || '',
+
+      // Complete Cookie Tracking Data (ALL the fucking data!)
+      cookie_data: data.cookieData || {},
     };
 
     console.log('📤 ABANDONED CART: Full payload being sent:', JSON.stringify(payload, null, 2));

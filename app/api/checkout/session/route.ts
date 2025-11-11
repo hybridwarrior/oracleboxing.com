@@ -180,6 +180,8 @@ export async function POST(req: NextRequest) {
           utmCampaign: trackingParams.last_utm_campaign,
           fbclid: trackingParams.fbclid,
         } : undefined,
+        cookieData: cookieData, // ALL cookie tracking data
+        facebookParams: fbParams, // Facebook Parameter Builder data
       }).then(() => {
         console.log('✅ ABANDONED CART: Webhook call initiated successfully');
       }).catch(err => {
