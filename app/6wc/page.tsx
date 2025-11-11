@@ -1,213 +1,306 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Header } from '@/components/Header'
 import { Footer } from '@/components/Footer'
-import dynamic from 'next/dynamic'
 import HeroSection from '@/components/HeroSection'
-import { PricingPopup } from '@/components/PricingPopup'
-import { ChallengePrice, ValuePrice } from '@/components/AdaptivePrice'
-import { useCurrency } from '@/contexts/CurrencyContext'
-import { getProductPrice } from '@/lib/currency'
+import { sendChallengeSignup } from '@/lib/simple-webhook'
 
-// Dynamic imports for below-the-fold components to reduce initial bundle
-const TestimonialsWithMediaSection = dynamic(() => import('@/components/TestimonialsWithMediaSection'))
+export default function ChallengeComingSoonPage() {
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
+  const [email, setEmail] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitSuccess, setSubmitSuccess] = useState(false)
+  const [submitError, setSubmitError] = useState('')
 
-const RefundRequirementsSection = dynamic(() => import('@/components/RefundRequirementsSection'))
+  const [timeLeft, setTimeLeft] = useState({
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0
+  })
 
-const TransformationStory = dynamic(() => import('@/components/TransformationStory'))
+  // Countdown to November 23, 2025
+  useEffect(() => {
+    const targetDate = new Date('2025-11-23T00:00:00+00:00')
 
-const CostOfInactionCTA = dynamic(() => import('@/components/CostOfInactionCTA'))
+    const updateCountdown = () => {
+      const now = new Date()
+      const difference = targetDate.getTime() - now.getTime()
 
-const FAQSection = dynamic(() => import('@/components/FAQSection'))
+      if (difference > 0) {
+        setTimeLeft({
+          days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+          hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+          minutes: Math.floor((difference / 1000 / 60) % 60),
+          seconds: Math.floor((difference / 1000) % 60)
+        })
+      }
+    }
 
-const PlatformScreenshotsCarousel = dynamic(() => import('@/components/PlatformScreenshotsCarousel').then(mod => ({ default: mod.PlatformScreenshotsCarousel })))
+    updateCountdown()
+    const interval = setInterval(updateCountdown, 1000)
 
-export default function ChallengePage() {
-  const [isPricingPopupOpen, setIsPricingPopupOpen] = useState(false)
-  const { currency } = useCurrency()
+    return () => clearInterval(interval)
+  }, [])
 
-  const handleOpenPricing = () => {
-    setIsPricingPopupOpen(true)
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsSubmitting(true)
+    setSubmitError('')
+
+    try {
+      await sendChallengeSignup(firstName, lastName, email)
+      setSubmitSuccess(true)
+      setFirstName('')
+      setLastName('')
+      setEmail('')
+    } catch (error) {
+      console.error('Signup error:', error)
+      setSubmitError('Something went wrong. Please try again.')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
-  // Benefits to display with checkmarks
-  const benefits = [
-    { text: "100% money back", bold: " when you finish" },
-    { text: "Clear 6-week training plan", bold: "" },
-    { text: "Live coaching calls every week", bold: " with Oliver" },
-    { text: "Personal help", bold: " on your training videos" },
-    { text: "Full access", bold: " to the Boxing Masterclass" },
-    { text: "Keep forever", bold: " the Boxing Roadmap" },
-    { text: "Ask your coaches", bold: " questions anytime" }
+  const testimonials = [
+    {
+      name: "Niclas Laux",
+      role: "Founder of Samurai Movement Academy, BJJ Purple Belt, Self-Defense Instructor",
+      image: "https://media.oracleboxing.com/webp/Website/niclas.webp",
+      quote: "This course showed me where my power comes from. I can't thank you enough for helping me box better! It was the best choice I ever made - the \"aha!\" moments are amazing!"
+    },
+    {
+      name: "Torey Goodall",
+      role: "Community Member & Boxing Enthusiast",
+      image: "https://media.oracleboxing.com/webp/Website/torey.webp",
+      quote: "I came back to this community and already made big progress on Toni and Oliver's Zoom calls. I have to say - you guys are really good at coaching online. I learn so much about boxing technique every time I join a call."
+    },
+    {
+      name: "Balal Hanif",
+      role: "Community Member & Boxing Enthusiast",
+      image: "https://media.oracleboxing.com/webp/Website/balal.webp",
+      quote: "Being part of this community has changed my life. Joining the live Zoom calls almost every day has helped me lose weight, box better, and feel more confident. The help, support, and friendship here have made a real difference in how I box."
+    }
   ]
-
-  // Calculate total value in current currency
-  const bffpPrice = getProductPrice('bffp', currency) || 297
-  const rcvPrice = getProductPrice('rcv', currency) || 97
-  const brdmpPrice = getProductPrice('brdmp', currency) || 147
-  const totalValue = bffpPrice + rcvPrice + rcvPrice + brdmpPrice
 
   return (
     <>
-      {/* Product Schema */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "Product",
-            "name": "6-Week Challenge",
-            "description": "6-week boxing training program with full money-back promise when you finish. Includes Boxing Masterclass, Boxing Roadmap you keep forever, live coaching, and personal help.",
-            "image": "https://media.oracleboxing.com/Website/skool_art.webp",
-            "brand": {
-              "@type": "Brand",
-              "name": "Oracle Boxing"
-            },
-            "offers": {
-              "@type": "Offer",
-              "price": "197",
-              "priceCurrency": "USD",
-              "availability": "https://schema.org/LimitedAvailability",
-              "url": "https://oracleboxing.com/6wc",
-              "priceValidUntil": "2026-12-31"
-            }
-          })
-        }}
-      />
-
       <Header />
 
-      {/* Hero Section */}
-      <HeroSection onOpenPricing={handleOpenPricing} />
+      {/* Hero with VSL */}
+      <HeroSection
+        onOpenPricing={() => {}}
+        challengePrice={97}
+        currency="USD"
+      />
 
-      {/* Founder's Transformation Story */}
-      <TransformationStory />
+      {/* Reopening Notice with Countdown */}
+      <section className="py-12 sm:py-16 lg:py-20 bg-black text-white">
+        <div className="w-full lg:max-w-[80%] mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6" style={{ fontFamily: 'Satoshi' }}>
+            Temporarily Closed Due to High Demand
+          </h2>
 
-      {/* Testimonials with Media Section */}
-      <TestimonialsWithMediaSection />
+          <p className="text-xl sm:text-2xl lg:text-3xl mb-8 sm:mb-12 text-yellow-100 font-bold" style={{ fontFamily: 'Satoshi' }}>
+            Reopening November 23rd for Guaranteed Access
+          </p>
 
-      {/* Platform Screenshots Carousel */}
-      <PlatformScreenshotsCarousel />
-
-      {/* How to Win Your Money Back - Moved before offer stack */}
-      <RefundRequirementsSection />
-
-      {/* Inline Pricing Section */}
-      <section className="py-6 sm:py-20 bg-white">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-[#000000] rounded-xl sm:rounded-3xl p-6 sm:p-8 lg:p-10 shadow-2xl text-white">
-            {/* Logo */}
-            <div className="flex justify-center mb-6 sm:mb-8">
-              <img
-                src="https://media.oracleboxing.com/Website/infinity_squared_white.svg"
-                alt="Oracle Boxing"
-                className="h-4 sm:h-5"
-                onError={(e) => {
-                  e.currentTarget.style.display = 'none'
-                }}
-              />
-            </div>
-
-            {/* Challenge Thumbnail */}
-            <div className="flex justify-center mb-6 sm:mb-8">
-              <img
-                src="https://media.oracleboxing.com/Website/skool_art.webp"
-                alt="6-Week Challenge"
-                className="w-full max-w-[280px] rounded-xl border-4 border-white shadow-lg"
-              />
-            </div>
-
-            {/* Heading */}
-            <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-center mb-6 sm:mb-8 uppercase px-4 whitespace-nowrap" style={{ fontFamily: "var(--font-satoshi)" }}>
-              6-WEEK CHALLENGE
-            </h3>
-
-            {/* Price Section */}
-            <div className="text-center mb-6 sm:mb-8">
-              <div className="flex items-center justify-center gap-3">
-                <ValuePrice usdAmount={totalValue} className="text-xl sm:text-2xl md:text-3xl font-bold opacity-60 line-through" />
-                <div className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black">
-                  <ChallengePrice />
+          {/* Countdown Timer */}
+          <div className="max-w-2xl mx-auto mb-8">
+            <div className="bg-white text-black rounded-2xl p-6 sm:p-8">
+              <div className="text-sm sm:text-base font-bold uppercase tracking-wide mb-4">
+                OPENS IN:
+              </div>
+              <div className="grid grid-cols-4 gap-2 sm:gap-4">
+                <div className="text-center">
+                  <div className="text-3xl sm:text-4xl lg:text-5xl font-black mb-1">
+                    {String(timeLeft.days).padStart(2, '0')}
+                  </div>
+                  <div className="text-xs sm:text-sm uppercase opacity-80">Days</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl sm:text-4xl lg:text-5xl font-black mb-1">
+                    {String(timeLeft.hours).padStart(2, '0')}
+                  </div>
+                  <div className="text-xs sm:text-sm uppercase opacity-80">Hours</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl sm:text-4xl lg:text-5xl font-black mb-1">
+                    {String(timeLeft.minutes).padStart(2, '0')}
+                  </div>
+                  <div className="text-xs sm:text-sm uppercase opacity-80">Minutes</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl sm:text-4xl lg:text-5xl font-black mb-1">
+                    {String(timeLeft.seconds).padStart(2, '0')}
+                  </div>
+                  <div className="text-xs sm:text-sm uppercase opacity-80">Seconds</div>
                 </div>
               </div>
-              <div className="text-sm text-white/80 mt-2">incl. all taxes</div>
-            </div>
-
-            {/* CTA Button */}
-            <a
-              href="/checkout?product=6wc&source=6wc-page"
-              className="w-full py-4 sm:py-5 lg:py-6 px-6 sm:px-8 lg:px-12 bg-yellow-100 text-[#000000] font-black text-xl sm:text-2xl md:text-3xl rounded-xl mb-4 sm:mb-6 uppercase tracking-wide min-h-[60px] sm:min-h-[64px] lg:min-h-[72px] shadow-lg hover:bg-white transition-all duration-200 flex items-center justify-center gap-2"
-              style={{ cursor: 'pointer' }}
-            >
-              CHECKOUT
-              <span className="text-2xl sm:text-3xl">→</span>
-            </a>
-
-            {/* Payment Methods */}
-            <div className="payment_icons-group mb-6 sm:mb-8">
-              <img
-                loading="lazy"
-                alt=""
-                src="https://media.oracleboxing.com/Website/payment1.svg"
-                className="image-55"
-              />
-              <img
-                loading="lazy"
-                alt=""
-                src="https://media.oracleboxing.com/Website/payment2.svg"
-                className="image-55 second"
-              />
-              <img
-                loading="lazy"
-                alt=""
-                src="https://media.oracleboxing.com/Website/paypal2.svg"
-                className="image-55 bigger"
-              />
-              <img
-                loading="lazy"
-                src="https://media.oracleboxing.com/Website/klarna.svg"
-                alt=""
-                className="image-55 bigger-mobile"
-              />
-            </div>
-
-            {/* Benefits List */}
-            <div className="space-y-3 sm:space-y-4 mb-6 sm:mb-8">
-              {benefits.map((benefit, index) => (
-                <div key={index} className="flex items-start gap-3">
-                  <svg
-                    className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0 text-white mt-0.5"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                  <span className="text-sm sm:text-base md:text-lg font-medium leading-relaxed">
-                    <strong className="font-bold">{benefit.text}</strong>
-                    {benefit.bold}
-                  </span>
-                </div>
-              ))}
             </div>
           </div>
         </div>
       </section>
 
-      {/* Cost of Inaction Final CTA */}
-      <CostOfInactionCTA />
+      {/* Email Signup Form */}
+      <section className="py-12 sm:py-16 lg:py-20 bg-white">
+        <div className="w-full lg:max-w-[80%] mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-2xl mx-auto">
+            <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-center mb-4 sm:mb-6" style={{ fontFamily: 'Satoshi' }}>
+              Get Notified When We Reopen
+            </h3>
 
-      {/* FAQ Section */}
-      <FAQSection />
+            <p className="text-base sm:text-lg text-gray-700 text-center mb-8">
+              Sign up here to receive an email notification when the Six Week Challenge reopens on November 23rd
+            </p>
 
-      {/* Pricing Popup */}
-      <PricingPopup isOpen={isPricingPopupOpen} onClose={() => setIsPricingPopupOpen(false)} />
+            {!submitSuccess ? (
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label htmlFor="firstName" className="block text-sm font-bold text-gray-900 mb-2">
+                      First Name
+                    </label>
+                    <input
+                      type="text"
+                      id="firstName"
+                      value={firstName}
+                      onChange={(e) => setFirstName(e.target.value)}
+                      required
+                      className="w-full px-4 py-3 border-2 border-black rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
+                      placeholder="John"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="lastName" className="block text-sm font-bold text-gray-900 mb-2">
+                      Last Name
+                    </label>
+                    <input
+                      type="text"
+                      id="lastName"
+                      value={lastName}
+                      onChange={(e) => setLastName(e.target.value)}
+                      required
+                      className="w-full px-4 py-3 border-2 border-black rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
+                      placeholder="Doe"
+                    />
+                  </div>
+                </div>
 
-      {/* Footer only; header and consultation widget omitted for this page */}
+                <div>
+                  <label htmlFor="email" className="block text-sm font-bold text-gray-900 mb-2">
+                    Email Address
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    className="w-full px-4 py-3 border-2 border-black rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
+                    placeholder="john@example.com"
+                  />
+                </div>
+
+                {submitError && (
+                  <div className="p-4 bg-red-50 border-2 border-red-500 rounded-lg text-red-700 text-sm">
+                    {submitError}
+                  </div>
+                )}
+
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full py-4 px-8 bg-yellow-100 text-black border-4 border-black font-black text-xl rounded-xl uppercase tracking-wide shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:bg-white transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                  style={{ fontFamily: 'Satoshi' }}
+                >
+                  {isSubmitting ? 'SUBMITTING...' : 'NOTIFY ME →'}
+                </button>
+              </form>
+            ) : (
+              <div className="p-6 sm:p-8 bg-green-50 border-4 border-green-500 rounded-2xl text-center">
+                <div className="text-4xl mb-4">✓</div>
+                <h4 className="text-xl sm:text-2xl font-bold text-green-900 mb-2" style={{ fontFamily: 'Satoshi' }}>
+                  You're on the list!
+                </h4>
+                <p className="text-base sm:text-lg text-green-800">
+                  We'll email you when the challenge opens on November 23rd
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* Alternative Purchase Options */}
+      <section className="py-12 sm:py-16 lg:py-20 bg-gray-50">
+        <div className="w-full lg:max-w-[80%] mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-4xl mx-auto text-center">
+            <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4 sm:mb-6" style={{ fontFamily: 'Satoshi' }}>
+              Can't Wait Until November 23rd?
+            </h3>
+
+            <p className="text-base sm:text-lg text-gray-700 mb-8">
+              Alternatively, you can purchase the courses for life or buy the full access membership here
+            </p>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 max-w-3xl mx-auto">
+              <a
+                href="/"
+                className="py-4 px-6 bg-yellow-100 text-black border-4 border-black font-black text-lg rounded-xl uppercase tracking-wide shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:bg-white transition-all duration-200 flex items-center justify-center"
+                style={{ fontFamily: 'Satoshi' }}
+              >
+                Oracle Boxing Bundle →
+              </a>
+
+              <a
+                href="/"
+                className="py-4 px-6 bg-yellow-100 text-black border-4 border-black font-black text-lg rounded-xl uppercase tracking-wide shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:bg-white transition-all duration-200 flex items-center justify-center"
+                style={{ fontFamily: 'Satoshi' }}
+              >
+                Full Access Membership →
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials */}
+      <section className="py-12 sm:py-16 lg:py-20 bg-white">
+        <div className="w-full lg:max-w-[80%] mx-auto px-4 sm:px-6 lg:px-8">
+          <h3 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-center mb-12 sm:mb-16" style={{ fontFamily: 'Satoshi' }}>
+            What Our Members Say
+          </h3>
+
+          <div className="max-w-4xl mx-auto space-y-8 sm:space-y-12">
+            {testimonials.map((testimonial, index) => (
+              <div key={index} className="bg-white border-4 border-black rounded-2xl p-6 sm:p-8 shadow-lg">
+                <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-6 mb-4">
+                  <img
+                    src={testimonial.image}
+                    alt={testimonial.name}
+                    className="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover flex-shrink-0 border-2 border-black"
+                  />
+                  <div className="flex-1">
+                    <div className="font-bold text-xl sm:text-2xl text-black mb-1" style={{ fontFamily: 'Satoshi' }}>
+                      {testimonial.name}
+                    </div>
+                    <div className="text-sm sm:text-base text-gray-600 mb-4">
+                      {testimonial.role}
+                    </div>
+                    <blockquote className="text-base sm:text-lg text-gray-900 leading-relaxed">
+                      "{testimonial.quote}"
+                    </blockquote>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <Footer />
     </>
   )
