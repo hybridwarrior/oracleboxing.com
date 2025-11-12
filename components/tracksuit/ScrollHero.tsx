@@ -11,17 +11,17 @@ export function ScrollHero() {
     offset: ['start start', 'end start'],
   })
 
-  // Parallax effects
-  const textOpacity1 = useTransform(scrollYProgress, [0, 0.2, 0.4], [1, 0, 0])
-  const textOpacity2 = useTransform(scrollYProgress, [0.2, 0.4, 0.6], [0, 1, 0])
-  const textOpacity3 = useTransform(scrollYProgress, [0.4, 0.6, 0.8], [0, 1, 0])
-  const textOpacity4 = useTransform(scrollYProgress, [0.6, 0.8, 1], [0, 1, 1])
+  // Parallax effects with more spacing - each text gets ~25% of scroll
+  const textOpacity1 = useTransform(scrollYProgress, [0, 0.15, 0.25], [1, 1, 0])
+  const textOpacity2 = useTransform(scrollYProgress, [0.25, 0.35, 0.5], [0, 1, 0])
+  const textOpacity3 = useTransform(scrollYProgress, [0.5, 0.6, 0.75], [0, 1, 0])
+  const textOpacity4 = useTransform(scrollYProgress, [0.75, 0.85, 1], [0, 1, 1])
 
   const imageScale = useTransform(scrollYProgress, [0, 1], [1, 1.2])
   const imageOpacity = useTransform(scrollYProgress, [0, 0.5, 1], [0.3, 0.6, 1])
 
   return (
-    <div ref={containerRef} className="relative min-h-[200vh]">
+    <div ref={containerRef} className="relative min-h-[400vh]">
       {/* Fixed viewport for parallax effect */}
       <div className="sticky top-0 h-screen w-full overflow-hidden">
         {/* Dark gradient background */}
