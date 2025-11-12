@@ -144,8 +144,7 @@ export async function POST(req: NextRequest) {
       console.log('🔍 ABANDONED CART: Total amount:', totalAmount);
       console.log('🔍 ABANDONED CART: About to call sendInitiatedCheckout...');
 
-      // Send webhook with all data (fire-and-forget, don't block checkout)
-      // Don't await - let it run in background
+      // Send webhook with all data (fire-and-forget, returns immediately)
       sendInitiatedCheckout({
         sessionId: session.id,
         checkoutUrl: session.url || pageUrl || 'https://oracleboxing.com',
@@ -182,16 +181,9 @@ export async function POST(req: NextRequest) {
         } : undefined,
         cookieData: cookieData, // ALL cookie tracking data
         facebookParams: fbParams, // Facebook Parameter Builder data
-      }).then(() => {
-        console.log('✅ ABANDONED CART: Webhook call initiated successfully');
-      }).catch(err => {
-        // Log but don't fail checkout if webhook fails
-        console.error('❌ ABANDONED CART: Failed to send initiated checkout webhook:', err);
-        console.error('❌ ABANDONED CART: Error stack:', err?.stack);
-        console.error('❌ ABANDONED CART: This usually means the Make.com scenario is turned OFF or the webhook URL is incorrect');
       });
 
-      console.log('✅ ABANDONED CART: sendInitiatedCheckout call completed (async)');
+      console.log('✅ ABANDONED CART: sendInitiatedCheckout queued for background processing');
     } else {
       console.error('❌ ABANDONED CART: Webhook NOT sent - customerInfo.email is missing!');
       console.error('❌ ABANDONED CART: customerInfo value:', customerInfo);
