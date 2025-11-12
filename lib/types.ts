@@ -66,6 +66,7 @@ export interface CartItem {
   quantity: number
   variant?: MerchVariant
   price_id: string
+  metadata?: Record<string, string> // Additional metadata for tracksuit (size, color, etc.)
 }
 
 export interface Cart {

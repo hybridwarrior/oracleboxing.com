@@ -165,6 +165,44 @@ Best value for serious boxers committed to long-term excellence.`,
     shortDescription: 'Best Value With Annual Commitment',
     perfectFor: 'Serious boxers committed to long-term excellence',
   },
+
+  // MERCHANDISE
+  {
+    id: 'tracksuit',
+    title: 'Oracle Boxing Tracksuit',
+    price: 115,
+    type: 'merch',
+    metadata: 'ts',
+    stripe_product_id: 'prod_TPWkJTEN5gr9BR',
+    stripe_price_id: 'prod_TPWkJTEN5gr9BR', // Single product ID, metadata handles variants
+    image: 'https://media.oracleboxing.com/Website/tracksuit-placeholder.png',
+    prices: {
+      gbp: 115,
+      usd: 145,
+      eur: 135,
+      aud: 215,
+      cad: 195,
+    },
+    description: `**Oracle Boxing Tracksuit — Built as Armour**
+
+Heavyweight 100% cotton tracksuit designed for boxers who move with quiet confidence.
+
+**Details:**
+• 100% cotton, 470-500 gsm garment-dyed fleece
+• Relaxed athletic fit — true to size
+• Breathable, structured, built to last
+• Ships before Christmas
+• Limited to 50 units worldwide
+
+**What's Included:**
+• Premium heavyweight hoodie
+• Matching joggers
+• Subtle branding — unmistakably boxer
+
+The way people treat you changes when they know you can fight. This tracksuit was designed so that from the front or back, people know — without you saying a word.`,
+    shortDescription: 'Heavyweight tracksuit built as armour for boxers',
+    perfectFor: 'Boxers who carry themselves with quiet certainty',
+  },
 ]
 
 // ===================================================================

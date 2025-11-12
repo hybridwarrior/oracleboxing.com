@@ -8,7 +8,7 @@ interface CartContextType {
   itemCount: number
   total: number
   hasPhysicalItems: boolean
-  addItem: (product: Product, variant?: MerchVariant) => void
+  addItem: (product: Product, variant?: MerchVariant, metadata?: Record<string, string>) => void
   removeItem: (productId: string, variantSku?: string) => void
   clearCart: () => void
 }
@@ -46,7 +46,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const total = items.reduce((sum, item) => sum + item.product.price * item.quantity, 0)
   const hasPhysicalItems = items.some(item => item.product.type === 'merch')
 
-  const addItem = (product: Product, variant?: MerchVariant) => {
+  const addItem = (product: Product, variant?: MerchVariant, metadata?: Record<string, string>) => {
     setItems(currentItems => {
       // Determine the price_id to use
       const price_id = variant ? variant.stripe_price_id : product.stripe_price_id
@@ -89,7 +89,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
           product,
           quantity: 1,
           variant,
-          price_id
+          price_id,
+          metadata
         }
       ]
     })

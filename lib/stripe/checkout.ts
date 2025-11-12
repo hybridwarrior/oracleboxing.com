@@ -202,6 +202,10 @@ export async function createCheckoutSession({
   const metadataFirstName = nameParts[0] || ''
   const metadataLastName = nameParts.slice(1).join(' ') || nameParts[0] || ''
 
+  // Collect tracksuit metadata if tracksuit in cart
+  const tracksuitItem = items.find(item => item.product.id === 'tracksuit')
+  const tracksuitMetadata = tracksuitItem?.metadata || {}
+
   sessionParams.metadata = {
     // Customer info
     customer_first_name: metadataFirstName,
@@ -224,6 +228,9 @@ export async function createCheckoutSession({
       quantity: i.quantity,
       price: i.product.price,
     }))),
+
+    // Tracksuit-specific metadata (size, color, SKU, cohort)
+    ...tracksuitMetadata,
 
     // Tracking params (referrer and UTM)
     referrer: trackingParams?.referrer || 'direct',
