@@ -326,10 +326,12 @@ export async function createCheckoutSession({
     // Cart summary
     cart_items: JSON.stringify(items.map(i => ({
       id: i.product.id,
+      title: i.product.title,
       metadata: i.product.metadata,
       quantity: i.quantity,
       price: i.product.price,
     }))),
+    product_name: mainProduct?.title || mainProduct?.id || '',
 
     // Merchandise-specific metadata (size, color, SKU, cohort)
     ...merchMetadata,

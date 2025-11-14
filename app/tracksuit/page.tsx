@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { MerchHeader } from '@/components/MerchHeader'
 import { Footer } from '@/components/Footer'
 import { Button } from '@/components/ui/button'
@@ -24,6 +24,35 @@ export default function TracksuitPage() {
 
   const product = getProductById('tracksuit')!
   const remainingStock = getRemainingStock()
+
+  // Preload all hoodie and tracksuit images on mount
+  useEffect(() => {
+    const colors = ['green', 'brown', 'blue', 'black']
+    const hoodieImages = ['hoodie_front', 'hoodie_back', 'hoodie_front_model', 'hoodie_back_model']
+    const tracksuitImages = ['jogger_front', 'jogger_back', 'jogger_front_model', 'jogger_back_model']
+
+    // Preload all tracksuit images (current page)
+    colors.forEach(color => {
+      tracksuitImages.forEach(image => {
+        const link = document.createElement('link')
+        link.rel = 'preload'
+        link.as = 'image'
+        link.href = `/images/${image}_${color}.webp`
+        document.head.appendChild(link)
+      })
+    })
+
+    // Preload all hoodie images (other page)
+    colors.forEach(color => {
+      hoodieImages.forEach(image => {
+        const link = document.createElement('link')
+        link.rel = 'preload'
+        link.as = 'image'
+        link.href = `/images/${image}_${color}.webp`
+        document.head.appendChild(link)
+      })
+    })
+  }, [])
 
   const handleAddToCart = () => {
     // Track AddToCart event
@@ -65,16 +94,9 @@ export default function TracksuitPage() {
           <p className="text-2xl text-gray-400 line-through" style={{ fontFamily: 'Zodiak, serif' }}>£150</p>
           <p className="text-2xl text-black font-bold" style={{ fontFamily: 'Zodiak, serif' }}>£130</p>
         </div>
-        <p className="text-sm text-gray-600 mb-3" style={{ fontFamily: 'Zodiak, serif' }}>
+        <p className="text-sm text-gray-600" style={{ fontFamily: 'Zodiak, serif' }}>
           Buy 2 or more and get 10% off your entire order
         </p>
-        <a
-          href="/hoodie#product"
-          className="text-sm text-black font-bold underline bg-yellow-100 px-2 py-1 cursor-pointer inline-block"
-          style={{ fontFamily: 'Zodiak, serif' }}
-        >
-          Want just the hoodie? →
-        </a>
       </div>
 
       {/* Product Selection Section */}
@@ -90,16 +112,9 @@ export default function TracksuitPage() {
                 <p className="text-2xl text-gray-400 line-through" style={{ fontFamily: 'Zodiak, serif' }}>£150</p>
                 <p className="text-2xl text-black font-bold" style={{ fontFamily: 'Zodiak, serif' }}>£130</p>
               </div>
-              <p className="text-sm text-gray-600 mb-3" style={{ fontFamily: 'Zodiak, serif' }}>
+              <p className="text-sm text-gray-600" style={{ fontFamily: 'Zodiak, serif' }}>
                 Buy 2 or more and get 10% off your entire order
               </p>
-              <a
-                href="/hoodie#product"
-                className="text-sm text-black font-bold underline bg-yellow-100 px-2 py-1 cursor-pointer inline-block"
-                style={{ fontFamily: 'Zodiak, serif' }}
-              >
-                Want just the hoodie? →
-              </a>
             </div>
 
             <p className="text-black leading-relaxed mb-4" style={{ fontFamily: 'Zodiak, serif' }}>
@@ -137,6 +152,17 @@ export default function TracksuitPage() {
             Add to Cart
             <ShoppingCart className="w-6 h-6 ml-2" />
           </Button>
+
+          {/* Cross-sell Link */}
+          <div className="text-left">
+            <a
+              href="/hoodie#product"
+              className="text-sm text-black font-bold underline cursor-pointer inline-block"
+              style={{ fontFamily: 'Zodiak, serif' }}
+            >
+              Get just the hoodie →
+            </a>
+          </div>
 
           {/* Product Details Accordion */}
           <ProductAccordion />

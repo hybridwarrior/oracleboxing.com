@@ -96,11 +96,16 @@ export async function POST(req: NextRequest) {
     // Detect physical items
     const hasPhysicalItems = serverSideItems.some(item => item.product.type === 'merch')
 
+    // Determine success URL based on whether cart contains merchandise
+    const successUrl = hasPhysicalItems
+      ? 'https://oracleboxing.com/success/merch?session_id={CHECKOUT_SESSION_ID}'
+      : 'https://oracleboxing.com/success/{CHECKOUT_SESSION_ID}'
+
     // Create checkout session with server-side products (correct env vars)
     const session = await createCheckoutSession({
       items: serverSideItems,
       hasPhysicalItems,
-      successUrl: 'https://oracleboxing.com/success/{CHECKOUT_SESSION_ID}', // Will be modified by checkout.ts
+      successUrl,
       cancelUrl: 'https://oracleboxing.com/',
       customerInfo,
       currency: currency || 'USD',
