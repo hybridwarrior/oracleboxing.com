@@ -28,6 +28,7 @@ export const metadata: Metadata = {
     title: 'Boxing Roadmap | Oracle Boxing',
     description: 'Follow a clear 5-phase system with 75 structured lessons that takes you from your first stance to sparring-ready.',
     images: ['https://media.oracleboxing.com/Website/optimized/products/tbrtn5hq-large.webp'],
+    creator: '@oracleboxing',
   },
 }
 

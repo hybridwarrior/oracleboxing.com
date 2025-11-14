@@ -28,6 +28,7 @@ export const metadata: Metadata = {
     title: 'Boxing Masterclass | Oracle Boxing',
     description: 'Master the science of boxing through 26 comprehensive lessons covering mind, body, movement, tactics, and conditioning.',
     images: ['https://media.oracleboxing.com/Website/optimized/products/bffp_tn5-large.webp'],
+    creator: '@oracleboxing',
   },
 }
 

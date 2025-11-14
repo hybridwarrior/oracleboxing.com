@@ -28,6 +28,7 @@ export const metadata: Metadata = {
     title: 'Oracle Boxing Bundle | Complete Boxing System',
     description: 'Get the complete Oracle Boxing system: 225+ lessons, 220+ coaching calls, lifetime access. Save $144.',
     images: ['https://media.oracleboxing.com/Website/optimized/products/obm_tn-large.webp'],
+    creator: '@oracleboxing',
   },
 }
 

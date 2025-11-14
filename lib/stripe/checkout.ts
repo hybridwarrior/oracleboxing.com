@@ -85,6 +85,11 @@ export async function createCheckoutSession({
   cookieData,
   fbParams,
 }: CreateCheckoutSessionParams): Promise<Stripe.Checkout.Session> {
+  // Calculate total items to determine if discount applies (10% off for 2+ items)
+  const totalItems = items.reduce((sum, item) => sum + item.quantity, 0)
+  const hasMultiItemDiscount = totalItems >= 2
+  const discountMultiplier = hasMultiItemDiscount ? 0.9 : 1.0 // 10% off if 2+ items
+
   // Convert cart items to Stripe line items, using correct price ID for currency
   const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] = items.map(item => {
     // Build description with size and color for merchandise items
@@ -104,6 +109,11 @@ export async function createCheckoutSession({
         parts.push(`Joggers: ${item.metadata.joggers_size}`)
       } else if (item.metadata.hoodie_size) {
         parts.push(`Size: ${item.metadata.hoodie_size}`)
+      }
+
+      // Add multi-item discount notice if applicable
+      if (hasMultiItemDiscount) {
+        parts.push('10% multi-item discount applied')
       }
 
       // Add shipping address if available
@@ -134,11 +144,14 @@ export async function createCheckoutSession({
     }
 
     // For merchandise with size/color, use price_data to add description and color-specific image
+    // Apply discount to merchandise items if 2+ items in cart
     if (description) {
+      const discountedPrice = Math.round(item.product.price * discountMultiplier * 100)
+
       return {
         price_data: {
           currency: currency.toLowerCase(),
-          unit_amount: Math.round(item.product.price * 100),
+          unit_amount: discountedPrice,
           product_data: {
             name: item.product.title,
             description: description,

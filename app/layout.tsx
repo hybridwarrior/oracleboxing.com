@@ -2,9 +2,12 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Oracle Boxing | Courses | Coaching | Community",
-  description: "Master Old School Boxing Anytime, Anywhere",
-  keywords: "boxing courses, boxing training, online boxing, boxing masterclass, boxing coaching, oracle boxing",
+  title: {
+    default: "Oracle Boxing | Master Old School Boxing Online",
+    template: "%s | Oracle Boxing"
+  },
+  description: "Transform your boxing with expert courses, live coaching, and a thriving community. Master the fundamentals, techniques, and tactics of old school boxing.",
+  keywords: "boxing courses, boxing training, online boxing, boxing masterclass, boxing coaching, oracle boxing, learn boxing online, boxing fundamentals",
   authors: [{ name: "Oracle Boxing" }],
   creator: "Oracle Boxing",
   publisher: "Oracle Boxing",
@@ -25,8 +28,8 @@ export const metadata: Metadata = {
     ],
   },
   openGraph: {
-    title: "Oracle Boxing | Courses | Coaching | Community",
-    description: "Master Old School Boxing Anytime, Anywhere",
+    title: "Oracle Boxing | Master Old School Boxing Online",
+    description: "Transform your boxing with expert courses, live coaching, and a thriving community.",
     url: 'https://oracleboxing.com',
     siteName: 'Oracle Boxing',
     locale: 'en_US',
@@ -42,9 +45,10 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: "Oracle Boxing | Courses | Coaching | Community",
-    description: "Master Old School Boxing Anytime, Anywhere",
+    title: "Oracle Boxing | Master Old School Boxing Online",
+    description: "Transform your boxing with expert courses, live coaching, and a thriving community.",
     images: ['https://media.oracleboxing.com/Website/optimized/products/obm_tn-large.webp'],
+    creator: '@oracleboxing',
   },
 };
 

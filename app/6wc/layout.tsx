@@ -28,6 +28,7 @@ export const metadata: Metadata = {
     title: '6-Week Challenge | Oracle Boxing',
     description: 'Commit $197, train for 6 weeks, complete the requirements, and get a full refund.',
     images: ['https://media.oracleboxing.com/Website/skool_art.webp'],
+    creator: '@oracleboxing',
   },
 }
 

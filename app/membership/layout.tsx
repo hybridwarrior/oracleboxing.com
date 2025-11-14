@@ -28,6 +28,7 @@ export const metadata: Metadata = {
     title: 'Membership | Oracle Boxing',
     description: 'Join 300+ boxers training with daily live coaching calls, complete course access, and community support.',
     images: ['https://media.oracleboxing.com/Website/optimized/products/boxing_clinic-large.webp'],
+    creator: '@oracleboxing',
   },
 }
 
