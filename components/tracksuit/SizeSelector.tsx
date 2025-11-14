@@ -11,7 +11,7 @@ const sizes: TracksuitSize[] = ['XS', 'S', 'M', 'L', 'XL']
 
 export function SizeSelector({ selectedSize, onSizeChange }: SizeSelectorProps) {
   return (
-    <div className="space-y-3">
+    <div className="space-y-2 md:space-y-3">
       <label className="text-sm font-medium text-black">Size</label>
       <div className="grid grid-cols-5 gap-2">
         {sizes.map((size) => {
@@ -21,7 +21,7 @@ export function SizeSelector({ selectedSize, onSizeChange }: SizeSelectorProps) 
               key={size}
               onClick={() => onSizeChange(size)}
               className={`
-                px-4 py-3 rounded-lg font-medium transition-all text-sm
+                px-3 py-2 md:px-4 md:py-3 rounded-lg font-medium transition-all text-sm
                 ${
                   isSelected
                     ? 'bg-yellow-100 text-black border-2 border-black'

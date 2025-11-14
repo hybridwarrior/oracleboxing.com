@@ -56,6 +56,39 @@
   font-display: swap;
 }
 
+/* Zodiak Font Family */
+@font-face {
+  font-family: 'Zodiak';
+  src: url('/fonts/Zodiak/Zodiak-Variable.woff2') format('woff2-variations');
+  font-weight: 100 900;
+  font-display: swap;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Zodiak';
+  src: url('/fonts/Zodiak/Zodiak-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Zodiak';
+  src: url('/fonts/Zodiak/Zodiak-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Zodiak';
+  src: url('/fonts/Zodiak/Zodiak-Black.woff2') format('woff2');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* ClashDisplay Font Family */
 @font-face {
   font-family: 'ClashDisplay';

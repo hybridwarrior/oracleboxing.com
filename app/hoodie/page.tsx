@@ -5,8 +5,7 @@ import { MerchHeader } from '@/components/MerchHeader'
 import { Footer } from '@/components/Footer'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { HoodieScrollHero } from '@/components/tracksuit/HoodieScrollHero'
-import { ImageGallery } from '@/components/tracksuit/ImageGallery'
+import { HoodieImageGallery } from '@/components/tracksuit/HoodieImageGallery'
 import { ColorSelector } from '@/components/tracksuit/ColorSelector'
 import { SizeSelector } from '@/components/tracksuit/SizeSelector'
 import { SizeGuideModal } from '@/components/tracksuit/SizeGuideModal'
@@ -47,125 +46,102 @@ export default function HoodiePage() {
   return (
     <>
       <MerchHeader />
-      {/* Hero Section with Scroll Animations */}
-      <HoodieScrollHero />
+
+      {/* Pre-Order Banner */}
+      <div className="bg-yellow-100 border-b-2 border-black py-2 px-4 text-center">
+        <p className="text-sm md:text-base font-bold text-black" style={{ fontFamily: 'Zodiak, serif' }}>
+          Pre-orders will be shipped before Christmas
+        </p>
+      </div>
 
       {/* Product Selection Section */}
-      <section id="product" className="py-20 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <div className="grid lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
-            {/* Left: Image Gallery */}
-            <ImageGallery selectedColor={selectedColor} />
+      <HoodieImageGallery selectedColor={selectedColor}>
+        <div className="space-y-6 md:space-y-8">
+          <div>
+            <h1 className="text-4xl md:text-5xl font-bold text-black mb-4" style={{ fontFamily: 'Zodiak, serif' }}>
+              HOODIE
+            </h1>
+            <p className="text-2xl text-black mb-6" style={{ fontFamily: 'Zodiak, serif' }}>£80</p>
 
-            {/* Right: Product Selector */}
-            <div className="space-y-8">
-              <div>
-                <h1 className="text-4xl md:text-5xl font-bold text-black mb-4">
-                  Oracle Boxing Hoodie
-                </h1>
-                <p className="text-2xl text-black mb-6">£80</p>
+            <p className="text-black leading-relaxed mb-4" style={{ fontFamily: 'Zodiak, serif' }}>
+              Heavyweight 100% cotton hoodie.
+              Built as armour, for those who live by the discipline of boxing.
+            </p>
 
-                <p className="text-black leading-relaxed mb-4">
-                  Heavyweight 100% cotton hoodie.
-                  Built as armour, for those who live by the discipline of boxing.
-                </p>
-
-                <a
-                  href="/tracksuit"
-                  className="text-sm text-black font-bold underline bg-yellow-100 px-2 py-1 cursor-pointer inline-block"
-                >
-                  Want the full tracksuit? →
-                </a>
-              </div>
-
-              {/* Color Selector */}
-              <ColorSelector selectedColor={selectedColor} onColorChange={setSelectedColor} />
-
-              {/* Size Selector */}
-              <SizeSelector selectedSize={selectedSize} onSizeChange={setSelectedSize} />
-
-              {/* Size Guide */}
-              <SizeGuideModal />
-
-              {/* Add to Cart Button */}
-              <Button
-                onClick={handleAddToCart}
-                size="lg"
-                className="w-full bg-yellow-100 text-black hover:bg-black hover:text-white border-2 border-black text-lg py-6 font-black uppercase tracking-wide"
-              >
-                Add to Cart
-                <ShoppingCart className="w-5 h-5 ml-2" />
-              </Button>
-
-              {/* Product Details Accordion */}
-              <ProductAccordion />
-            </div>
+            <a
+              href="/tracksuit"
+              className="text-sm text-black font-bold underline bg-yellow-100 px-2 py-1 cursor-pointer inline-block"
+              style={{ fontFamily: 'Zodiak, serif' }}
+            >
+              Want the full tracksuit? →
+            </a>
           </div>
+
+          {/* Color Selector */}
+          <ColorSelector selectedColor={selectedColor} onColorChange={setSelectedColor} />
+
+          {/* Size Selector */}
+          <SizeSelector selectedSize={selectedSize} onSizeChange={setSelectedSize} />
+
+          {/* Size Guide */}
+          <SizeGuideModal />
+
+          {/* Add to Cart Button */}
+          <Button
+            onClick={handleAddToCart}
+            size="lg"
+            className="w-full bg-yellow-100 text-black hover:bg-black hover:text-white border-2 border-black text-lg md:py-6 py-4 font-black uppercase tracking-wide cursor-pointer"
+            style={{ fontFamily: 'Zodiak, serif' }}
+          >
+            Add to Cart
+            <ShoppingCart className="w-5 h-5 ml-2" />
+          </Button>
+
+          {/* Product Details Accordion */}
+          <ProductAccordion />
         </div>
-      </section>
+      </HoodieImageGallery>
 
       {/* Why Pre-Order Section */}
       <section className="py-20 bg-white">
         <div className="container mx-auto px-4 max-w-4xl">
-          <h2 className="text-3xl md:text-4xl font-bold text-black mb-12 text-center">
+          <h2 className="text-3xl md:text-4xl font-bold text-black mb-12 text-center" style={{ fontFamily: 'Zodiak, serif' }}>
             Why Pre-Order Now
           </h2>
           <div className="grid md:grid-cols-3 gap-8">
-            <div className="space-y-3">
-              <div className="w-12 h-12 rounded-full bg-yellow-100 flex items-center justify-center">
+            <div className="flex md:flex-col gap-4 md:gap-0 md:space-y-3">
+              <div className="w-12 h-12 flex-shrink-0 rounded-full bg-yellow-100 flex items-center justify-center">
                 <Check className="w-6 h-6 text-black" />
               </div>
-              <h3 className="text-xl font-semibold text-black">Limited Stock</h3>
-              <p className="text-black">
-                When the main sale opens mid-January, there's no guarantee you'll get one, 50 units max, no restock.
-              </p>
+              <div className="flex-1 space-y-2">
+                <h3 className="text-xl font-semibold text-black" style={{ fontFamily: 'Zodiak, serif' }}>Limited Stock</h3>
+                <p className="text-black" style={{ fontFamily: 'Zodiak, serif' }}>
+                  When the main sale opens mid-January, there's no guarantee you'll get one, 50 units max, no restock.
+                </p>
+              </div>
             </div>
-            <div className="space-y-3">
-              <div className="w-12 h-12 rounded-full bg-yellow-100 flex items-center justify-center">
+            <div className="flex md:flex-col gap-4 md:gap-0 md:space-y-3">
+              <div className="w-12 h-12 flex-shrink-0 rounded-full bg-yellow-100 flex items-center justify-center">
                 <Truck className="w-6 h-6 text-black" />
               </div>
-              <h3 className="text-xl font-semibold text-black">Ships First</h3>
-              <p className="text-black">
-                Pre-orders ship before Christmas, you'll wear it while everyone else waits.
-              </p>
+              <div className="flex-1 space-y-2">
+                <h3 className="text-xl font-semibold text-black" style={{ fontFamily: 'Zodiak, serif' }}>Ships First</h3>
+                <p className="text-black" style={{ fontFamily: 'Zodiak, serif' }}>
+                  Pre-orders ship before Christmas, you'll wear it while everyone else waits.
+                </p>
+              </div>
             </div>
-            <div className="space-y-3">
-              <div className="w-12 h-12 rounded-full bg-yellow-100 flex items-center justify-center">
+            <div className="flex md:flex-col gap-4 md:gap-0 md:space-y-3">
+              <div className="w-12 h-12 flex-shrink-0 rounded-full bg-yellow-100 flex items-center justify-center">
                 <Shield className="w-6 h-6 text-black" />
               </div>
-              <h3 className="text-xl font-semibold text-black">Lock Your Size</h3>
-              <p className="text-black">
-                If you want a specific colour and size, this is your only shot to lock it in.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Design Intent Section */}
-      <section className="py-20 bg-gray-50">
-        <div className="container mx-auto px-4 max-w-5xl">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div className="space-y-6">
-              <h2 className="text-3xl md:text-4xl font-bold text-black">
-                Designed as Armour
-              </h2>
-              <div className="space-y-4 text-black leading-relaxed">
-                <p>
-                  Boxing changes how you move, and how the world responds to you.
-                  The Oracle Boxing hoodie was built to reflect that energy: confidence without arrogance.
-                </p>
-                <p>
-                  The silhouette is clean, the branding subtle, the fabric uncompromising.
-                  It's for boxers who carry themselves with quiet certainty, not flash.
-                </p>
-                <p>
-                  Premium heavyweight cotton. Breathable, not fluffy. Built to outlast every cheap gym set you've ever owned.
-                  Supporting real boxers and real craftsmanship.
+              <div className="flex-1 space-y-2">
+                <h3 className="text-xl font-semibold text-black" style={{ fontFamily: 'Zodiak, serif' }}>Lock Your Size</h3>
+                <p className="text-black" style={{ fontFamily: 'Zodiak, serif' }}>
+                  If you want a specific colour and size, this is your only shot to lock it in.
                 </p>
               </div>
             </div>
-            <div className="aspect-[4/5] bg-gradient-to-br from-gray-300 to-gray-400 rounded-lg" />
           </div>
         </div>
       </section>
@@ -173,14 +149,14 @@ export default function HoodiePage() {
       {/* FAQ Section */}
       <section className="py-20 bg-white">
         <div className="container mx-auto px-4 max-w-3xl">
-          <h2 className="text-3xl md:text-4xl font-bold text-black mb-12 text-center">
+          <h2 className="text-3xl md:text-4xl font-bold text-black mb-12 text-center" style={{ fontFamily: 'Zodiak, serif' }}>
             Frequently Asked Questions
           </h2>
           <div className="space-y-6">
             {tracksuitConfig.faq.map((item, i) => (
               <div key={i} className="border-b border-gray-300 pb-6">
-                <h3 className="text-lg font-semibold text-black mb-3">{item.question}</h3>
-                <p className="text-black leading-relaxed">{item.answer}</p>
+                <h3 className="text-lg font-semibold text-black mb-3" style={{ fontFamily: 'Zodiak, serif' }}>{item.question}</h3>
+                <p className="text-black leading-relaxed" style={{ fontFamily: 'Zodiak, serif' }}>{item.answer}</p>
               </div>
             ))}
           </div>
@@ -188,9 +164,9 @@ export default function HoodiePage() {
       </section>
 
       {/* Final CTA Section */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-20 bg-black">
         <div className="container mx-auto px-4 text-center max-w-2xl">
-          <p className="text-2xl md:text-3xl text-black leading-relaxed">
+          <p className="text-2xl md:text-3xl text-white leading-relaxed" style={{ fontFamily: 'Zodiak, serif' }}>
             Every boxer needs armour. This is yours.
           </p>
         </div>

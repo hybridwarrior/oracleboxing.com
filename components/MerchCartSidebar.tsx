@@ -116,7 +116,7 @@ export function MerchCartSidebar() {
         <div className="flex flex-col h-full">
           {/* Header */}
           <div className="p-6 pb-4 mb-4">
-            <h2 className="text-2xl font-bold text-black">Review your cart</h2>
+            <h2 className="text-2xl font-bold text-black" style={{ fontFamily: 'Zodiak, serif' }}>Review your cart</h2>
             <button
               onClick={closeCart}
               className="absolute top-6 right-6 p-2 hover:bg-gray-100 rounded-full transition"
@@ -127,7 +127,7 @@ export function MerchCartSidebar() {
 
           {/* Cart Items */}
           {items.length === 0 ? (
-            <p className="text-gray-600 text-center py-8">Your cart is empty</p>
+            <p className="text-gray-600 text-center py-8" style={{ fontFamily: 'Zodiak, serif' }}>Your cart is empty</p>
           ) : (
             <>
               <div className="px-6 space-y-4 mb-4">
@@ -166,9 +166,9 @@ export function MerchCartSidebar() {
 
                       {/* Product Info - Middle Column */}
                       <div className="flex-1 flex flex-col justify-start">
-                        <h3 className="font-semibold text-black text-sm mb-1">{item.product.title}</h3>
-                        <p className="text-xs text-gray-600 mb-2">{variantText}</p>
-                        <p className="text-base font-bold text-black">£{item.product.price}</p>
+                        <h3 className="font-semibold text-black text-sm mb-1" style={{ fontFamily: 'Zodiak, serif' }}>{item.product.title}</h3>
+                        <p className="text-xs text-gray-600 mb-2" style={{ fontFamily: 'Zodiak, serif' }}>{variantText}</p>
+                        <p className="text-base font-bold text-black" style={{ fontFamily: 'Zodiak, serif' }}>£{item.product.price}</p>
                       </div>
 
                       {/* Controls - Right Column */}
@@ -195,6 +195,7 @@ export function MerchCartSidebar() {
                         <button
                           onClick={() => removeItem(item.product.id, item.metadata)}
                           className="text-xs text-gray-600 underline cursor-pointer hover:text-black transition"
+                          style={{ fontFamily: 'Zodiak, serif' }}
                         >
                           Remove
                         </button>
@@ -206,11 +207,11 @@ export function MerchCartSidebar() {
 
               {/* Subtotal Divider */}
               <div className="bg-black py-4 px-4 mb-4">
-                <div className="flex justify-between text-lg font-bold text-white">
+                <div className="flex justify-between text-lg font-bold text-white" style={{ fontFamily: 'Zodiak, serif' }}>
                   <span>Subtotal</span>
                   <span>£{total.toFixed(2)}</span>
                 </div>
-                <p className="text-sm text-gray-300 mt-1">Shipping calculated at checkout</p>
+                <p className="text-sm text-gray-300 mt-1" style={{ fontFamily: 'Zodiak, serif' }}>Shipping calculated at checkout</p>
               </div>
 
               {/* Checkout Form */}
@@ -218,11 +219,11 @@ export function MerchCartSidebar() {
                 <div className="px-6">
                 {/* Contact Info */}
                 <div className="mb-3">
-                  <h3 className="text-sm font-bold text-black mb-2">Contact Information</h3>
+                  <h3 className="text-sm font-bold text-black mb-2" style={{ fontFamily: 'Zodiak, serif' }}>Contact Information</h3>
                   <div className="space-y-2">
                     <div className="grid grid-cols-2 gap-2">
                       <div>
-                        <label htmlFor="firstName" className="block text-xs font-medium text-gray-700 mb-1">
+                        <label htmlFor="firstName" className="block text-xs font-medium text-gray-700 mb-1" style={{ fontFamily: 'Zodiak, serif' }}>
                           First Name *
                         </label>
                         <Input
@@ -236,7 +237,7 @@ export function MerchCartSidebar() {
                         />
                       </div>
                       <div>
-                        <label htmlFor="lastName" className="block text-xs font-medium text-gray-700 mb-1">
+                        <label htmlFor="lastName" className="block text-xs font-medium text-gray-700 mb-1" style={{ fontFamily: 'Zodiak, serif' }}>
                           Last Name *
                         </label>
                         <Input
@@ -251,7 +252,7 @@ export function MerchCartSidebar() {
                       </div>
                     </div>
                     <div>
-                      <label htmlFor="email" className="block text-xs font-medium text-gray-700 mb-1">
+                      <label htmlFor="email" className="block text-xs font-medium text-gray-700 mb-1" style={{ fontFamily: 'Zodiak, serif' }}>
                         Email *
                       </label>
                       <Input
@@ -269,10 +270,10 @@ export function MerchCartSidebar() {
 
                 {/* Shipping Address */}
                 <div>
-                  <h3 className="text-sm font-bold text-black mb-2">Shipping Address</h3>
+                  <h3 className="text-sm font-bold text-black mb-2" style={{ fontFamily: 'Zodiak, serif' }}>Shipping Address</h3>
                   <div className="space-y-2">
                     <div>
-                      <label htmlFor="country" className="block text-xs font-medium text-gray-700 mb-1">
+                      <label htmlFor="country" className="block text-xs font-medium text-gray-700 mb-1" style={{ fontFamily: 'Zodiak, serif' }}>
                         Country *
                       </label>
                       <select
@@ -296,7 +297,7 @@ export function MerchCartSidebar() {
                         </select>
                     </div>
                     <div>
-                      <label htmlFor="addressLine1" className="block text-xs font-medium text-gray-700 mb-1">
+                      <label htmlFor="addressLine1" className="block text-xs font-medium text-gray-700 mb-1" style={{ fontFamily: 'Zodiak, serif' }}>
                         Address *
                       </label>
                       <Input
@@ -310,7 +311,7 @@ export function MerchCartSidebar() {
                       />
                     </div>
                     <div>
-                      <label htmlFor="addressLine2" className="block text-xs font-medium text-gray-700 mb-1">
+                      <label htmlFor="addressLine2" className="block text-xs font-medium text-gray-700 mb-1" style={{ fontFamily: 'Zodiak, serif' }}>
                         Apartment, suite, etc.
                       </label>
                       <Input
@@ -324,7 +325,7 @@ export function MerchCartSidebar() {
                     </div>
                     <div className="grid grid-cols-2 gap-2">
                       <div>
-                        <label htmlFor="city" className="block text-xs font-medium text-gray-700 mb-1">
+                        <label htmlFor="city" className="block text-xs font-medium text-gray-700 mb-1" style={{ fontFamily: 'Zodiak, serif' }}>
                           City *
                         </label>
                         <Input
@@ -338,7 +339,7 @@ export function MerchCartSidebar() {
                         />
                       </div>
                       <div>
-                        <label htmlFor="postalCode" className="block text-xs font-medium text-gray-700 mb-1">
+                        <label htmlFor="postalCode" className="block text-xs font-medium text-gray-700 mb-1" style={{ fontFamily: 'Zodiak, serif' }}>
                           {postalCodeLabel}
                         </label>
                         <Input
@@ -353,7 +354,7 @@ export function MerchCartSidebar() {
                       </div>
                     </div>
                     <div>
-                      <label htmlFor="state" className="block text-xs font-medium text-gray-700 mb-1">
+                      <label htmlFor="state" className="block text-xs font-medium text-gray-700 mb-1" style={{ fontFamily: 'Zodiak, serif' }}>
                         State/County *
                       </label>
                       <Input
@@ -369,11 +370,17 @@ export function MerchCartSidebar() {
                   </div>
                 </div>
 
+                {/* Pre-Order Notice */}
+                <p className="text-xs text-gray-600 text-center mb-3" style={{ fontFamily: 'Zodiak, serif' }}>
+                  Pre-orders will be shipped before Christmas
+                </p>
+
                 {/* Submit Button */}
                 <Button
                   type="submit"
                   disabled={isProcessing}
-                  className="w-full bg-yellow-100 text-black hover:bg-black hover:text-white border-2 border-black text-base py-6 font-black uppercase tracking-wide mb-3"
+                  className="w-full bg-yellow-100 text-black hover:bg-black hover:text-white border-2 border-black text-base py-6 font-black uppercase tracking-wide mb-3 cursor-pointer"
+                  style={{ fontFamily: 'Zodiak, serif' }}
                 >
                   {isProcessing ? (
                     <>

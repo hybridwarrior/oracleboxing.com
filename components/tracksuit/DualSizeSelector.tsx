@@ -18,9 +18,9 @@ export function DualSizeSelector({
   onJoggersSizeChange
 }: DualSizeSelectorProps) {
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 md:space-y-6">
       {/* Hoodie Size */}
-      <div className="space-y-3">
+      <div className="space-y-2 md:space-y-3">
         <label className="text-sm font-medium text-black">Hoodie Size</label>
         <div className="grid grid-cols-5 gap-2">
           {sizes.map((size) => {
@@ -30,7 +30,7 @@ export function DualSizeSelector({
                 key={size}
                 onClick={() => onHoodieSizeChange(size)}
                 className={`
-                  px-4 py-3 rounded-lg font-medium transition-all text-sm
+                  px-3 py-2 md:px-4 md:py-3 rounded-lg font-medium transition-all text-sm
                   ${
                     isSelected
                       ? 'bg-yellow-100 text-black border-2 border-black'
@@ -47,7 +47,7 @@ export function DualSizeSelector({
       </div>
 
       {/* Joggers Size */}
-      <div className="space-y-3">
+      <div className="space-y-2 md:space-y-3">
         <label className="text-sm font-medium text-black">Joggers Size</label>
         <div className="grid grid-cols-5 gap-2">
           {sizes.map((size) => {
@@ -57,7 +57,7 @@ export function DualSizeSelector({
                 key={size}
                 onClick={() => onJoggersSizeChange(size)}
                 className={`
-                  px-4 py-3 rounded-lg font-medium transition-all text-sm
+                  px-3 py-2 md:px-4 md:py-3 rounded-lg font-medium transition-all text-sm
                   ${
                     isSelected
                       ? 'bg-yellow-100 text-black border-2 border-black'

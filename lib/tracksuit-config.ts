@@ -65,20 +65,8 @@ export const tracksuitConfig = {
   // FAQ content
   faq: [
     {
-      question: 'When will my order ship?',
-      answer: 'All pre-orders ship before 20 December 2025 (UK). You\'ll receive tracking information via email once your order ships.',
-    },
-    {
       question: 'How many are being made?',
-      answer: 'Roughly 50 total worldwide. This is a limited presale run — once they\'re gone, they\'re gone.',
-    },
-    {
-      question: 'Can I change my size after ordering?',
-      answer: 'Yes, within 24 hours of purchase. Email team@oracleboxing.com with your order number and new size preference.',
-    },
-    {
-      question: 'Do you ship worldwide?',
-      answer: 'Yes — we ship to UK, EU, US, Canada, Australia, and UAE. Shipping rates are calculated at checkout based on your location.',
+      answer: 'Roughly 50 total worldwide. This is a limited presale run, once they\'re gone, they\'re gone.',
     },
     {
       question: 'Can I return it?',
@@ -86,11 +74,19 @@ export const tracksuitConfig = {
     },
     {
       question: 'What is Atelier?',
-      answer: 'It means workshop. This tracksuit comes straight from ours — hand-designed for fighters.',
+      answer: 'It means workshop. This tracksuit comes straight from ours, hand-designed for fighters.',
     },
     {
       question: 'What\'s the fabric weight?',
-      answer: 'Premium heavyweight 100% cotton, 470-500 gsm (garment-dyed fleece). It\'s substantial, breathable, and built to last.',
+      answer: 'Premium heavyweight 100% cotton, 470-500 gsm (garment-dyed). It\'s substantial, breathable, and built to last.',
+    },
+    {
+      question: 'When will these officially launch?',
+      answer: 'These will officially launch mid-January.',
+    },
+    {
+      question: 'When can I expect to get them if I pre-order?',
+      answer: 'UK before Christmas, Rest of the World hopefully before the end of the year.',
     },
   ] as const,
 
