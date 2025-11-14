@@ -12,6 +12,9 @@ interface MerchCartItem {
 interface MerchCartContextType {
   items: MerchCartItem[]
   total: number
+  subtotal: number
+  discount: number
+  totalItems: number
   isOpen: boolean
   addItem: (product: Product, metadata?: Record<string, string>) => void
   removeItem: (productId: string, metadata?: Record<string, string>) => void
@@ -48,8 +51,13 @@ export function MerchCartProvider({ children }: { children: ReactNode }) {
     }
   }, [items, hydrated])
 
-  // Calculate total
-  const total = items.reduce((sum, item) => sum + item.product.price * item.quantity, 0)
+  // Calculate totals and discount
+  const totalItems = items.reduce((sum, item) => sum + item.quantity, 0)
+  const subtotal = items.reduce((sum, item) => sum + item.product.price * item.quantity, 0)
+
+  // Apply 10% discount if more than 1 item
+  const discount = totalItems > 1 ? subtotal * 0.1 : 0
+  const total = subtotal - discount
 
   const addItem = (product: Product, metadata?: Record<string, string>) => {
     setItems(prevItems => {
@@ -118,6 +126,9 @@ export function MerchCartProvider({ children }: { children: ReactNode }) {
       value={{
         items,
         total,
+        subtotal,
+        discount,
+        totalItems,
         isOpen,
         addItem,
         removeItem,

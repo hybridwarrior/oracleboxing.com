@@ -8,7 +8,7 @@ import { X, ArrowRight, Loader2, Trash2 } from 'lucide-react'
 import { getTrackingParams, getOrInitTrackingData } from '@/lib/tracking-cookies'
 
 export function MerchCartSidebar() {
-  const { items, total, isOpen, closeCart, removeItem, updateQuantity } = useMerchCart()
+  const { items, total, subtotal, discount, totalItems, isOpen, closeCart, removeItem, updateQuantity } = useMerchCart()
   const [isProcessing, setIsProcessing] = useState(false)
 
   // Customer info
@@ -207,11 +207,23 @@ export function MerchCartSidebar() {
 
               {/* Subtotal Divider */}
               <div className="bg-black py-4 px-4 mb-4">
-                <div className="flex justify-between text-lg font-bold text-white" style={{ fontFamily: 'Zodiak, serif' }}>
-                  <span>Subtotal</span>
-                  <span>£{total.toFixed(2)}</span>
+                <div className="space-y-2">
+                  <div className="flex justify-between text-base text-white" style={{ fontFamily: 'Zodiak, serif' }}>
+                    <span>Subtotal</span>
+                    <span>£{subtotal.toFixed(2)}</span>
+                  </div>
+                  {discount > 0 && (
+                    <div className="flex justify-between text-base text-yellow-100" style={{ fontFamily: 'Zodiak, serif' }}>
+                      <span>Multi-item discount (10%)</span>
+                      <span>-£{discount.toFixed(2)}</span>
+                    </div>
+                  )}
+                  <div className="flex justify-between text-lg font-bold text-white pt-2 border-t border-gray-700" style={{ fontFamily: 'Zodiak, serif' }}>
+                    <span>Total</span>
+                    <span>£{total.toFixed(2)}</span>
+                  </div>
                 </div>
-                <p className="text-sm text-gray-300 mt-1" style={{ fontFamily: 'Zodiak, serif' }}>Shipping calculated at checkout</p>
+                <p className="text-sm text-gray-300 mt-2" style={{ fontFamily: 'Zodiak, serif' }}>Shipping calculated at checkout</p>
               </div>
 
               {/* Checkout Form */}
