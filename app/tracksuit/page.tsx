@@ -64,9 +64,12 @@ export default function TracksuitPage() {
               TRACKSUIT
             </h1>
             <div className="mb-6">
-              <p className="text-2xl text-black mb-2" style={{ fontFamily: 'Zodiak, serif' }}>£130</p>
+              <div className="flex items-center gap-3 mb-2">
+                <p className="text-2xl text-gray-400 line-through" style={{ fontFamily: 'Zodiak, serif' }}>£150</p>
+                <p className="text-2xl text-black font-bold" style={{ fontFamily: 'Zodiak, serif' }}>£130</p>
+              </div>
               <p className="text-sm text-gray-600" style={{ fontFamily: 'Zodiak, serif' }}>
-                Buy 2+ items and get 10% off your entire order
+                Buy 2 or more and get 10% off your entire order
               </p>
             </div>
 

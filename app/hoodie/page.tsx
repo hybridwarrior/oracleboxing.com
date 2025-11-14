@@ -64,7 +64,7 @@ export default function HoodiePage() {
             <div className="mb-6">
               <p className="text-2xl text-black mb-2" style={{ fontFamily: 'Zodiak, serif' }}>£80</p>
               <p className="text-sm text-gray-600" style={{ fontFamily: 'Zodiak, serif' }}>
-                Buy 2+ items and get 10% off your entire order
+                Buy 2 or more and get 10% off your entire order
               </p>
             </div>
 
