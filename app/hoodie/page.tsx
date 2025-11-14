@@ -18,7 +18,7 @@ import { fbTrack } from '@/lib/fbpixel'
 
 export default function HoodiePage() {
   const { addItem } = useMerchCart()
-  const [selectedColor, setSelectedColor] = useState<TracksuitColor>('Hazel')
+  const [selectedColor, setSelectedColor] = useState<TracksuitColor>('Forest')
   const [selectedSize, setSelectedSize] = useState<TracksuitSize>('M')
 
   const product = getProductById('hoodie')!
@@ -54,37 +54,50 @@ export default function HoodiePage() {
         </p>
       </div>
 
+      {/* Mobile: Product info above carousel */}
+      <div className="lg:hidden px-6 pt-6 pb-4 bg-gray-50">
+        <h1 className="text-4xl font-bold text-black mb-3" style={{ fontFamily: 'Zodiak, serif' }}>
+          HOODIE
+        </h1>
+        <p className="text-2xl text-black mb-2" style={{ fontFamily: 'Zodiak, serif' }}>£80</p>
+        <p className="text-sm text-gray-600 mb-3" style={{ fontFamily: 'Zodiak, serif' }}>
+          Buy 2 or more and get 10% off your entire order
+        </p>
+        <a
+          href="/tracksuit"
+          className="text-sm text-black font-bold underline bg-yellow-100 px-2 py-1 cursor-pointer inline-block"
+          style={{ fontFamily: 'Zodiak, serif' }}
+        >
+          Want the full tracksuit? →
+        </a>
+      </div>
+
       {/* Product Selection Section */}
       <HoodieImageGallery selectedColor={selectedColor}>
         <div className="space-y-6 md:space-y-8">
-          <div>
+          {/* Desktop: Product info */}
+          <div className="hidden lg:block">
             <h1 className="text-4xl md:text-5xl font-bold text-black mb-4" style={{ fontFamily: 'Zodiak, serif' }}>
               HOODIE
             </h1>
-            {/* Mobile: Two-column layout for price and discount */}
-            <div className="mb-6 grid grid-cols-2 gap-4 lg:block">
-              <div>
-                <p className="text-2xl text-black" style={{ fontFamily: 'Zodiak, serif' }}>£80</p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-600" style={{ fontFamily: 'Zodiak, serif' }}>
-                  Buy 2 or more and get 10% off your entire order
-                </p>
-              </div>
+            <div className="mb-6">
+              <p className="text-2xl text-black mb-2" style={{ fontFamily: 'Zodiak, serif' }}>£80</p>
+              <p className="text-sm text-gray-600 mb-3" style={{ fontFamily: 'Zodiak, serif' }}>
+                Buy 2 or more and get 10% off your entire order
+              </p>
+              <a
+                href="/tracksuit"
+                className="text-sm text-black font-bold underline bg-yellow-100 px-2 py-1 cursor-pointer inline-block"
+                style={{ fontFamily: 'Zodiak, serif' }}
+              >
+                Want the full tracksuit? →
+              </a>
             </div>
 
             <p className="text-black leading-relaxed mb-4" style={{ fontFamily: 'Zodiak, serif' }}>
               Heavyweight 100% cotton hoodie.
               Built as armour, for those who live by the discipline of boxing.
             </p>
-
-            <a
-              href="/tracksuit"
-              className="text-sm text-black font-bold underline bg-yellow-100 px-2 py-1 cursor-pointer inline-block"
-              style={{ fontFamily: 'Zodiak, serif' }}
-            >
-              Want the full tracksuit? →
-            </a>
           </div>
 
           {/* Color Selector */}
@@ -93,18 +106,23 @@ export default function HoodiePage() {
           {/* Size Selector */}
           <SizeSelector selectedSize={selectedSize} onSizeChange={setSelectedSize} />
 
-          {/* Size Guide */}
-          <SizeGuideModal />
+          {/* Mobile: Description below size selector */}
+          <div className="lg:hidden">
+            <p className="text-black leading-relaxed" style={{ fontFamily: 'Zodiak, serif' }}>
+              Heavyweight 100% cotton hoodie.
+              Built as armour, for those who live by the discipline of boxing.
+            </p>
+          </div>
 
           {/* Add to Cart Button */}
           <Button
             onClick={handleAddToCart}
             size="lg"
-            className="w-full bg-yellow-100 text-black hover:bg-black hover:text-white border-2 border-black text-lg md:py-6 py-4 font-black uppercase tracking-wide cursor-pointer"
+            className="w-full bg-yellow-100 text-black hover:bg-black hover:text-white border-2 border-black text-xl md:text-2xl py-6 md:py-8 font-black uppercase tracking-wide cursor-pointer"
             style={{ fontFamily: 'Zodiak, serif' }}
           >
             Add to Cart
-            <ShoppingCart className="w-5 h-5 ml-2" />
+            <ShoppingCart className="w-6 h-6 ml-2" />
           </Button>
 
           {/* Product Details Accordion */}

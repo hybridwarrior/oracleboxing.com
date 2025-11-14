@@ -73,10 +73,6 @@ export const tracksuitConfig = {
       answer: 'Exchanges for defects only. We inspect every piece before shipping to ensure quality.',
     },
     {
-      question: 'What is Atelier?',
-      answer: 'It means workshop. This tracksuit comes straight from ours, hand-designed for fighters.',
-    },
-    {
       question: 'What\'s the fabric weight?',
       answer: 'Premium heavyweight 100% cotton, 470-500 gsm (garment-dyed). It\'s substantial, breathable, and built to last.',
     },

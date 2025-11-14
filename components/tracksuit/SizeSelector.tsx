@@ -1,6 +1,7 @@
 'use client'
 
 import { TracksuitSize } from '@/lib/tracksuit-config'
+import { SizeGuideModal } from './SizeGuideModal'
 
 interface SizeSelectorProps {
   selectedSize: TracksuitSize
@@ -12,7 +13,10 @@ const sizes: TracksuitSize[] = ['XS', 'S', 'M', 'L', 'XL']
 export function SizeSelector({ selectedSize, onSizeChange }: SizeSelectorProps) {
   return (
     <div className="space-y-2 md:space-y-3">
-      <label className="text-sm font-medium text-black">Size</label>
+      <div className="flex items-center justify-between">
+        <label className="text-sm font-medium text-black">Size</label>
+        <SizeGuideModal />
+      </div>
       <div className="grid grid-cols-5 gap-2">
         {sizes.map((size) => {
           const isSelected = selectedSize === size

@@ -13,7 +13,9 @@ export function ColorSelector({ selectedColor, onColorChange }: ColorSelectorPro
 
   return (
     <div className="space-y-3">
-      <label className="text-sm font-medium text-black">Color</label>
+      <div className="flex items-center justify-between">
+        <label className="text-sm font-medium text-black">Colour: {selectedColor}</label>
+      </div>
       <div className="flex gap-3">
         {colors.map(([colorName, colorData]) => {
           const isSelected = selectedColor === colorName
@@ -35,7 +37,6 @@ export function ColorSelector({ selectedColor, onColorChange }: ColorSelectorPro
           )
         })}
       </div>
-      <p className="text-xs text-black mt-2">Selected: {selectedColor}</p>
     </div>
   )
 }

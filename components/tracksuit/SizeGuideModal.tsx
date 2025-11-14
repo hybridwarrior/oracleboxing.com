@@ -17,7 +17,7 @@ export function SizeGuideModal() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <button className="text-sm text-gray-400 hover:text-black transition-colors flex items-center gap-1.5">
+        <button className="text-sm text-black hover:text-gray-600 transition-colors flex items-center gap-1.5">
           <Ruler className="w-4 h-4" />
           Size Guide
         </button>

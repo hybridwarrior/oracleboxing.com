@@ -1,6 +1,7 @@
 'use client'
 
 import { TracksuitSize } from '@/lib/tracksuit-config'
+import { SizeGuideModal } from './SizeGuideModal'
 
 interface DualSizeSelectorProps {
   hoodieSize: TracksuitSize
@@ -21,7 +22,10 @@ export function DualSizeSelector({
     <div className="space-y-4 md:space-y-6">
       {/* Hoodie Size */}
       <div className="space-y-2 md:space-y-3">
-        <label className="text-sm font-medium text-black">Hoodie Size</label>
+        <div className="flex items-center justify-between">
+          <label className="text-sm font-medium text-black">Hoodie Size</label>
+          <SizeGuideModal />
+        </div>
         <div className="grid grid-cols-5 gap-2">
           {sizes.map((size) => {
             const isSelected = hoodieSize === size
