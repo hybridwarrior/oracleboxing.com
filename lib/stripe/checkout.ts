@@ -259,7 +259,10 @@ export async function createCheckoutSession({
   let funnelType = 'course' // Default
   let successPath = '/success/course'
 
-  if (mainProduct?.id === '6wc' || mainProduct?.metadata === '6wc') {
+  if (mainProduct?.type === 'merch') {
+    funnelType = 'merch'
+    successPath = '/success/merch'
+  } else if (mainProduct?.id === '6wc' || mainProduct?.metadata === '6wc') {
     funnelType = '6wc'
     successPath = '/success/6wc'
   } else if (mainProduct?.id === 'bundle') {

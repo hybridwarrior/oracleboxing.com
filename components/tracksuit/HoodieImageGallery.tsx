@@ -33,6 +33,24 @@ export function HoodieImageGallery({ selectedColor, children }: HoodieImageGalle
   const [touchEnd, setTouchEnd] = useState(0)
   const colorName = colorNameMap[selectedColor]
 
+  // Preload all color variant images for instant switching
+  useEffect(() => {
+    const allColors: TracksuitColor[] = ['Forest', 'Hazel', 'Steel', 'Black']
+
+    allColors.forEach(color => {
+      const colorCode = colorNameMap[color]
+      imageConfigs.forEach(config => {
+        const imageUrl = config.type
+          ? `https://media.oracleboxing.com/tracksuit/${config.prefix}_${colorCode}_${config.angle}_${config.type}.webp`
+          : `https://media.oracleboxing.com/tracksuit/${config.prefix}_${colorCode}_${config.angle}.webp`
+
+        // Create image element to trigger browser preload
+        const img = new window.Image()
+        img.src = imageUrl
+      })
+    })
+  }, []) // Run once on mount
+
   // Sync page scroll to image scroll
   useEffect(() => {
     const handleScroll = () => {

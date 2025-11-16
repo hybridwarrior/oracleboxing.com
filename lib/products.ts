@@ -170,7 +170,7 @@ Best value for serious boxers committed to long-term excellence.`,
   {
     id: 'tracksuit',
     title: 'TRACKSUIT',
-    price: 130,
+    price: 125,
     type: 'merch',
     metadata: 'ts',
     stripe_product_id: 'prod_TPWkJTEN5gr9BR',
