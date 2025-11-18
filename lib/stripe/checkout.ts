@@ -548,6 +548,18 @@ export async function createCheckoutSession({
     line_items_count: sessionParams.line_items?.length,
   })
 
+  // DEBUG: Count metadata keys
+  const metadataKeys = Object.keys(sessionParams.metadata || {})
+  console.log('📊 Metadata key count:', metadataKeys.length)
+  console.log('📊 Metadata keys:', metadataKeys)
+
+  // Check for long values
+  Object.entries(sessionParams.metadata || {}).forEach(([key, value]) => {
+    if (value && value.length > 100) {
+      console.log(`⚠️ Long metadata value: ${key} = ${value.length} chars`)
+    }
+  })
+
   try {
     const session = await stripe.checkout.sessions.create(sessionParams)
     console.log('✅ Stripe session created successfully:', session.id)
