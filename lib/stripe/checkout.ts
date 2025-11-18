@@ -362,23 +362,15 @@ export async function createCheckoutSession({
     // Cross-sell tracking
     recommended_products: recommendedProducts.join(','),
 
-    // Cart summary (now includes item-level metadata)
-    cart_items: JSON.stringify(items.map(i => ({
-      id: i.product.id,
-      title: i.product.title,
-      metadata: i.product.metadata,
-      quantity: i.quantity,
-      price: i.product.price,
-      variant_metadata: i.metadata, // Add variant-specific metadata (color, size, SKU)
-    }))),
+    // Product info
     product_name: mainProduct?.title || mainProduct?.id || '',
+    product_id: mainProduct?.id || '',
 
     // Merchandise-specific metadata (individual fields for each merch item)
     ...merchMetadata,
 
-    // Aggregated merchandise variants summary (JSON string)
+    // Merchandise count
     ...(merchVariantsSummary.length > 0 ? {
-      merch_variants_summary: JSON.stringify(merchVariantsSummary),
       merch_items_count: merchVariantsSummary.length.toString(),
     } : {}),
 
@@ -497,20 +489,11 @@ export async function createCheckoutSession({
         product_name: mainProduct?.title || '',
         product_id: mainProduct?.id || '',
 
-        // Cart summary (with variant metadata)
-        cart_items: JSON.stringify(items.map(i => ({
-          id: i.product.id,
-          title: i.product.title,
-          qty: i.quantity,
-          variant_metadata: i.metadata, // Include variant-specific metadata
-        }))),
-
         // Merchandise-specific metadata (all items)
         ...merchMetadata,
 
-        // Aggregated merchandise variants summary
+        // Merchandise count
         ...(merchVariantsSummary.length > 0 ? {
-          merch_variants_summary: JSON.stringify(merchVariantsSummary),
           merch_items_count: merchVariantsSummary.length.toString(),
         } : {}),
 
@@ -545,9 +528,6 @@ export async function createCheckoutSession({
         // Product details
         product_name: mainProduct?.title || '',
         product_id: mainProduct?.id || '',
-
-        // Cart summary
-        cart_items: JSON.stringify(items.map(i => ({ id: i.product.id, qty: i.quantity }))),
 
         // Additional tracking
         fbclid: trackingParams?.fbclid || '',
