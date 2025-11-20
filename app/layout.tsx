@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     type: 'website',
     images: [
       {
-        url: 'https://media.oracleboxing.com/Website/optimized/products/obm_tn-large.webp',
+        url: 'https://media.oracleboxing.com/Website/skool_art.webp',
         width: 1200,
         height: 630,
         alt: 'Oracle Boxing - Master Old School Boxing',
@@ -47,7 +47,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: "Oracle Boxing | Master Old School Boxing Online",
     description: "Transform your boxing with expert courses, live coaching, and a thriving community.",
-    images: ['https://media.oracleboxing.com/Website/optimized/products/obm_tn-large.webp'],
+    images: ['https://media.oracleboxing.com/Website/skool_art.webp'],
     creator: '@oracleboxing',
   },
 };
