@@ -1,4 +1,4 @@
-export type ProductType = 'course' | 'membership' | 'merch'
+export type ProductType = 'course' | 'membership' | 'merch' | 'bfc' | 'bfc-vip'
 
 export interface MerchVariant {
   size: string
