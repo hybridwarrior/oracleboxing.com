@@ -265,10 +265,10 @@ export async function createCheckoutSession({
   } else if (mainProduct?.id === '6wc' || mainProduct?.metadata === '6wc') {
     funnelType = '6wc'
     successPath = '/success/6wc'
-  } else if (mainProduct?.type === 'bfc' || mainProduct?.metadata === 'bfc') {
+  } else if (mainProduct?.metadata === 'bfc') {
     funnelType = 'bfc'
     successPath = '/success/membership' // BFC uses membership success (coaching upsell)
-  } else if (mainProduct?.type === 'bfc-vip' || mainProduct?.metadata === 'bfc_vip') {
+  } else if (mainProduct?.metadata === 'bfc_vip') {
     funnelType = 'bfc-vip'
     successPath = '/success/membership' // BFC VIP uses membership success (coaching upsell)
   } else if (mainProduct?.id === 'bundle') {
@@ -291,11 +291,11 @@ export async function createCheckoutSession({
   let purchaseType = 'course' // Default
   if (mainProduct?.type === 'merch') {
     purchaseType = 'merch'
-  } else if (mainProduct?.id === '6wc') {
+  } else if (mainProduct?.id === '6wc' || mainProduct?.metadata === '6wc') {
     purchaseType = '6wc'
-  } else if (mainProduct?.type === 'bfc') {
+  } else if (mainProduct?.metadata === 'bfc') {
     purchaseType = 'bfc'
-  } else if (mainProduct?.type === 'bfc-vip') {
+  } else if (mainProduct?.metadata === 'bfc_vip') {
     purchaseType = 'bfc-vip'
   } else if (mainProduct?.type === 'membership') {
     purchaseType = 'membership'
