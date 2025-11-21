@@ -368,7 +368,12 @@ export default function MembershipsPage() {
                 { video: 'Maria.webm', poster: 'Maria_poster.webp' },
                 { video: 'zyginta.webm', poster: 'zyginta_poster.webp' }
               ].map((item, index) => (
-                <div key={index} className="relative flex-shrink-0 w-[70vw] sm:w-[320px] aspect-[9/16] rounded-xl overflow-hidden snap-center">
+                <div key={index} className="relative flex-shrink-0 w-[70vw] sm:w-[320px] aspect-[9/16] rounded-xl overflow-hidden snap-center bg-gray-200">
+                  {/* Poster image as background fallback */}
+                  <div
+                    className="absolute inset-0 bg-cover bg-center"
+                    style={{ backgroundImage: `url(https://media.oracleboxing.com/Website/transfo/${item.poster})` }}
+                  />
                   <video
                     ref={(el) => {
                       videoRefs.current[index] = el
@@ -380,7 +385,7 @@ export default function MembershipsPage() {
                     muted
                     playsInline
                     poster={`https://media.oracleboxing.com/Website/transfo/${item.poster}`}
-                    className="w-full h-full object-cover"
+                    className="relative w-full h-full object-cover"
                     preload="metadata"
                   >
                     <source src={`https://media.oracleboxing.com/Website/transfo/${item.video}`} type="video/webm" />
