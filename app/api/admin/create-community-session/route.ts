@@ -84,7 +84,7 @@ export async function POST(req: NextRequest) {
       ...pricingMetadata,
 
       // Override type
-      type: 'community_admin',
+      type: 'win',
 
       // Tracking params (referrer and UTM)
       referrer: trackingParams?.referrer || 'internal_community_tool',
