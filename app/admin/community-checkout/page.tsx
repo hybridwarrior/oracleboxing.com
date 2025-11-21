@@ -300,6 +300,9 @@ export default function AdminCommunityCheckout() {
                     <option value="first_4_months" disabled={!isDiscountEligible(tier, 'first_4_months')}>
                       First 4 Months (-$49.25/mo × 4) {!isDiscountEligible(tier, 'first_4_months') && '(Not available)'}
                     </option>
+                    <option value="97_off" disabled={!isDiscountEligible(tier, '97_off')}>
+                      $97 Off (-$97) {!isDiscountEligible(tier, '97_off') && '(Not available)'}
+                    </option>
                   </select>
 
                   {/* Warning for 3-month + challenge winner */}
@@ -415,6 +418,10 @@ export default function AdminCommunityCheckout() {
                 <li className="flex items-start gap-2">
                   <span className="text-gray-400 mt-0.5">•</span>
                   <span><strong>First 4 Months ($49.25/mo × 4):</strong> Only available for Monthly subscription - gives $49.25 off per month for the first 4 months.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-gray-400 mt-0.5">•</span>
+                  <span><strong>$97 Off:</strong> Available for all membership tiers - gives $97 off the total price.</span>
                 </li>
               </ul>
             </div>

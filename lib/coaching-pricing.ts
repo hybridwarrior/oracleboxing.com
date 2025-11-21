@@ -5,7 +5,7 @@
 // with flexible pricing, discounts, and payment plans
 
 export type CoachingTier = 'tier_1' | 'tier_2' | 'tier_3'
-export type CustomerDiscount = 'none' | 'challenge_winner' | 'existing_member'
+export type CustomerDiscount = 'none' | 'challenge_winner' | 'existing_member' | '97_off'
 export type PaymentPlan = 'full' | 'split_2' | 'monthly'
 export type Coach = 'Toni' | 'Charlie'
 
@@ -21,6 +21,7 @@ export const CUSTOMER_DISCOUNTS = {
   none: 0,
   challenge_winner: 197,
   existing_member: 297,
+  '97_off': 97,
 } as const
 
 // Split pay rates - divide tier price by 2 (not affected by discounts)
@@ -135,6 +136,8 @@ export function getCustomerDiscountDisplayName(discount: CustomerDiscount): stri
       return 'Challenge Winner'
     case 'existing_member':
       return 'Existing Member'
+    case '97_off':
+      return '$97 Off'
   }
 }
 

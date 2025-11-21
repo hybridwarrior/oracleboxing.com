@@ -308,6 +308,7 @@ export default function AdminCoachingCheckout() {
                     <option value="none">No Discount</option>
                     <option value="challenge_winner">Challenge Winner (-{formatPrice(CUSTOMER_DISCOUNTS.challenge_winner)})</option>
                     <option value="existing_member">Existing Member (-{formatPrice(CUSTOMER_DISCOUNTS.existing_member)})</option>
+                    <option value="97_off">$97 Off (-{formatPrice(CUSTOMER_DISCOUNTS['97_off'])})</option>
                   </select>
                 </div>
 
@@ -477,6 +478,10 @@ export default function AdminCoachingCheckout() {
                 <li className="flex items-start gap-2">
                   <span className="text-gray-400 mt-0.5">•</span>
                   <span><strong>Existing Member:</strong> -$297 discount (applies to Pay in Full and Split by 2 only)</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-gray-400 mt-0.5">•</span>
+                  <span><strong>$97 Off:</strong> -$97 discount (applies to Pay in Full and Split by 2 only)</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-gray-400 mt-0.5">•</span>
