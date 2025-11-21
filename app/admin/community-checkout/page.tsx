@@ -379,26 +379,27 @@ export default function AdminCommunityCheckout() {
             {/* Membership Tiers */}
             <div>
               <h3 className="text-base font-semibold text-gray-900 mb-2">Membership Tiers</h3>
+              <p className="text-sm text-gray-600 mb-3 italic">⚠️ ALL memberships are subscriptions that renew automatically. Direct customers to the billing portal at <strong>oracleboxing.com/billing</strong> to manage their subscription or cancel.</p>
               <ul className="space-y-2 text-sm text-gray-600">
                 <li className="flex items-start gap-2">
                   <span className="text-gray-400 mt-0.5">•</span>
-                  <span><strong>Monthly:</strong> {formatPrice(TIER_PRICES.monthly)}/month - Recurring subscription</span>
+                  <span><strong>Monthly:</strong> {formatPrice(TIER_PRICES.monthly)}/month - Renews monthly</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-gray-400 mt-0.5">•</span>
-                  <span><strong>3-Month:</strong> {formatPrice(TIER_PRICES['3_month'])} total - One-time payment</span>
+                  <span><strong>3-Month:</strong> {formatPrice(TIER_PRICES['3_month'])} - Renews every 3 months</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-gray-400 mt-0.5">•</span>
-                  <span><strong>6-Month:</strong> {formatPrice(TIER_PRICES['6_month'])} total - One-time payment</span>
+                  <span><strong>6-Month:</strong> {formatPrice(TIER_PRICES['6_month'])} - Renews every 6 months</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-gray-400 mt-0.5">•</span>
-                  <span><strong>Annual:</strong> {formatPrice(TIER_PRICES.annual)} total - One-time payment</span>
+                  <span><strong>Annual:</strong> {formatPrice(TIER_PRICES.annual)} - Renews yearly</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-gray-400 mt-0.5">•</span>
-                  <span><strong>24-Month:</strong> {formatPrice(TIER_PRICES['24_month'])} total - One-time payment</span>
+                  <span><strong>24-Month:</strong> {formatPrice(TIER_PRICES['24_month'])} - Renews every 24 months</span>
                 </li>
               </ul>
             </div>
@@ -439,7 +440,7 @@ export default function AdminCommunityCheckout() {
 
             {/* Billing */}
             <div>
-              <h3 className="text-base font-semibold text-gray-900 mb-2">Billing & Tax</h3>
+              <h3 className="text-base font-semibold text-gray-900 mb-2">Billing & Subscription Management</h3>
               <ul className="space-y-2 text-sm text-gray-600">
                 <li className="flex items-start gap-2">
                   <span className="text-gray-400 mt-0.5">•</span>
@@ -447,18 +448,22 @@ export default function AdminCommunityCheckout() {
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-gray-400 mt-0.5">•</span>
-                  <span><strong>One-Time Payments:</strong> 3-Month, 6-Month, Annual, and 24-Month are all one-time payments</span>
+                  <span><strong>All Subscriptions:</strong> All memberships auto-renew at their respective intervals (monthly, 3-month, 6-month, annual, or 24-month)</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-gray-400 mt-0.5">•</span>
-                  <span><strong>Monthly Subscription:</strong> Recurring monthly charge on the same day each month</span>
+                  <span><strong>Billing Portal:</strong> Customers can manage their subscription, update payment methods, or cancel at <strong>oracleboxing.com/billing</strong></span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-gray-400 mt-0.5">•</span>
+                  <span><strong>Renewal Date:</strong> Subscriptions renew on the same day of their billing cycle (e.g., if purchased on Jan 15, renews on Feb 15 for monthly)</span>
                 </li>
               </ul>
             </div>
 
             {/* Recommendations */}
             <div>
-              <h3 className="text-base font-semibold text-gray-900 mb-2">Sales Recommendations</h3>
+              <h3 className="text-base font-semibold text-gray-900 mb-2">Sales Recommendations & Pricing Comparisons</h3>
               <ul className="space-y-2 text-sm text-gray-600">
                 <li className="flex items-start gap-2">
                   <span className="text-gray-400 mt-0.5">•</span>
@@ -467,6 +472,14 @@ export default function AdminCommunityCheckout() {
                 <li className="flex items-start gap-2">
                   <span className="text-gray-400 mt-0.5">•</span>
                   <span><strong>Avoid:</strong> Don't apply Challenge Winner discount to 3-Month tier - better to upsell to 6-Month or Annual</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-gray-400 mt-0.5">•</span>
+                  <span><strong>6-Month vs Annual (Common Misconception):</strong> Many think buying 6-Month twice is cheaper than Annual. Reality: 6-Month × 2 = {formatPrice(TIER_PRICES['6_month'] * 2)} vs Annual with discount = {formatPrice(TIER_PRICES.annual - 197)}. Annual saves {formatPrice((TIER_PRICES['6_month'] * 2) - (TIER_PRICES.annual - 197))}!</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-gray-400 mt-0.5">•</span>
+                  <span><strong>Savings Breakdown:</strong> 3-Month ({formatPrice(TIER_PRICES['3_month'] / 3)}/mo) → 6-Month ({formatPrice(TIER_PRICES['6_month'] / 6)}/mo) → Annual with discount ({formatPrice((TIER_PRICES.annual - 197) / 12)}/mo) - Longer commitment = better value</span>
                 </li>
               </ul>
             </div>
