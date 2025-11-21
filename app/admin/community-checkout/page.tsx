@@ -379,7 +379,7 @@ export default function AdminCommunityCheckout() {
             {/* Membership Tiers */}
             <div>
               <h3 className="text-base font-semibold text-gray-900 mb-2">Membership Tiers</h3>
-              <p className="text-sm text-gray-600 mb-3 italic">⚠️ ALL memberships are subscriptions that renew automatically. Direct customers to the billing portal at <strong>oracleboxing.com/billing</strong> to manage their subscription or cancel.</p>
+              <p className="text-sm text-gray-600 mb-3 italic">⚠️ ALL memberships are subscriptions that renew automatically. Direct customers to the billing portal at <a href="https://checkout.oracleboxing.com/p/login/dR69Bm6Pg7Csavm288" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 underline font-semibold">checkout.oracleboxing.com/p/login/dR69Bm6Pg7Csavm288</a> to manage their subscription or cancel.</p>
               <ul className="space-y-2 text-sm text-gray-600">
                 <li className="flex items-start gap-2">
                   <span className="text-gray-400 mt-0.5">•</span>
@@ -452,7 +452,7 @@ export default function AdminCommunityCheckout() {
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-gray-400 mt-0.5">•</span>
-                  <span><strong>Billing Portal:</strong> Customers can manage their subscription, update payment methods, or cancel at <strong>oracleboxing.com/billing</strong></span>
+                  <span><strong>Billing Portal:</strong> Customers can manage their subscription, update payment methods, or cancel at <a href="https://checkout.oracleboxing.com/p/login/dR69Bm6Pg7Csavm288" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 underline font-semibold">checkout.oracleboxing.com/p/login/dR69Bm6Pg7Csavm288</a></span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-gray-400 mt-0.5">•</span>
