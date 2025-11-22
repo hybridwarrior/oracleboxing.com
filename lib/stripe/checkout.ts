@@ -255,20 +255,26 @@ export async function createCheckoutSession({
   const mainProduct = items[0]?.product
   const addOns = items.slice(1).map(i => i.product.metadata || i.product.id).join(',')
 
-  // Determine funnel type based on main product
+  // Check if cart contains 6WC, BFC, or BFC_VIP (needed for reliable detection when order bumps are present)
+  const has6WC = items.some(item => item.product.id === '6wc' || item.product.metadata === '6wc')
+  const hasBFC = items.some(item => item.product.metadata === 'bfc')
+  const hasBFCVIP = items.some(item => item.product.metadata === 'bfc_vip')
+
+  // Determine funnel type based on main product or cart contents
   let funnelType = 'course' // Default
   let successPath = '/success/course'
 
   if (mainProduct?.type === 'merch') {
     funnelType = 'merch'
     successPath = '/success/merch'
-  } else if (mainProduct?.id === '6wc' || mainProduct?.metadata === '6wc') {
+  } else if (has6WC) {
+    // 6WC uses membership success page (same as BFC - shows coaching upsell)
     funnelType = '6wc'
-    successPath = '/success/6wc'
-  } else if (mainProduct?.metadata === 'bfc') {
+    successPath = '/success/membership'
+  } else if (hasBFC) {
     funnelType = 'bfc'
     successPath = '/success/membership' // BFC uses membership success (coaching upsell)
-  } else if (mainProduct?.metadata === 'bfc_vip') {
+  } else if (hasBFCVIP) {
     funnelType = 'bfc-vip'
     successPath = '/success/membership' // BFC VIP uses membership success (coaching upsell)
   } else if (mainProduct?.id === 'bundle') {
@@ -287,15 +293,15 @@ export async function createCheckoutSession({
   console.log('🔍 DEBUG: Final success_url:', sessionParams.success_url)
   console.log('🔍 DEBUG: Cancel URL:', sessionParams.cancel_url)
 
-  // Determine the purchase type based on main product
+  // Determine the purchase type based on main product or cart contents
   let purchaseType = 'course' // Default
   if (mainProduct?.type === 'merch') {
     purchaseType = 'merch'
-  } else if (mainProduct?.id === '6wc' || mainProduct?.metadata === '6wc') {
+  } else if (has6WC) {
     purchaseType = '6wc'
-  } else if (mainProduct?.metadata === 'bfc') {
+  } else if (hasBFC) {
     purchaseType = 'bfc'
-  } else if (mainProduct?.metadata === 'bfc_vip') {
+  } else if (hasBFCVIP) {
     purchaseType = 'bfc-vip'
   } else if (mainProduct?.type === 'membership') {
     purchaseType = 'membership'
