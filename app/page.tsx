@@ -157,8 +157,25 @@ export default function HomePage() {
               <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-3 sm:mb-4 lg:mb-6 capitalize drop-shadow-lg leading-tight sm:leading-normal lg:leading-tight">
                 Learn Boxing - Perfect for <span className="font-bold text-white">Beginners</span>
               </h1>
-              <p className="text-base sm:text-xl md:text-2xl lg:text-3xl text-white leading-relaxed drop-shadow-md font-medium">
+              <p className="text-base sm:text-xl md:text-2xl lg:text-3xl text-white leading-relaxed drop-shadow-md font-medium mb-6">
                 Learn boxing step-by-step with videos, coaching, and a team of boxers like you.
+              </p>
+
+              {/* Spot Counter */}
+              <div className="inline-flex items-center gap-3 bg-white text-black px-4 py-3 rounded-lg border-2 border-black shadow-lg">
+                <span className="relative flex h-3 w-3">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                </span>
+                <div className="text-left">
+                  <div className="text-xs font-bold uppercase tracking-wide opacity-80">Challenge Spots</div>
+                  <div className="text-2xl font-black" style={{ fontFamily: 'Satoshi' }}>
+                    20<span className="text-lg opacity-60">/30</span>
+                  </div>
+                </div>
+              </div>
+              <p className="text-xs text-white font-bold mt-2 drop-shadow-md">
+                One colour already sold out!!!
               </p>
             </div>
           </div>
