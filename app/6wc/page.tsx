@@ -284,22 +284,22 @@ export default function BlackFridayChallengePage() {
       <BlackFridayChallengeHeader spotsRemaining={spotsRemaining} />
 
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-white pt-6 sm:pt-8 lg:pt-12">
-        <div className="w-full lg:max-w-[80%] mx-auto px-4 sm:px-6 lg:px-8 pb-12 sm:pb-16 lg:pb-20">
+      <section className="relative overflow-hidden bg-white pt-4 sm:pt-6 lg:pt-12">
+        <div className="w-full lg:max-w-[80%] mx-auto px-4 sm:px-6 lg:px-8 pb-8 sm:pb-12 lg:pb-20">
 
           {/* 2-Column Layout on Desktop */}
-          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+          <div className="grid lg:grid-cols-2 gap-6 lg:gap-12 items-center">
             {/* Left Column - Text Content */}
             <div className="text-center lg:text-left" style={{ fontFamily: 'Satoshi, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>
               {/* Discount Badge */}
-              <div className="mb-4 sm:mb-6">
-                <span className="inline-block bg-black text-white px-6 py-3 font-black text-lg sm:text-xl md:text-2xl uppercase tracking-wide" style={{ fontFamily: 'Satoshi' }}>
+              <div className="mb-3 sm:mb-5">
+                <span className="inline-block bg-black text-white px-4 py-2 sm:px-6 sm:py-3 font-black text-base sm:text-xl md:text-2xl uppercase tracking-wide" style={{ fontFamily: 'Satoshi' }}>
                   DISCOUNTED 50% OFF
                 </span>
               </div>
 
               <h1
-                className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl font-bold text-gray-900 tracking-tight leading-tight mb-4 sm:mb-5"
+                className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-900 tracking-tight leading-[1.15] sm:leading-tight mb-3 sm:mb-4"
                 style={{
                   fontFamily: 'Satoshi, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
                   fontWeight: '700'
@@ -308,15 +308,15 @@ export default function BlackFridayChallengePage() {
                 Learn Boxing Fundamentals In Under 48 Days
               </h1>
 
-              <p className="text-base sm:text-lg md:text-xl text-gray-700 leading-relaxed mb-8">
+              <p className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-700 leading-relaxed mb-5 sm:mb-6">
                 A structured 6-week challenge for beginners, late starters, and frustrated sparrers. Train from home, follow the weekly plan, get coached over the holidays.
               </p>
 
               {/* CTA Button */}
-              <div className="flex justify-center lg:justify-start mb-8">
+              <div className="flex justify-center lg:justify-start mb-5 sm:mb-6">
                 <button
                   onClick={scrollToPricing}
-                  className="w-full sm:w-auto max-w-md sm:max-w-none px-8 py-4 bg-yellow-100 text-black border-4 border-black font-black text-xl rounded-xl uppercase tracking-wide shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:bg-white transition-all duration-200"
+                  className="w-full sm:w-auto max-w-md sm:max-w-none px-6 py-3 sm:px-8 sm:py-4 bg-yellow-100 text-black border-3 sm:border-4 border-black font-black text-lg sm:text-xl rounded-xl uppercase tracking-wide shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] sm:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:bg-white transition-all duration-200"
                   style={{ fontFamily: 'Satoshi' }}
                 >
                   JOIN THE CHALLENGE →
@@ -326,7 +326,7 @@ export default function BlackFridayChallengePage() {
 
             {/* Right Column - VSL Video */}
             <div className="lg:order-last">
-              <div className="relative w-full mb-6 rounded-2xl overflow-hidden" style={{ paddingBottom: '56.25%' }}>
+              <div className="relative w-full mb-4 sm:mb-6 rounded-xl sm:rounded-2xl overflow-hidden" style={{ paddingBottom: '56.25%' }}>
                 <video
                   controls
                   poster="https://media.oracleboxing.com/Website/6wcv2-main-vsl_poster.webp"
@@ -341,107 +341,95 @@ export default function BlackFridayChallengePage() {
           </div>
 
           {/* Testimonials */}
-          <div className="max-w-6xl mx-auto px-4 mt-12">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-5 items-start">
+          <div className="max-w-6xl mx-auto px-0 sm:px-4 mt-6 sm:mt-10 lg:mt-12">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-4 items-start">
               {/* Left Column */}
-              <div className="flex flex-col gap-3 sm:gap-5">
-                  <div className="bg-white border-4 border-black px-3 sm:px-5 py-2.5 sm:py-4 rounded-lg shadow-md text-left">
-                    <div className="flex gap-0.5 sm:gap-1 mb-1.5 sm:mb-2">
+              <div className="flex flex-col gap-2.5 sm:gap-4">
+                  <div className="bg-white border-2 sm:border-4 border-black px-3 sm:px-5 py-2 sm:py-3 rounded-lg shadow-sm sm:shadow-md text-left">
+                    <div className="flex gap-0.5 mb-1 sm:mb-2">
                       {[...Array(5)].map((_, i) => (
-                        <svg key={i} className="w-3.5 h-3.5 sm:w-5 sm:h-5 text-black fill-black" viewBox="0 0 24 24" strokeWidth={2}>
+                        <svg key={i} className="w-3 h-3 sm:w-4 sm:h-4 text-black fill-black" viewBox="0 0 24 24" strokeWidth={2}>
                           <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
                         </svg>
                       ))}
                     </div>
-                    <p className="text-xs sm:text-base text-black font-bold mb-1.5 sm:mb-3 leading-relaxed">
-                      "This course showed me where my power comes from. I can't thank you enough for helping me box better! It was the best choice I ever made - the "aha!" moments are amazing!"
+                    <p className="text-[13px] sm:text-sm text-black font-semibold mb-1 sm:mb-2 leading-snug">
+                      "This course showed me where my power comes from. I can't thank you enough for helping me box better! The "aha!" moments are amazing!"
                     </p>
-                    <div>
-                      <div className="font-bold text-xs sm:text-base text-black">Niclas Laux</div>
-                    </div>
+                    <div className="font-bold text-[11px] sm:text-xs text-gray-600">Niclas Laux</div>
                   </div>
 
-                  <div className="bg-white border-4 border-black px-3 sm:px-5 py-2.5 sm:py-4 rounded-lg shadow-md text-left">
-                    <div className="flex gap-0.5 sm:gap-1 mb-1.5 sm:mb-2">
+                  <div className="bg-white border-2 sm:border-4 border-black px-3 sm:px-5 py-2 sm:py-3 rounded-lg shadow-sm sm:shadow-md text-left">
+                    <div className="flex gap-0.5 mb-1 sm:mb-2">
                       {[...Array(5)].map((_, i) => (
-                        <svg key={i} className="w-3.5 h-3.5 sm:w-5 sm:h-5 text-black fill-black" viewBox="0 0 24 24" strokeWidth={2}>
+                        <svg key={i} className="w-3 h-3 sm:w-4 sm:h-4 text-black fill-black" viewBox="0 0 24 24" strokeWidth={2}>
                           <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
                         </svg>
                       ))}
                     </div>
-                    <p className="text-xs sm:text-base text-black font-bold mb-1.5 sm:mb-3 leading-relaxed">
-                      "Being part of this community has changed my life. Joining the live Zoom calls almost every day has helped me lose weight, box better, and feel more confident."
+                    <p className="text-[13px] sm:text-sm text-black font-semibold mb-1 sm:mb-2 leading-snug">
+                      "Being part of this community has changed my life. Joining the live Zoom calls has helped me lose weight, box better, and feel more confident."
                     </p>
-                    <div>
-                      <div className="font-bold text-xs sm:text-base text-black">Balal Hanif</div>
-                    </div>
+                    <div className="font-bold text-[11px] sm:text-xs text-gray-600">Balal Hanif</div>
                   </div>
 
-                  <div className="bg-white border-4 border-black px-3 sm:px-5 py-2.5 sm:py-4 rounded-lg shadow-md text-left">
-                    <div className="flex gap-0.5 sm:gap-1 mb-1.5 sm:mb-2">
+                  <div className="bg-white border-2 sm:border-4 border-black px-3 sm:px-5 py-2 sm:py-3 rounded-lg shadow-sm sm:shadow-md text-left">
+                    <div className="flex gap-0.5 mb-1 sm:mb-2">
                       {[...Array(5)].map((_, i) => (
-                        <svg key={i} className="w-3.5 h-3.5 sm:w-5 sm:h-5 text-black fill-black" viewBox="0 0 24 24" strokeWidth={2}>
+                        <svg key={i} className="w-3 h-3 sm:w-4 sm:h-4 text-black fill-black" viewBox="0 0 24 24" strokeWidth={2}>
                           <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
                         </svg>
                       ))}
                     </div>
-                    <p className="text-xs sm:text-base text-black font-bold mb-1.5 sm:mb-3 leading-relaxed">
-                      "The value that the coaches bring is WAY BEYOND what I ever expected when I joined this challenge. I can genuinely SEE and FEEL the shift happening."
+                    <p className="text-[13px] sm:text-sm text-black font-semibold mb-1 sm:mb-2 leading-snug">
+                      "The value that the coaches bring is WAY BEYOND what I ever expected. I can genuinely SEE and FEEL the shift happening."
                     </p>
-                    <div>
-                      <div className="font-bold text-xs sm:text-base text-black">Bruno Martins</div>
-                    </div>
+                    <div className="font-bold text-[11px] sm:text-xs text-gray-600">Bruno Martins</div>
                   </div>
                 </div>
 
                 {/* Right Column */}
-                <div className="flex flex-col gap-3 sm:gap-5">
-                  <div className="bg-white border-4 border-black px-3 sm:px-5 py-2.5 sm:py-4 rounded-lg shadow-md text-left">
-                    <div className="flex gap-0.5 sm:gap-1 mb-1.5 sm:mb-2">
+                <div className="flex flex-col gap-2.5 sm:gap-4">
+                  <div className="bg-white border-2 sm:border-4 border-black px-3 sm:px-5 py-2 sm:py-3 rounded-lg shadow-sm sm:shadow-md text-left">
+                    <div className="flex gap-0.5 mb-1 sm:mb-2">
                       {[...Array(5)].map((_, i) => (
-                        <svg key={i} className="w-3.5 h-3.5 sm:w-5 sm:h-5 text-black fill-black" viewBox="0 0 24 24" strokeWidth={2}>
+                        <svg key={i} className="w-3 h-3 sm:w-4 sm:h-4 text-black fill-black" viewBox="0 0 24 24" strokeWidth={2}>
                           <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
                         </svg>
                       ))}
                     </div>
-                    <p className="text-xs sm:text-base text-black font-bold mb-1.5 sm:mb-3 leading-relaxed">
-                      "I came back to this community and already made big progress on Toni and Oliver's Zoom calls. You guys are really good at coaching online. I learn so much every time I join a call."
+                    <p className="text-[13px] sm:text-sm text-black font-semibold mb-1 sm:mb-2 leading-snug">
+                      "I came back to this community and already made big progress. You guys are really good at coaching online. I learn so much every call."
                     </p>
-                    <div>
-                      <div className="font-bold text-xs sm:text-base text-black">Torey Goodall</div>
-                    </div>
+                    <div className="font-bold text-[11px] sm:text-xs text-gray-600">Torey Goodall</div>
                   </div>
 
-                  <div className="bg-white border-4 border-black px-3 sm:px-5 py-2.5 sm:py-4 rounded-lg shadow-md text-left">
-                    <div className="flex gap-0.5 sm:gap-1 mb-1.5 sm:mb-2">
+                  <div className="bg-white border-2 sm:border-4 border-black px-3 sm:px-5 py-2 sm:py-3 rounded-lg shadow-sm sm:shadow-md text-left">
+                    <div className="flex gap-0.5 mb-1 sm:mb-2">
                       {[...Array(5)].map((_, i) => (
-                        <svg key={i} className="w-3.5 h-3.5 sm:w-5 sm:h-5 text-black fill-black" viewBox="0 0 24 24" strokeWidth={2}>
+                        <svg key={i} className="w-3 h-3 sm:w-4 sm:h-4 text-black fill-black" viewBox="0 0 24 24" strokeWidth={2}>
                           <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
                         </svg>
                       ))}
                     </div>
-                    <p className="text-xs sm:text-base text-black font-bold mb-1.5 sm:mb-3 leading-relaxed">
-                      "The Boxing Masterclass course was a huge rewiring of my thinking. You could be training here and learning new things for months, maybe years!"
+                    <p className="text-[13px] sm:text-sm text-black font-semibold mb-1 sm:mb-2 leading-snug">
+                      "The Boxing Masterclass course was a huge rewiring of my thinking. You could be training here for months, maybe years!"
                     </p>
-                    <div>
-                      <div className="font-bold text-xs sm:text-base text-black">Daniel Ramirez</div>
-                    </div>
+                    <div className="font-bold text-[11px] sm:text-xs text-gray-600">Daniel Ramirez</div>
                   </div>
 
-                  <div className="bg-white border-4 border-black px-3 sm:px-5 py-2.5 sm:py-4 rounded-lg shadow-md text-left">
-                    <div className="flex gap-0.5 sm:gap-1 mb-1.5 sm:mb-2">
+                  <div className="bg-white border-2 sm:border-4 border-black px-3 sm:px-5 py-2 sm:py-3 rounded-lg shadow-sm sm:shadow-md text-left">
+                    <div className="flex gap-0.5 mb-1 sm:mb-2">
                       {[...Array(5)].map((_, i) => (
-                        <svg key={i} className="w-3.5 h-3.5 sm:w-5 sm:h-5 text-black fill-black" viewBox="0 0 24 24" strokeWidth={2}>
+                        <svg key={i} className="w-3 h-3 sm:w-4 sm:h-4 text-black fill-black" viewBox="0 0 24 24" strokeWidth={2}>
                           <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
                         </svg>
                       ))}
                     </div>
-                    <p className="text-xs sm:text-base text-black font-bold mb-1.5 sm:mb-3 leading-relaxed">
-                      "I am truly humbled by the passion, dedication and depth of analysis exemplified by our coaches here. You have every asset necessary to become a real boxer and change your life forever."
+                    <p className="text-[13px] sm:text-sm text-black font-semibold mb-1 sm:mb-2 leading-snug">
+                      "I am truly humbled by the passion and depth of analysis here. You have every asset necessary to become a real boxer."
                     </p>
-                    <div>
-                      <div className="font-bold text-xs sm:text-base text-black">Illya</div>
-                    </div>
+                    <div className="font-bold text-[11px] sm:text-xs text-gray-600">Illya</div>
                 </div>
               </div>
             </div>
