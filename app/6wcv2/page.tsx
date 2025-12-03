@@ -50,32 +50,6 @@ export default function ChallengePage() {
 
   return (
     <>
-      {/* Product Schema */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "Product",
-            "name": "6-Week Challenge",
-            "description": "6-week boxing training program with full money-back promise when you finish. Includes Boxing Masterclass, Boxing Roadmap you keep forever, live coaching, and personal help.",
-            "image": "https://media.oracleboxing.com/Website/skool_art.webp",
-            "brand": {
-              "@type": "Brand",
-              "name": "Oracle Boxing"
-            },
-            "offers": {
-              "@type": "Offer",
-              "price": "197",
-              "priceCurrency": "USD",
-              "availability": "https://schema.org/LimitedAvailability",
-              "url": "https://oracleboxing.com/6wc",
-              "priceValidUntil": "2026-12-31"
-            }
-          })
-        }}
-      />
-
       <Header />
 
       {/* Hero Section */}
