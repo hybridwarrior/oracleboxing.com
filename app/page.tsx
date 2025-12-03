@@ -529,7 +529,7 @@ export default function HomePage() {
                   type="submit"
                   disabled={newsletterLoading}
                   className="ob-btn ob-btn-secondary disabled:opacity-50 disabled:cursor-not-allowed"
-                  style={{ padding: 'clamp(0.6rem, 2vw, 0.9rem) clamp(1.2rem, 3vw, 2rem)' }}
+                  style={{ padding: 'clamp(0.5rem, 1.5vw, 0.7rem) clamp(1rem, 2.5vw, 1.5rem)', fontSize: 'clamp(0.875rem, 2vw, 1rem)' }}
                 >
                   {newsletterLoading ? 'Subscribing...' : 'Subscribe'}
                 </button>

@@ -77,11 +77,6 @@ export function Footer() {
                   Boxing Roadmap
                 </Link>
               </li>
-              <li>
-                <Link to="/courses/vault" className="text-gray-400 hover:text-white transition-colors text-sm">
-                  Coaching Vault
-                </Link>
-              </li>
             </ul>
           </div>
 

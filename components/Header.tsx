@@ -199,7 +199,13 @@ export function Header() {
 
             {/* Mobile Hamburger Menu */}
             <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              onClick={() => {
+                if (mobileMenuOpen) {
+                  closeMobileMenu()
+                } else {
+                  setMobileMenuOpen(true)
+                }
+              }}
               className="md:hidden text-white p-2 rounded-md hover:bg-neutral-800 transition-colors relative z-50"
               aria-label="Toggle menu"
             >

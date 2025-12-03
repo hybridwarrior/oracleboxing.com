@@ -146,8 +146,8 @@ export default function SixWeekChallengePage() {
               <div className="flex justify-center lg:justify-start mb-5 sm:mb-6">
                 <button
                   onClick={scrollToPricing}
-                  className="w-full sm:w-auto max-w-md sm:max-w-none px-6 py-3 sm:px-8 sm:py-4 bg-yellow-100 text-black border-3 sm:border-4 border-black font-black text-lg sm:text-xl rounded-xl uppercase tracking-wide shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] sm:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:bg-white transition-all duration-200"
-                  style={{ fontFamily: 'Satoshi' }}
+                  className="ob-btn ob-btn-gp-ybg-p w-full sm:w-auto max-w-md sm:max-w-none"
+                  style={{ fontFamily: 'Satoshi', fontSize: 'clamp(1.125rem, 2.5vw, 1.25rem)', padding: 'clamp(0.75rem, 2vw, 1rem) clamp(1.5rem, 3vw, 2rem)' }}
                 >
                   JOIN THE CHALLENGE →
                 </button>
@@ -369,8 +369,8 @@ export default function SixWeekChallengePage() {
           <div className="flex justify-center">
             <button
               onClick={scrollToPricing}
-              className="w-full sm:w-auto max-w-md sm:max-w-none px-8 py-4 bg-yellow-100 text-black border-4 border-black font-black text-xl rounded-xl uppercase tracking-wide shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:bg-white transition-all duration-200"
-              style={{ fontFamily: 'Satoshi' }}
+              className="ob-btn ob-btn-gp-ybg-p w-full sm:w-auto max-w-md sm:max-w-none"
+              style={{ fontFamily: 'Satoshi', fontSize: 'clamp(1.125rem, 2.5vw, 1.25rem)', padding: 'clamp(0.75rem, 2vw, 1rem) clamp(1.5rem, 3vw, 2rem)' }}
             >
               JOIN THE CHALLENGE →
             </button>
@@ -752,8 +752,8 @@ export default function SixWeekChallengePage() {
           <a
             href="/checkout?product=6wc&source=6wc-page"
             onClick={() => handleButtonClick('final-call', 'JOIN THE CHALLENGE')}
-            className="inline-block w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 bg-yellow-100 text-black border-4 border-black font-black text-lg sm:text-xl rounded-xl uppercase tracking-wide shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:bg-white transition-all duration-200 mb-6 sm:mb-8"
-            style={{ fontFamily: 'Satoshi' }}
+            className="ob-btn ob-btn-gp-ybg-p inline-block w-full sm:w-auto mb-6 sm:mb-8"
+            style={{ fontFamily: 'Satoshi', fontSize: 'clamp(1.125rem, 2.5vw, 1.25rem)', padding: 'clamp(0.75rem, 2vw, 1rem) clamp(1.5rem, 3vw, 2rem)' }}
           >
             JOIN THE CHALLENGE →
           </a>

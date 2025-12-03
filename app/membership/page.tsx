@@ -276,7 +276,8 @@ export default function MembershipsPage() {
               {/* CTA Button */}
               <button
                 onClick={() => setIsPricingPopupOpen(true)}
-                className="inline-block py-3 sm:py-4 lg:py-5 px-8 sm:px-10 lg:px-12 bg-yellow-100 text-black border-4 border-black font-black text-base sm:text-lg lg:text-xl rounded-lg uppercase tracking-wide cursor-pointer animate-bounce-subtle hover:bg-black hover:text-white transition-colors duration-300"
+                className="ob-btn ob-btn-gp-ybg-p inline-block cursor-pointer"
+                style={{ fontSize: 'clamp(1rem, 2.5vw, 1.25rem)', padding: 'clamp(0.75rem, 2vw, 1.25rem) clamp(2rem, 3vw, 3rem)' }}
               >
                 ENROLL NOW
               </button>
