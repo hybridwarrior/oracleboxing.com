@@ -57,7 +57,7 @@ export function Header() {
 
   const courses = [
     {
-      name: 'Oracle Boxing Bundle',
+      name: 'Boxing Bundle',
       href: '/courses/bundle',
       image: 'https://media.oracleboxing.com/Website/optimized/products/obm_tn-small.webp',
     },
@@ -131,7 +131,7 @@ export function Header() {
                           key={course.href}
                           href={course.href}
                           onClick={() => handleNavClick('header_dropdown', course.href)}
-                          className="group/item flex flex-col items-center text-center space-y-3 hover:bg-gray-900 p-4 rounded-lg transition-colors"
+                          className="group/item flex flex-col items-center text-center space-y-3 hover:bg-neutral-800 p-4 rounded-lg transition-colors"
                         >
                           <h3 className="text-white font-semibold text-sm tracking-wide group-hover/item:text-yellow-200 transition-colors">
                             {course.name}
@@ -164,7 +164,7 @@ export function Header() {
                         key={item.href}
                         href={item.href}
                         onClick={() => handleNavClick('header_dropdown', item.href)}
-                        className="block px-6 py-3 text-white font-medium text-sm tracking-wide hover:bg-gray-900 hover:text-yellow-200 transition-colors"
+                        className="block px-6 py-3 text-white font-medium text-sm tracking-wide hover:bg-neutral-800 hover:text-yellow-200 transition-colors"
                       >
                         {item.name}
                       </Link>
@@ -188,7 +188,7 @@ export function Header() {
             {/* Mobile Hamburger Menu */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden text-white p-2 rounded-md hover:bg-gray-900 transition-colors z-10"
+              className="md:hidden text-white p-2 rounded-md hover:bg-neutral-800 transition-colors z-10"
               aria-label="Toggle menu"
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -216,7 +216,7 @@ export function Header() {
           <div className="flex items-center justify-end p-4 border-b border-gray-800">
             <button
               onClick={closeMobileMenu}
-              className="text-white p-2 rounded-md hover:bg-gray-900 transition-colors"
+              className="text-white p-2 rounded-md hover:bg-neutral-800 transition-colors"
               aria-label="Close menu"
             >
               <X className="w-6 h-6" />
@@ -234,7 +234,7 @@ export function Header() {
                 {/* Courses */}
                 <button
                   onClick={() => setMobileSubMenu('courses')}
-                  className="flex items-center justify-between text-white font-bold text-xl py-4 px-4 hover:bg-gray-900 rounded-lg transition-colors text-left"
+                  className="flex items-center justify-between text-white font-bold text-xl py-4 px-4 hover:bg-neutral-800 rounded-lg transition-colors text-left"
                 >
                   <span>Courses</span>
                   <ChevronRight className="w-6 h-6" />
@@ -243,7 +243,7 @@ export function Header() {
                 {/* Coaching */}
                 <button
                   onClick={() => setMobileSubMenu('coaching')}
-                  className="flex items-center justify-between text-white font-bold text-xl py-4 px-4 hover:bg-gray-900 rounded-lg transition-colors text-left"
+                  className="flex items-center justify-between text-white font-bold text-xl py-4 px-4 hover:bg-neutral-800 rounded-lg transition-colors text-left"
                 >
                   <span>Coaching</span>
                   <ChevronRight className="w-6 h-6" />
@@ -258,7 +258,7 @@ export function Header() {
                     handleNavClick('mobile_menu', 'https://shop.oracleboxing.com')
                     closeMobileMenu()
                   }}
-                  className="text-white font-bold text-xl py-4 px-4 hover:bg-gray-900 rounded-lg transition-colors text-left block"
+                  className="text-white font-bold text-xl py-4 px-4 hover:bg-neutral-800 rounded-lg transition-colors text-left block"
                 >
                   Clothing
                 </a>
@@ -277,7 +277,7 @@ export function Header() {
               <div className="flex items-center p-4 border-b border-gray-800">
                 <button
                   onClick={() => setMobileSubMenu(null)}
-                  className="text-white p-2 rounded-md hover:bg-gray-900 transition-colors"
+                  className="text-white p-2 rounded-md hover:bg-neutral-800 transition-colors"
                   aria-label="Back"
                 >
                   <ChevronRight className="w-6 h-6 rotate-180" />
@@ -296,7 +296,7 @@ export function Header() {
                         handleNavClick('mobile_submenu', course.href)
                         closeMobileMenu()
                       }}
-                      className="flex flex-col space-y-3 p-4 hover:bg-gray-900 rounded-lg transition-colors"
+                      className="flex flex-col space-y-3 p-4 hover:bg-neutral-800 rounded-lg transition-colors"
                     >
                       <h3 className="text-white font-semibold text-lg">
                         {course.name}
@@ -326,7 +326,7 @@ export function Header() {
               <div className="flex items-center p-4 border-b border-gray-800">
                 <button
                   onClick={() => setMobileSubMenu(null)}
-                  className="text-white p-2 rounded-md hover:bg-gray-900 transition-colors"
+                  className="text-white p-2 rounded-md hover:bg-neutral-800 transition-colors"
                   aria-label="Back"
                 >
                   <ChevronRight className="w-6 h-6 rotate-180" />
@@ -345,7 +345,7 @@ export function Header() {
                         handleNavClick('mobile_submenu', item.href)
                         closeMobileMenu()
                       }}
-                      className="text-white font-semibold text-lg py-4 px-4 hover:bg-gray-900 rounded-lg transition-colors block"
+                      className="text-white font-semibold text-lg py-4 px-4 hover:bg-neutral-800 rounded-lg transition-colors block"
                     >
                       {item.name}
                     </Link>
