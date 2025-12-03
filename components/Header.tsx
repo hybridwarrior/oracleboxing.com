@@ -214,11 +214,11 @@ export function Header() {
 
       {/* Mobile Menu */}
       <div
-        className={`fixed top-0 left-0 right-0 bg-black shadow-2xl z-50 md:hidden transform transition-all duration-300 ease-out ${
+        className={`fixed top-0 left-0 right-0 bottom-0 bg-black shadow-2xl z-50 md:hidden transform transition-all duration-300 ease-out ${
           mobileMenuOpen ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0'
         }`}
       >
-        <div className="max-h-screen overflow-y-auto relative">
+        <div className="h-full overflow-y-auto relative">
           {/* Mobile Menu Header */}
           <div className="flex items-center justify-end p-4 border-b border-gray-800">
             <button
@@ -232,7 +232,7 @@ export function Header() {
 
           {/* Layer 1: Main Menu */}
           <div
-            className={`transition-transform duration-300 ease-out ${
+            className={`min-h-screen transition-transform duration-300 ease-out ${
               mobileSubMenu ? '-translate-x-full' : 'translate-x-0'
             }`}
           >
