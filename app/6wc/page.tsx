@@ -23,7 +23,12 @@ export default function SixWeekChallengePage() {
   }
 
   const handleButtonClick = (location: string, buttonText: string) => {
-    trackButtonClick(location, buttonText, '6wc', undefined, '/checkout?product=6wc')
+    trackButtonClick({
+      button_location: location,
+      button_type: 'primary-cta',
+      product_id: '6wc',
+      destination: '/checkout?product=6wc'
+    })
   }
 
   // Benefits to display with checkmarks in price card
