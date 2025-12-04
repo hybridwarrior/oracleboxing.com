@@ -71,7 +71,10 @@ export async function POST(req: NextRequest) {
       // If no customer on session, try to get from payment intent's latest charge
       if (!session.customer && paymentIntent.latest_charge) {
         console.log('🔍 UPSELL: No customer on session, retrieving from charge')
-        const charge = await stripe.charges.retrieve(paymentIntent.latest_charge as string)
+        const chargeId = typeof paymentIntent.latest_charge === 'string'
+          ? paymentIntent.latest_charge
+          : paymentIntent.latest_charge.id
+        const charge = await stripe.charges.retrieve(chargeId)
         customerId = charge.customer as string
       } else {
         customerId = session.customer as string
