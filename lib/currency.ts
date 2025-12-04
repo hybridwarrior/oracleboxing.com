@@ -39,8 +39,9 @@ export const COUNTRY_TO_CURRENCY: Record<string, Currency> = {
 // Product pricing matrix (from product_upsell_matrix.md)
 export const PRODUCT_PRICES: Record<string, Record<Currency, number>> = {
   '6wc': { USD: 197, GBP: 157, EUR: 182, AUD: 297, CAD: 267, AED: 725 },
-  rcv: { USD: 97, GBP: 77, EUR: 90, AUD: 145, CAD: 132, AED: 355 },
+  rcv: { USD: 67, GBP: 53, EUR: 62, AUD: 100, CAD: 91, AED: 245 },
   ltbffp: { USD: 147, GBP: 117, EUR: 136, AUD: 220, CAD: 199, AED: 540 },
+  ltbrdmp: { USD: 97, GBP: 77, EUR: 90, AUD: 145, CAD: 132, AED: 355 },
   bffp: { USD: 297, GBP: 237, EUR: 273, AUD: 445, CAD: 403, AED: 1095 },
   brdmp: { USD: 147, GBP: 117, EUR: 136, AUD: 220, CAD: 199, AED: 540 },
   clnc: { USD: 97, GBP: 77, EUR: 90, AUD: 145, CAD: 132, AED: 355 },
@@ -58,6 +59,8 @@ export const PRODUCT_PRICES: Record<string, Record<Currency, number>> = {
   // Black Friday Challenge products
   bfc: { USD: 97, GBP: 78, EUR: 89, AUD: 146, CAD: 132, AED: 358 },
   bfc_vip: { USD: 497, GBP: 397, EUR: 457, AUD: 745, CAD: 674, AED: 1834 },
+  // Tracksuit (20% discount already applied)
+  tracksuit: { USD: 161, GBP: 128, EUR: 150, CAD: 219, AUD: 241, AED: 590 },
 };
 
 // Membership products - now support multi-currency
@@ -201,7 +204,7 @@ export const formatProductDescription = (
         const price = 197; // Reference price in description
         return `Normally ${formatPrice(price, currency)}`;
       }},
-      { find: /\$97/g, getReplacement: () => formatPrice(getProductPrice('rcv', currency) || 97, currency) },
+      { find: /\$67/g, getReplacement: () => formatPrice(getProductPrice('rcv', currency) || 67, currency) },
     ],
     'lifetime-bffp': [
       {
@@ -216,6 +219,22 @@ export const formatProductDescription = (
         getReplacement: () => {
           const price = getProductPrice('ltbffp', currency) || 147;
           return `just **${formatPrice(price, currency)}**`;
+        }
+      },
+    ],
+    'lifetime-roadmap': [
+      {
+        find: /Normally \$147/g,
+        getReplacement: () => {
+          const price = getProductPrice('brdmp', currency) || 147;
+          return `Normally ${formatPrice(price, currency)}`;
+        }
+      },
+      {
+        find: /just \$97/g,
+        getReplacement: () => {
+          const price = getProductPrice('ltbrdmp', currency) || 97;
+          return `just ${formatPrice(price, currency)}`;
         }
       },
     ],

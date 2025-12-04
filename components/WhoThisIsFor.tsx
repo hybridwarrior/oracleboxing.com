@@ -14,7 +14,7 @@ export function WhoThisIsFor({ courseName, personas }: WhoThisIsForProps) {
     <section className="py-8 sm:py-16 bg-white">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <h2 className="text-xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-4 sm:mb-6 text-center">
-          <span className="italic">{courseName}</span> is built for those who:
+          <span className="italic">{courseName}</span> is built for:
         </h2>
 
         {/* Black divider line - 70% width, 2pt thick */}

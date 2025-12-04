@@ -262,34 +262,26 @@ export async function createCheckoutSession({
 
   // Determine funnel type based on main product or cart contents
   let funnelType = 'course' // Default
-  let successPath = '/success/course'
 
   if (mainProduct?.type === 'merch') {
     funnelType = 'merch'
-    successPath = '/success/merch'
   } else if (has6WC) {
-    // 6WC uses 6wc success page
     funnelType = '6wc'
-    successPath = '/success/6wc'
   } else if (hasBFC) {
     funnelType = 'bfc'
-    successPath = '/success/6wc' // BFC uses 6wc success page
   } else if (hasBFCVIP) {
     funnelType = 'bfc-vip'
-    successPath = '/success/6wc' // BFC VIP uses 6wc success page
   } else if (mainProduct?.id === 'bundle') {
     funnelType = 'bundle'
-    successPath = '/success/course' // Bundle uses course success
   } else if (mainProduct?.type === 'membership') {
     funnelType = 'membership'
-    successPath = '/success/membership'
   }
 
-  // Hardcode the success URL to avoid any environment variable issues
-  sessionParams.success_url = `https://oracleboxing.com${successPath}?session_id={CHECKOUT_SESSION_ID}`
+  // All purchases now go to single success page with query parameter
+  sessionParams.success_url = `https://oracleboxing.com/success?session_id={CHECKOUT_SESSION_ID}`
   sessionParams.cancel_url = 'https://oracleboxing.com/'
 
-  console.log('🔍 DEBUG: Success path:', successPath)
+  console.log('🔍 DEBUG: Funnel type:', funnelType)
   console.log('🔍 DEBUG: Final success_url:', sessionParams.success_url)
   console.log('🔍 DEBUG: Cancel URL:', sessionParams.cancel_url)
 

@@ -2,7 +2,7 @@
 
 import { Suspense, useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { ChevronDown, ArrowRight, ArrowLeft } from 'lucide-react'
+import { Check, ArrowRight, ArrowLeft } from 'lucide-react'
 import { toast } from 'sonner'
 
 import { get6WCAddOns, getCourseOrderBump, getProductById } from '@/lib/products'
@@ -306,157 +306,268 @@ function OrderBumpsContent() {
           />
         </div>
 
-        {/* Heading with Navigation */}
-        <div className="flex items-center justify-between mb-8">
-          <h2 className="text-center text-gray-900 text-sm font-medium flex-1">
-            {funnelType === 'course' ? 'Upgrade to the complete bundle' : 'Add to your order'}
+        {/* Heading */}
+        <div className="mb-8">
+          <h2 className="text-center text-gray-900 text-sm font-medium">
+            {funnelType === 'course' ? 'Upgrade to the complete bundle' : 'Add to your order?'}
           </h2>
-          {!showAll && (
-            <div className="flex items-center gap-2">
-              <button
-                onClick={handlePrevious}
-                disabled={currentIndex === 0}
-                className={`flex items-center justify-center w-10 h-10 rounded-full transition-all ${
-                  currentIndex === 0
-                    ? 'bg-gray-50 text-gray-300 cursor-not-allowed'
-                    : 'bg-gray-100 hover:bg-gray-200 text-gray-700 hover:text-gray-900'
-                }`}
-                aria-label="Previous product"
-              >
-                <ArrowLeft className="w-5 h-5" />
-              </button>
-              <button
-                onClick={handleNext}
-                disabled={currentIndex === orderBumps.length - 1}
-                className={`flex items-center justify-center w-10 h-10 rounded-full transition-all ${
-                  currentIndex === orderBumps.length - 1
-                    ? 'bg-gray-50 text-gray-300 cursor-not-allowed'
-                    : 'bg-gray-100 hover:bg-gray-200 text-gray-700 hover:text-gray-900'
-                }`}
-                aria-label="Next product"
-              >
-                <ArrowRight className="w-5 h-5" />
-              </button>
-            </div>
-          )}
         </div>
 
-        {/* Order Bumps */}
-        <div className="space-y-4 mb-6 relative">
-          {visibleBumps.map((product, index) => {
-            const isExpanded = expandedBump === product.id
-            const isSelected = selectedBumps.includes(product.id)
+        {/* Mobile Navigation - Only shown on mobile when multiple items */}
+        {orderBumps.length > 1 && (
+          <div className="md:hidden flex items-center justify-center gap-2 mb-6">
+            <button
+              onClick={handlePrevious}
+              disabled={currentIndex === 0}
+              className={`flex items-center justify-center w-10 h-10 rounded-full transition-all ${
+                currentIndex === 0
+                  ? 'bg-gray-50 text-gray-300 cursor-not-allowed'
+                  : 'bg-gray-100 hover:bg-gray-200 text-gray-700 hover:text-gray-900'
+              }`}
+              aria-label="Previous product"
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </button>
+            <span className="text-sm text-gray-600 min-w-[60px] text-center">
+              {currentIndex + 1} / {orderBumps.length}
+            </span>
+            <button
+              onClick={handleNext}
+              disabled={currentIndex === orderBumps.length - 1}
+              className={`flex items-center justify-center w-10 h-10 rounded-full transition-all ${
+                currentIndex === orderBumps.length - 1
+                  ? 'bg-gray-50 text-gray-300 cursor-not-allowed'
+                  : 'bg-gray-100 hover:bg-gray-200 text-gray-700 hover:text-gray-900'
+              }`}
+              aria-label="Next product"
+            >
+              <ArrowRight className="w-5 h-5" />
+            </button>
+          </div>
+        )}
 
-            return (
-              <div
-                key={product.id}
-                className={`bg-white border-2 rounded-2xl p-6 transition-all duration-300 ease-in-out transform ${
-                  isSelected ? 'border-[#000000] shadow-lg' : 'border-gray-200'
-                } ${!showAll ? 'animate-fadeIn' : ''}`}
-                style={{
-                  animation: !showAll ? 'fadeIn 0.3s ease-in-out' : 'none'
-                }}
-              >
-                {/* Product Header */}
-                <div className="flex items-start gap-4">
-                  {/* Image */}
-                  <div className="flex-shrink-0 w-16 h-16">
-                    <img
-                      src={product.image}
-                      alt={product.title}
-                      className="w-full h-full object-cover rounded-lg"
-                      onError={(e) => {
-                        e.currentTarget.src = 'https://via.placeholder.com/64'
-                      }}
-                    />
-                  </div>
+        {/* Order Bumps - Grid on desktop, Carousel on mobile */}
+        <div className="mb-6">
+          {/* Mobile: Carousel (single item) */}
+          <div className="md:hidden">
+            {orderBumps[currentIndex] && (() => {
+              const product = orderBumps[currentIndex]
+              const isSelected = selectedBumps.includes(product.id)
 
-                  {/* Title, Subtitle, and Add Button */}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-start justify-between gap-3 mb-2">
-                      <div className="flex-1">
-                        <h3 className="text-lg font-bold text-gray-900">{product.title}</h3>
+              // Parse benefits from description or use a default set
+              const benefits = product.description
+                ? product.description.split('\n').filter(line => line.trim().startsWith('-') || line.trim().startsWith('•')).map(line => line.replace(/^[-•]\s*/, '').trim())
+                : [
+                    `Access to all ${product.title} content`,
+                    'Lifetime updates and new additions',
+                    'Watch anytime on any device',
+                    '30-day money-back guarantee'
+                  ]
+
+              return (
+                <div
+                  key={product.id}
+                  className={`bg-white rounded-3xl overflow-hidden cursor-pointer transition-all duration-300 ${
+                    isSelected ? 'ring-2 ring-black shadow-2xl' : 'shadow-sm hover:shadow-lg'
+                  }`}
+                  style={{
+                    animation: 'fadeIn 0.3s ease-in-out'
+                  }}
+                >
+                  <div className="grid gap-0">
+                    {/* Product image */}
+                    <div className="bg-gradient-to-br from-gray-50 to-gray-100 p-6 flex items-center justify-center">
+                      <img
+                        src={product.image}
+                        alt={product.title}
+                        className="w-full max-w-[280px] rounded-xl shadow-lg"
+                        onError={(e) => {
+                          e.currentTarget.src = 'https://via.placeholder.com/400'
+                        }}
+                      />
+                    </div>
+
+                    {/* Product info, benefits, and CTA */}
+                    <div className="p-6 flex flex-col justify-center">
+                      <div className="mb-5">
+                        <h3 className="text-xl font-bold text-gray-900 mb-2">{product.title}</h3>
+                        <p className="text-sm text-gray-600">{product.shortDescription}</p>
                       </div>
-                      {/* Price */}
-                      <p className="text-xl font-bold text-gray-900 flex-shrink-0">
-                        {funnelType === 'course' && product.id === 'bundle' ? (
-                          // Calculate additional cost for bundle upgrade
-                          (() => {
-                            const courseParam = searchParams.get('course')
-                            if (courseParam) {
-                              const course = getProductById(courseParam)
-                              if (course) {
-                                const bundlePrice = getProductPrice(product.metadata, currency) || product.price
-                                const coursePrice = getProductPrice(course.metadata, currency) || course.price
-                                const additionalCost = bundlePrice - coursePrice
-                                return `+${formatPrice(additionalCost, currency)}`
+                      <div className="space-y-2 mb-6">
+                        {benefits.slice(0, 3).map((benefit: string, i: number) => (
+                          <div key={i} className="flex items-center gap-2">
+                            <Check className="w-4 h-4 text-green-600 flex-shrink-0" strokeWidth={2.5} />
+                            <span className="text-xs text-gray-700">{benefit}</span>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <div>
+                          {funnelType === 'course' && product.id === 'bundle' ? (
+                            // Show total value crossed out + additional cost
+                            (() => {
+                              const courseParam = searchParams.get('course')
+                              const bffpPrice = getProductPrice('bffp', currency) || 297
+                              const brdmpPrice = getProductPrice('brdmp', currency) || 147
+                              const rcvPrice = getProductPrice('rcv', currency) || 67
+                              const totalValue = bffpPrice + brdmpPrice + rcvPrice
+                              const bundlePrice = getProductPrice(product.metadata, currency) || product.price
+
+                              let additionalCost = bundlePrice
+                              if (courseParam) {
+                                const course = getProductById(courseParam)
+                                if (course) {
+                                  const coursePrice = getProductPrice(course.metadata, currency) || course.price
+                                  additionalCost = bundlePrice - coursePrice
+                                }
                               }
-                            }
-                            const bundlePrice = getProductPrice(product.metadata, currency) || product.price
-                            return formatPrice(bundlePrice, currency)
-                          })()
-                        ) : (
-                          formatPrice(getProductPrice(product.metadata, currency) || product.price, currency)
-                        )}
-                      </p>
-                    </div>
 
-                    <div className="flex items-center justify-between gap-3">
-                      <p className="text-sm text-gray-600 flex-1">{product.shortDescription}</p>
-                      {/* Chevron */}
-                      <button
-                        onClick={() => setExpandedBump(isExpanded ? null : product.id)}
-                        className="text-gray-600 hover:text-gray-900 transition-colors flex-shrink-0"
-                        aria-label={isExpanded ? 'Hide details' : 'Show details'}
-                      >
-                        <ChevronDown
-                          className={`w-5 h-5 transition-transform ${
-                            isExpanded ? 'rotate-180' : ''
+                              return (
+                                <div className="flex items-center gap-3">
+                                  <p className="text-lg font-bold text-gray-500 line-through">
+                                    {formatPrice(totalValue, currency)}
+                                  </p>
+                                  <p className="text-2xl font-bold text-gray-900">
+                                    {formatPrice(additionalCost, currency)}
+                                  </p>
+                                </div>
+                              )
+                            })()
+                          ) : (
+                            <p className="text-2xl font-bold text-gray-900">
+                              {formatPrice(getProductPrice(product.metadata, currency) || product.price, currency)}
+                            </p>
+                          )}
+                        </div>
+                        <button
+                          onClick={() => handleToggleBump(product.id)}
+                          className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-all ${
+                            isSelected
+                              ? 'bg-black text-white'
+                              : 'bg-gray-900 text-white hover:bg-black'
                           }`}
-                        />
-                      </button>
+                        >
+                          {isSelected ? (product.id === 'bundle' ? '✓ Upgraded' : '✓ Added') : (product.id === 'bundle' ? 'Upgrade' : 'Add to order')}
+                        </button>
+                      </div>
                     </div>
-
-                    {/* Add/Upgrade Button - Below subtitle */}
-                    <button
-                      onClick={() => handleToggleBump(product.id)}
-                      className={`mt-3 py-2 px-6 font-bold text-sm rounded-lg transition-all duration-200 ${
-                        isSelected
-                          ? 'bg-[#000000] text-white hover:bg-[#1a1a1a]'
-                          : 'bg-gray-100 text-gray-900 hover:bg-gray-200'
-                      }`}
-                      style={{ cursor: 'pointer' }}
-                    >
-                      {funnelType === 'course'
-                        ? (isSelected ? '✓ Upgraded' : 'Upgrade')
-                        : (isSelected ? '✓ Added' : '+ Add')
-                      }
-                    </button>
                   </div>
                 </div>
+              )
+            })()}
+          </div>
 
-                {isExpanded && (
-                  <div
-                    className="mt-4 text-sm text-gray-700 whitespace-pre-line"
-                    dangerouslySetInnerHTML={{
-                      __html: formatDescription(formatProductDescription(product.id, product.description, currency))
-                    }}
-                  />
-                )}
-              </div>
-            )
-          })}
+          {/* Desktop: Grid (all items) */}
+          <div className={`hidden md:grid gap-4 ${
+            orderBumps.length === 1 ? 'md:grid-cols-1 max-w-md mx-auto' :
+            orderBumps.length === 2 ? 'md:grid-cols-2' :
+            'md:grid-cols-3'
+          }`}>
+            {orderBumps.map((product) => {
+              const isSelected = selectedBumps.includes(product.id)
+
+              // Parse benefits from description or use a default set
+              const benefits = product.description
+                ? product.description.split('\n').filter(line => line.trim().startsWith('-') || line.trim().startsWith('•')).map(line => line.replace(/^[-•]\s*/, '').trim())
+                : [
+                    `Access to all ${product.title} content`,
+                    'Lifetime updates and new additions',
+                    'Watch anytime on any device',
+                    '30-day money-back guarantee'
+                  ]
+
+              return (
+                <div
+                  key={product.id}
+                  className={`bg-white rounded-3xl overflow-hidden cursor-pointer transition-all duration-300 ${
+                    isSelected ? 'ring-2 ring-black shadow-2xl' : 'shadow-sm hover:shadow-lg'
+                  }`}
+                >
+                  <div className="flex flex-col h-full">
+                    {/* Product image */}
+                    <div className="bg-gradient-to-br from-gray-50 to-gray-100 p-6 flex items-center justify-center">
+                      <img
+                        src={product.image}
+                        alt={product.title}
+                        className="w-full max-w-[200px] rounded-xl shadow-lg"
+                        onError={(e) => {
+                          e.currentTarget.src = 'https://via.placeholder.com/400'
+                        }}
+                      />
+                    </div>
+
+                    {/* Product info, benefits, and CTA */}
+                    <div className="p-6 flex flex-col justify-between flex-1">
+                      <div>
+                        <div className="mb-4">
+                          <h3 className="text-lg font-bold text-gray-900 mb-2">{product.title}</h3>
+                          <p className="text-sm text-gray-600">{product.shortDescription}</p>
+                        </div>
+                        <div className="space-y-2 mb-6">
+                          {benefits.slice(0, 3).map((benefit: string, i: number) => (
+                            <div key={i} className="flex items-start gap-2">
+                              <Check className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" strokeWidth={2.5} />
+                              <span className="text-xs text-gray-700">{benefit}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                      <div>
+                        <div className="mb-3">
+                          {funnelType === 'course' && product.id === 'bundle' ? (
+                            // Show total value crossed out + additional cost
+                            (() => {
+                              const courseParam = searchParams.get('course')
+                              const bffpPrice = getProductPrice('bffp', currency) || 297
+                              const brdmpPrice = getProductPrice('brdmp', currency) || 147
+                              const rcvPrice = getProductPrice('rcv', currency) || 67
+                              const totalValue = bffpPrice + brdmpPrice + rcvPrice
+                              const bundlePrice = getProductPrice(product.metadata, currency) || product.price
+
+                              let additionalCost = bundlePrice
+                              if (courseParam) {
+                                const course = getProductById(courseParam)
+                                if (course) {
+                                  const coursePrice = getProductPrice(course.metadata, currency) || course.price
+                                  additionalCost = bundlePrice - coursePrice
+                                }
+                              }
+
+                              return (
+                                <div className="flex items-center gap-2">
+                                  <p className="text-base font-bold text-gray-500 line-through">
+                                    {formatPrice(totalValue, currency)}
+                                  </p>
+                                  <p className="text-xl font-bold text-gray-900">
+                                    {formatPrice(additionalCost, currency)}
+                                  </p>
+                                </div>
+                              )
+                            })()
+                          ) : (
+                            <p className="text-xl font-bold text-gray-900">
+                              {formatPrice(getProductPrice(product.metadata, currency) || product.price, currency)}
+                            </p>
+                          )}
+                        </div>
+                        <button
+                          onClick={() => handleToggleBump(product.id)}
+                          className={`w-full px-5 py-2.5 rounded-full text-sm font-semibold transition-all ${
+                            isSelected
+                              ? 'bg-black text-white'
+                              : 'bg-gray-900 text-white hover:bg-black'
+                          }`}
+                        >
+                          {isSelected ? (product.id === 'bundle' ? '✓ Upgraded' : '✓ Added') : (product.id === 'bundle' ? 'Upgrade' : 'Add to order')}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
         </div>
-
-        {/* View All Button */}
-        {!showAll && orderBumps.length > 1 && (
-          <button
-            onClick={() => setShowAll(true)}
-            className="w-full py-3 text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors mb-6"
-          >
-            View all
-          </button>
-        )}
 
         {/* Continue Button */}
         <button

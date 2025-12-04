@@ -38,7 +38,7 @@ export default function SixWeekChallengePage() {
     { text: "Live coaching calls every week", bold: " with Oliver" },
     { text: "Personal help", bold: " on your training videos" },
     { text: "Full access", bold: " to the Boxing Masterclass" },
-    { text: "Keep forever", bold: " the Boxing Roadmap" },
+    { text: "Full access", bold: " to the Boxing Roadmap" },
     { text: "Ask your coaches", bold: " questions anytime" }
   ]
 

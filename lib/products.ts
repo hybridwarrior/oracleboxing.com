@@ -20,15 +20,12 @@ export const products: Product[] = [
     lessonCount: 225,
     lessonCountPrefix: '+',
     workoutCount: 100,
-    description: `**Get everything. Master the complete boxing system from fundamentals to real application.**
+    description: `**Oracle Boxing Bundle**
+**Every Course, Every Call, Every System, All in One Bundle.**
 
-**This bundle includes:**
-• Boxing Masterclass ($297)
-• Boxing Roadmap ($147)
-
-**Total value: $444**
-**Bundle price: $397**
-**You save: $47**
+- Boxing Masterclass ($297)
+- Boxing Roadmap ($147)
+- Boxing Recordings ($97)
 
 Complete access to the entire Oracle Boxing system — theory, technique, and tactics.`,
   },
@@ -208,13 +205,13 @@ Perfect for beginners or boxers who want rapid improvement with accountability.`
   {
     id: 'recordings-vault',
     title: 'Recordings Vault Access',
-    price: 97,
+    price: 67,
     type: 'course',
     metadata: 'rcv',
     stripe_product_id: 'prod_TKqg9nRbK27CDg',
-    stripe_price_id: 'price_1SOAyoKPvH4Ddlg1LwFtCdm2',
+    stripe_price_id: 'price_1SaVe2KPvH4Ddlg1zttkauwt',
     image: 'https://media.oracleboxing.com/Website/optimized/products/boxing_clinic-large.webp',
-    description: `Get lifetime access to every coaching call and 1-on-1 call recording. Never worry about missing a session, rewatch, review, and learn at your own pace. Normally $197, yours today for just $97.`,
+    description: `Get lifetime access to every coaching call and 1-on-1 call recording. Never worry about missing a session, rewatch, review, and learn at your own pace. Normally $197, yours today for just $67.`,
     shortDescription: 'Lifetime access to all coaching call recordings',
     perfectFor: 'Visual learners who study best through examples',
     lessonCount: 220,
@@ -235,6 +232,22 @@ Perfect for beginners or boxers who want rapid improvement with accountability.`
     perfectFor: '6-Week Challenge participants who want to keep learning',
     moduleCount: 5,
     lessonCount: 26,
+  },
+  {
+    id: 'lifetime-roadmap',
+    title: 'Lifetime Access to Boxing Roadmap',
+    price: 97,
+    type: 'course',
+    metadata: 'ltbrdmp',
+    stripe_product_id: 'prod_TKgxoODHTfkQEF',
+    stripe_price_id: 'price_1SaVcCKPvH4Ddlg1cT1jmuMS',
+    image: 'https://media.oracleboxing.com/Website/optimized/products/tbrtn5hq-large.webp',
+    description: `Get lifetime access to the complete Boxing Roadmap training system. Master all 5 phases from fundamentals to sparring-ready technique. Normally $147, add lifetime access today for just $97.`,
+    shortDescription: 'Keep Boxing Roadmap forever',
+    perfectFor: '6-Week Challenge participants who want structured training',
+    weeks: 20,
+    workoutCount: 100,
+    lessonCount: 176,
   },
   {
     id: 'lifetime-all-monthly',
@@ -448,6 +461,42 @@ Everything in the Challenge plus lifetime access and VIP perks.
     weeks: 6,
     lessonCount: 26,
   },
+  {
+    id: 'tracksuit',
+    title: 'Oracle Boxing Tracksuit',
+    price: 161, // USD base price (20% discount applied)
+    currency_prices: {
+      USD: 161,
+      GBP: 128,
+      EUR: 150,
+      CAD: 219,
+      AUD: 241,
+      AED: 590,
+    },
+    type: 'course',
+    metadata: 'tracksuit',
+    stripe_product_id: 'prod_PLACEHOLDER',
+    stripe_price_id: 'price_PLACEHOLDER_USD',
+    price_ids: {
+      multicurrency: 'price_PLACEHOLDER_MULTI',
+    },
+    image: 'https://media.oracleboxing.com/Website/tracksuit_preview.png',
+    description: `**Premium Oracle Boxing Tracksuit**
+
+Represent the Oracle Boxing community with our exclusive tracksuit.
+
+**Features:**
+• 100% cotton for maximum comfort and durability
+• Made in Britain with premium craftsmanship
+• Official Oracle Boxing branding
+• Perfect for training or casual wear
+• Limited availability
+
+**Sizing:**
+We'll contact you after purchase to confirm your size and shipping details.`,
+    shortDescription: 'Official Oracle Boxing Tracksuit - 20% Off Success Page Only',
+    perfectFor: 'Community members who want to represent',
+  },
 ]
 
 // Combine all products for internal lookups
@@ -480,7 +529,7 @@ export function getProductByMetadata(metadata: string): Product | undefined {
 
 // Get products for specific funnels
 export function get6WCAddOns(): Product[] {
-  return allProducts.filter(p => ['rcv', 'ltbffp'].includes(p.metadata || ''))
+  return allProducts.filter(p => ['rcv', 'ltbffp', 'ltbrdmp'].includes(p.metadata || ''))
 }
 
 export function getMembershipAddOns(membershipTier: 'monthly' | '6month' | 'annual'): Product[] {

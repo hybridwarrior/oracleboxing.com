@@ -14,6 +14,53 @@ export async function GET(req: NextRequest) {
       );
     }
 
+    // DEV MODE: Return mock data for test session ID
+    if (sessionId === 'test_preview' || sessionId.startsWith('cs_test_preview')) {
+      return NextResponse.json({
+        customerName: 'John Doe',
+        customerEmail: 'john@example.com',
+        amountPaid: '$397',
+        productPurchased: 'Oracle Boxing Bundle',
+        currency: 'USD',
+        funnelType: 'course',
+        sessionId: sessionId,
+        productMetadata: {
+          funnel: 'course',
+          product_metadata: 'obm'
+        },
+        trackingParams: {
+          referrer: 'direct',
+          utm_source: 'test',
+          utm_campaign: 'preview'
+        },
+        metadata: {
+          product_metadata: 'obm',
+          funnel_type: 'course'
+        },
+        amount_total: 39700,
+        customer_details: {
+          name: 'John Doe',
+          email: 'john@example.com'
+        },
+        customer_email: 'john@example.com',
+        line_items: {
+          data: [
+            {
+              description: 'Oracle Boxing Bundle',
+              quantity: 1,
+              price: {
+                unit_amount: 39700,
+                product: {
+                  id: 'prod_test_bundle',
+                  name: 'Oracle Boxing Bundle'
+                }
+              }
+            }
+          ]
+        }
+      });
+    }
+
     // Retrieve the checkout session from Stripe with expanded line items
     const session = await stripe.checkout.sessions.retrieve(sessionId, {
       expand: ['line_items', 'line_items.data.price.product', 'customer', 'payment_intent'],

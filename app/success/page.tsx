@@ -8,8 +8,25 @@ export const metadata = {
   description: 'Your order has been confirmed',
 }
 
-export default async function SuccessPage({ params }: { params: Promise<{ session_id: string }> }) {
-  const { session_id } = await params
+export default async function SuccessPage({
+  searchParams
+}: {
+  searchParams: Promise<{ session_id?: string }>
+}) {
+  const { session_id } = await searchParams
+
+  if (!session_id) {
+    return (
+      <div className="min-h-screen bg-white text-gray-900">
+        <Header />
+        <div className="py-20 text-center">
+          <h1 className="text-2xl font-bold text-gray-900">Invalid session</h1>
+          <p className="text-gray-600 mt-2">Please check your confirmation email for the correct link.</p>
+        </div>
+        <Footer />
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-white text-gray-900">
