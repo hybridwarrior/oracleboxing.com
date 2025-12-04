@@ -1,13 +1,10 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { CheckCircle } from 'lucide-react'
 import { Upsell } from './Upsell'
 import { Product } from '@/lib/types'
 import { getProductById } from '@/lib/products'
 import { useAnalytics } from '@/hooks/useAnalytics'
-import { useCurrency } from '@/contexts/CurrencyContext'
-import { formatPrice } from '@/lib/currency'
 
 interface SuccessContentProps {
   sessionId: string
@@ -39,7 +36,7 @@ function getTrackingCookie(): any {
  * Generate a unique event ID for deduplication
  */
 function generateEventId(): string {
-  return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+  return `${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
 }
 
 /**
@@ -62,7 +59,6 @@ export function SuccessContent({ sessionId }: SuccessContentProps) {
   const [upsellProduct, setUpsellProduct] = useState<Product | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const { trackPurchase } = useAnalytics()
-  const { currency } = useCurrency()
 
   useEffect(() => {
     async function fetchSession() {
@@ -229,33 +225,13 @@ export function SuccessContent({ sessionId }: SuccessContentProps) {
 
           {/* TOP: Order Details */}
           <div className="space-y-6">
-            {/* Compact Header */}
-            <div className="text-center">
-              <h1 className="text-2xl font-bold text-gray-900 mb-2">
+            {/* Simple Thank You Message */}
+            <div className="text-center max-w-xl mx-auto space-y-4">
+              <h1 className="text-2xl font-bold text-gray-900">
                 Thank you for your purchase, {session?.customerName || 'Customer'}.
               </h1>
-            </div>
-
-            {/* Compact Order Summary */}
-            <div className="bg-white border border-gray-200 rounded-lg p-4 max-w-xl mx-auto">
-              <table className="w-full">
-                <tbody>
-                  <tr>
-                    <td className="font-semibold text-gray-900 py-1">Product</td>
-                    <td className="text-right text-gray-900 py-1">{session?.productPurchased}</td>
-                  </tr>
-                  <tr>
-                    <td className="font-semibold text-gray-900 py-1">Amount</td>
-                    <td className="text-right font-bold text-gray-900 py-1">{session?.amountPaid}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
-            {/* Simple Notice */}
-            <div className="text-center max-w-xl mx-auto">
-              <p className="text-sm text-gray-600">
-                We will email you a copy of this receipt and further instructions to {session?.customerEmail || 'your email'}.
+              <p className="text-gray-600">
+                We will email your receipt and further instructions to <span className="font-medium text-gray-900">{session?.customerEmail || 'your email'}</span>.
               </p>
             </div>
           </div>
