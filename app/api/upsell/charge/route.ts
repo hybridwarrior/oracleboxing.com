@@ -197,25 +197,16 @@ export async function POST(req: NextRequest) {
         status: subscription.status,
       })
     } else {
-      // Create a one-time payment for non-recurring products using multi-currency price
-      console.log('🔍 UPSELL: Creating one-time payment with multi-currency price')
+      // Create a one-time payment for non-recurring products
+      console.log('🔍 UPSELL: Creating one-time payment')
 
-      // Currency-specific pricing (in cents)
-      const currencyPricing: Record<string, number> = {
-        'usd': 39700,  // $397.00
-        'gbp': 31700,  // £317.00
-        'eur': 36500,  // €365.00
-        'cad': 53800,  // CA$538.00
-        'aud': 59500,  // A$595.00
-        'aed': 146500, // AED 1,465.00
-      };
-
-      const lowerCurrency = originalCurrency.toLowerCase();
-      const amount = currencyPricing[lowerCurrency] || 39700; // Default to USD if currency not found
+      // Use the price from the Stripe Price object
+      const amount = priceObj.unit_amount || 0;
+      const currency = priceObj.currency;
 
       console.log('🔍 UPSELL: Final charge details:', {
         amount,
-        currency: originalCurrency,
+        currency,
         customer: customerId,
         amountInMajorUnit: (amount / 100).toFixed(2)
       });
@@ -232,7 +223,7 @@ export async function POST(req: NextRequest) {
 
       const upsellPaymentIntent = await stripe.paymentIntents.create({
         amount: amount,
-        currency: originalCurrency,
+        currency: currency,
         customer: customerId,
         payment_method: paymentMethodId,
         off_session: true,
@@ -246,11 +237,11 @@ export async function POST(req: NextRequest) {
 
           // Funnel tracking
           funnel_type: 'upsell',
-          type: 'coaching',
-          entry_product: 'coach1',
+          type: product_id === 'tracksuit' ? 'tracksuit' : 'coaching',
+          entry_product: product_id,
 
           // Product details
-          product_name: '1-Month 1-on-1 Coaching',
+          product_name: priceObj.nickname || product_id,
           product_id: product_id,
           price_id: price_id,
 
@@ -317,7 +308,7 @@ export async function POST(req: NextRequest) {
             },
             custom_data: {
               value: amount / 100,
-              currency: originalCurrency.toUpperCase(),
+              currency: currency.toUpperCase(),
               content_ids: [product_id],
               content_type: 'product',
               num_items: 1,

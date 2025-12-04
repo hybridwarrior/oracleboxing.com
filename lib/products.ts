@@ -475,10 +475,10 @@ Everything in the Challenge plus lifetime access and VIP perks.
     },
     type: 'course',
     metadata: 'tracksuit',
-    stripe_product_id: 'prod_PLACEHOLDER',
-    stripe_price_id: 'price_PLACEHOLDER_USD',
+    stripe_product_id: 'prod_TXkoI5vRqO7auz', // Test product ID
+    stripe_price_id: 'price_1SafJLQNEdHwdojXTHKyas20', // Test price ID ($161)
     price_ids: {
-      multicurrency: 'price_PLACEHOLDER_MULTI',
+      usd: 'price_1SafJLQNEdHwdojXTHKyas20',
     },
     image: 'https://media.oracleboxing.com/Website/tracksuit_preview.png',
     description: `**Premium Oracle Boxing Tracksuit**
