@@ -8,7 +8,7 @@ import { useCurrency } from '@/contexts/CurrencyContext'
 import { getProductPrice, formatPrice, isMembershipProduct } from '@/lib/currency'
 import { getCookie, getTrackingParams } from '@/lib/tracking-cookies'
 import { useAnalytics } from '@/hooks/useAnalytics'
-import { ColorSelector, getColorImages, TRACKSUIT_COLORS, type TrackSuitColor } from '@/app/upsell-library/components/ColorSelector'
+import { ColorSelector, getColorImages, TRACKSUIT_COLORS, type TrackSuitColor } from '@/components/ColorSelector'
 
 interface UpsellProps {
   product: Product
