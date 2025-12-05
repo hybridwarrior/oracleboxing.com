@@ -204,6 +204,15 @@ export function Header() {
               >
                 Clothing
               </a>
+
+              {/* Contact Link */}
+              <Link
+                href="/contact"
+                onClick={() => handleNavClick('header', '/contact')}
+                className="text-white font-semibold text-sm lg:text-base tracking-wide hover:text-gray-300 transition-colors"
+              >
+                Contact
+              </Link>
             </nav>
 
             {/* Mobile Hamburger Menu */}
@@ -287,6 +296,18 @@ export function Header() {
                 >
                   Clothing
                 </a>
+
+                {/* Contact Link */}
+                <Link
+                  href="/contact"
+                  onClick={() => {
+                    handleNavClick('mobile_menu', '/contact')
+                    closeMobileMenu()
+                  }}
+                  className="text-white font-bold text-xl py-4 px-5 hover:bg-neutral-800 rounded-lg transition-colors text-left block"
+                >
+                  Contact
+                </Link>
               </div>
             </nav>
           </div>
