@@ -58,18 +58,76 @@ interface CreateCheckoutSessionParams {
 
 // Helper function to flatten cookie data into individual Stripe metadata fields
 // Each cookie field becomes a separate metadata field with "cookie_" prefix
-function prepareCookieDataForStripe(cookieData: any): Record<string, string> {
+// FIXED: Added validation to prevent exceeding Stripe's 500-key and 500-char limits
+function prepareCookieDataForStripe(cookieData: any, existingKeyCount: number = 0): Record<string, string> {
   if (!cookieData) return {};
 
   const flattenedCookieData: Record<string, string> = {};
 
-  // Flatten all cookie data fields with "cookie_" prefix
-  for (const [key, value] of Object.entries(cookieData)) {
-    if (value !== null && value !== undefined) {
-      // Convert value to string and prefix with "cookie_"
-      flattenedCookieData[`cookie_${key}`] = String(value);
+  // Stripe limits: 500 keys total, 500 chars per value
+  const MAX_METADATA_KEYS = 500;
+  const MAX_VALUE_LENGTH = 500;
+
+  // Calculate remaining key budget (reserve buffer for critical fields)
+  const RESERVED_KEYS = 50; // Reserve space for critical non-cookie fields
+  const availableKeys = MAX_METADATA_KEYS - existingKeyCount - RESERVED_KEYS;
+
+  // FIXED: Prioritize critical attribution fields first
+  const priorityFields = [
+    'session_id', 'event_id', 'landing_time',
+    'first_utm_source', 'first_utm_medium', 'first_utm_campaign', 'first_utm_content', 'first_utm_term',
+    'last_utm_source', 'last_utm_medium', 'last_utm_campaign', 'last_utm_content', 'last_utm_term',
+    'first_referrer', 'first_referrer_time', 'last_referrer', 'last_referrer_time',
+    '_fbc', '_fbp', 'country_code', 'currency', 'consent_given',
+  ];
+
+  // Add priority fields first
+  let keysAdded = 0;
+  for (const key of priorityFields) {
+    if (keysAdded >= availableKeys) {
+      console.warn(`⚠️ STRIPE METADATA: Reached key limit (${availableKeys}), skipping remaining cookie fields`);
+      break;
+    }
+
+    if (cookieData[key] !== null && cookieData[key] !== undefined) {
+      let value = String(cookieData[key]);
+
+      // FIXED: Truncate long values to 500 chars
+      if (value.length > MAX_VALUE_LENGTH) {
+        console.warn(`⚠️ STRIPE METADATA: Truncating cookie_${key} from ${value.length} to ${MAX_VALUE_LENGTH} chars`);
+        value = value.substring(0, MAX_VALUE_LENGTH);
+      }
+
+      flattenedCookieData[`cookie_${key}`] = value;
+      keysAdded++;
     }
   }
+
+  // Add remaining fields if space available
+  for (const [key, value] of Object.entries(cookieData)) {
+    if (keysAdded >= availableKeys) {
+      console.warn(`⚠️ STRIPE METADATA: Reached key limit (${availableKeys}), skipping cookie_${key}`);
+      break;
+    }
+
+    // Skip if already added as priority field
+    if (priorityFields.includes(key)) continue;
+
+    if (value !== null && value !== undefined) {
+      let stringValue = String(value);
+
+      // FIXED: Truncate long values
+      if (stringValue.length > MAX_VALUE_LENGTH) {
+        console.warn(`⚠️ STRIPE METADATA: Truncating cookie_${key} from ${stringValue.length} to ${MAX_VALUE_LENGTH} chars`);
+        stringValue = stringValue.substring(0, MAX_VALUE_LENGTH);
+      }
+
+      flattenedCookieData[`cookie_${key}`] = stringValue;
+      keysAdded++;
+    }
+  }
+
+  console.log(`📊 STRIPE METADATA: Added ${keysAdded} cookie fields (${availableKeys - keysAdded} keys remaining)`);
 
   return flattenedCookieData;
 }
@@ -346,55 +404,70 @@ export async function createCheckoutSession({
     })
   })
 
-  sessionParams.metadata = {
+  // FIXED: Calculate base metadata key count before adding cookie data
+  const baseMetadata: Record<string, string> = {
     // Customer info
     customer_first_name: metadataFirstName,
     customer_last_name: metadataLastName,
     customer_phone: customerInfo?.phone || '',
     customer_email: customerInfo?.email || '',
 
-    // Shipping address
-    shipping_line1: customerInfo?.address?.line1 || '',
-    shipping_line2: customerInfo?.address?.line2 || '',
-    shipping_city: customerInfo?.address?.city || '',
-    shipping_state: customerInfo?.address?.state || '',
-    shipping_postal_code: customerInfo?.address?.postal_code || '',
-    shipping_country: customerInfo?.address?.country || '',
-
     // Funnel tracking
     funnel_type: funnelType,
-    type: purchaseType, // Add type metadata: course, membership, 6wc, merch
+    type: purchaseType,
     entry_product: mainProduct?.metadata || mainProduct?.id || '',
     add_ons_included: addOns,
-
-    // Cross-sell tracking
     recommended_products: recommendedProducts.join(','),
 
     // Product info
     product_name: mainProduct?.title || mainProduct?.id || '',
     product_id: mainProduct?.id || '',
 
-    // Merchandise-specific metadata (individual fields for each merch item)
-    ...merchMetadata,
-
-    // Merchandise count
-    ...(merchVariantsSummary.length > 0 ? {
-      merch_items_count: merchVariantsSummary.length.toString(),
-    } : {}),
-
-    // Additional tracking
-    fbclid: trackingParams?.fbclid || fbParams?.fbclid || '',
+    // Session tracking
     session_id: trackingParams?.session_id || '',
     event_id: trackingParams?.event_id || '',
+    fbclid: trackingParams?.fbclid || fbParams?.fbclid || '',
 
-    // Facebook Conversions API parameters (from Parameter Builder)
+    // FIXED: Explicit first-touch attribution (CRITICAL for multi-touch attribution)
+    first_utm_source: trackingParams?.first_utm_source || '',
+    first_utm_medium: trackingParams?.first_utm_medium || '',
+    first_utm_campaign: trackingParams?.first_utm_campaign || '',
+    first_utm_content: trackingParams?.first_utm_content || '',
+    first_utm_term: trackingParams?.first_utm_term || '',
+    first_referrer: trackingParams?.referrer || '',
+    first_referrer_time: trackingParams?.first_referrer_time || '',
+
+    // FIXED: Explicit last-touch attribution (what brought them to checkout)
+    last_utm_source: trackingParams?.last_utm_source || '',
+    last_utm_medium: trackingParams?.last_utm_medium || '',
+    last_utm_campaign: trackingParams?.last_utm_campaign || '',
+    last_utm_content: trackingParams?.last_utm_content || '',
+    last_utm_term: trackingParams?.last_utm_term || '',
+    last_referrer_time: trackingParams?.last_referrer_time || '',
+
+    // Facebook Conversions API parameters
     fb_fbc: fbParams?.fbc || '',
     fb_fbp: fbParams?.fbp || '',
     fb_client_ip: fbParams?.client_ip_address || '',
     fb_user_agent: fbParams?.client_user_agent || '',
 
-    // Cookie tracking data - each field as separate metadata (includes all UTM and attribution data)
-    ...prepareCookieDataForStripe(cookieData),
+    // Merchandise count
+    ...(merchVariantsSummary.length > 0 ? {
+      merch_items_count: merchVariantsSummary.length.toString(),
+    } : {}),
+  };
+
+  // FIXED: Add merchandise metadata to base count
+  const baseKeyCount = Object.keys(baseMetadata).length + Object.keys(merchMetadata).length;
+
+  // FIXED: Add cookie data with size validation
+  const cookieMetadata = prepareCookieDataForStripe(cookieData, baseKeyCount);
+
+  // FIXED: Combine all metadata
+  sessionParams.metadata = {
+    ...baseMetadata,
+    ...merchMetadata, // Merchandise-specific metadata
+    ...cookieMetadata, // Cookie tracking data with validation
   }
 
   // Add cross-sell recommendations using Stripe's adjustable quantity feature
@@ -478,40 +551,70 @@ export async function createCheckoutSession({
 
   // Add payment intent data for off-session charges (upsells)
   if (mode === 'payment') {
+    // FIXED: Calculate payment intent base metadata count
+    const paymentIntentBaseMetadata: Record<string, string> = {
+      // Customer info
+      customer_first_name: metadataFirstName,
+      customer_last_name: metadataLastName,
+      customer_email: customerInfo?.email || '',
+      customer_phone: customerInfo?.phone || '',
+
+      // Funnel tracking
+      funnel_type: funnelType,
+      type: purchaseType,
+      entry_product: mainProduct?.metadata || mainProduct?.id || '',
+      add_ons_included: addOns,
+
+      // Product details
+      product_name: mainProduct?.title || '',
+      product_id: mainProduct?.id || '',
+
+      // Session tracking
+      session_id: trackingParams?.session_id || '',
+      event_id: trackingParams?.event_id || '',
+      fbclid: trackingParams?.fbclid || fbParams?.fbclid || '',
+
+      // FIXED: Explicit first-touch attribution (CRITICAL for charge.succeeded webhook)
+      first_utm_source: trackingParams?.first_utm_source || '',
+      first_utm_medium: trackingParams?.first_utm_medium || '',
+      first_utm_campaign: trackingParams?.first_utm_campaign || '',
+      first_utm_content: trackingParams?.first_utm_content || '',
+      first_utm_term: trackingParams?.first_utm_term || '',
+      first_referrer: trackingParams?.referrer || '',
+      first_referrer_time: trackingParams?.first_referrer_time || '',
+
+      // FIXED: Explicit last-touch attribution
+      last_utm_source: trackingParams?.last_utm_source || '',
+      last_utm_medium: trackingParams?.last_utm_medium || '',
+      last_utm_campaign: trackingParams?.last_utm_campaign || '',
+      last_utm_content: trackingParams?.last_utm_content || '',
+      last_utm_term: trackingParams?.last_utm_term || '',
+      last_referrer_time: trackingParams?.last_referrer_time || '',
+
+      // FIXED: Facebook Conversions API parameters (for FB CAPI events)
+      fb_fbc: fbParams?.fbc || '',
+      fb_fbp: fbParams?.fbp || '',
+      fb_client_ip: fbParams?.client_ip_address || '',
+      fb_user_agent: fbParams?.client_user_agent || '',
+
+      // Merchandise count
+      ...(merchVariantsSummary.length > 0 ? {
+        merch_items_count: merchVariantsSummary.length.toString(),
+      } : {}),
+    };
+
+    // FIXED: Calculate key count with merchandise metadata
+    const paymentIntentBaseKeyCount = Object.keys(paymentIntentBaseMetadata).length + Object.keys(merchMetadata).length;
+
+    // FIXED: Add cookie data with size validation
+    const paymentIntentCookieMetadata = prepareCookieDataForStripe(cookieData, paymentIntentBaseKeyCount);
+
     sessionParams.payment_intent_data = {
       setup_future_usage: 'off_session', // Save payment method for future charges
       metadata: {
-        // Copy all metadata to payment intent for charge.succeeded webhook
-        customer_first_name: metadataFirstName,
-        customer_last_name: metadataLastName,
-        customer_email: customerInfo?.email || '',
-        customer_phone: customerInfo?.phone || '',
-
-        // Funnel tracking
-        funnel_type: funnelType,
-        type: purchaseType,
-        entry_product: mainProduct?.metadata || mainProduct?.id || '',
-        add_ons_included: addOns,
-
-        // Product details
-        product_name: mainProduct?.title || '',
-        product_id: mainProduct?.id || '',
-
-        // Merchandise-specific metadata (all items)
-        ...merchMetadata,
-
-        // Merchandise count
-        ...(merchVariantsSummary.length > 0 ? {
-          merch_items_count: merchVariantsSummary.length.toString(),
-        } : {}),
-
-        // Additional tracking
-        fbclid: trackingParams?.fbclid || '',
-        session_id: trackingParams?.session_id || '',
-        event_id: trackingParams?.event_id || '',
-
-        // Cookie tracking data - each field as separate metadata (includes all UTM and attribution data)
-        ...prepareCookieDataForStripe(cookieData),
+        ...paymentIntentBaseMetadata,
+        ...merchMetadata, // Merchandise-specific metadata (all items)
+        ...paymentIntentCookieMetadata, // Cookie tracking data with validation
       },
     }
   }
@@ -519,31 +622,64 @@ export async function createCheckoutSession({
   // Add subscription data for membership purchases
   if (mode === 'subscription') {
     sessionParams.payment_method_collection = 'always' // Ensure payment method is saved
+
+    // FIXED: Calculate subscription base metadata count
+    const subscriptionBaseMetadata: Record<string, string> = {
+      // Customer info
+      customer_first_name: metadataFirstName,
+      customer_last_name: metadataLastName,
+      customer_email: customerInfo?.email || '',
+      customer_phone: customerInfo?.phone || '',
+
+      // Funnel tracking
+      funnel_type: funnelType,
+      type: purchaseType,
+      entry_product: mainProduct?.metadata || mainProduct?.id || '',
+      add_ons_included: addOns,
+
+      // Product details
+      product_name: mainProduct?.title || '',
+      product_id: mainProduct?.id || '',
+
+      // Session tracking
+      session_id: trackingParams?.session_id || '',
+      event_id: trackingParams?.event_id || '',
+      fbclid: trackingParams?.fbclid || fbParams?.fbclid || '',
+
+      // FIXED: Explicit first-touch attribution (CRITICAL for subscription webhooks)
+      first_utm_source: trackingParams?.first_utm_source || '',
+      first_utm_medium: trackingParams?.first_utm_medium || '',
+      first_utm_campaign: trackingParams?.first_utm_campaign || '',
+      first_utm_content: trackingParams?.first_utm_content || '',
+      first_utm_term: trackingParams?.first_utm_term || '',
+      first_referrer: trackingParams?.referrer || '',
+      first_referrer_time: trackingParams?.first_referrer_time || '',
+
+      // FIXED: Explicit last-touch attribution
+      last_utm_source: trackingParams?.last_utm_source || '',
+      last_utm_medium: trackingParams?.last_utm_medium || '',
+      last_utm_campaign: trackingParams?.last_utm_campaign || '',
+      last_utm_content: trackingParams?.last_utm_content || '',
+      last_utm_term: trackingParams?.last_utm_term || '',
+      last_referrer_time: trackingParams?.last_referrer_time || '',
+
+      // FIXED: Facebook Conversions API parameters (for FB CAPI events)
+      fb_fbc: fbParams?.fbc || '',
+      fb_fbp: fbParams?.fbp || '',
+      fb_client_ip: fbParams?.client_ip_address || '',
+      fb_user_agent: fbParams?.client_user_agent || '',
+    };
+
+    // FIXED: Calculate key count (subscriptions typically don't have merchandise metadata)
+    const subscriptionBaseKeyCount = Object.keys(subscriptionBaseMetadata).length;
+
+    // FIXED: Add cookie data with size validation
+    const subscriptionCookieMetadata = prepareCookieDataForStripe(cookieData, subscriptionBaseKeyCount);
+
     sessionParams.subscription_data = {
       metadata: {
-        // Copy all metadata to subscription for invoice.payment_succeeded webhook
-        customer_first_name: metadataFirstName,
-        customer_last_name: metadataLastName,
-        customer_email: customerInfo?.email || '',
-        customer_phone: customerInfo?.phone || '',
-
-        // Funnel tracking
-        funnel_type: funnelType,
-        type: purchaseType,
-        entry_product: mainProduct?.metadata || mainProduct?.id || '',
-        add_ons_included: addOns,
-
-        // Product details
-        product_name: mainProduct?.title || '',
-        product_id: mainProduct?.id || '',
-
-        // Additional tracking
-        fbclid: trackingParams?.fbclid || '',
-        session_id: trackingParams?.session_id || '',
-        event_id: trackingParams?.event_id || '',
-
-        // Cookie tracking data - each field as separate metadata (includes all UTM and attribution data)
-        ...prepareCookieDataForStripe(cookieData),
+        ...subscriptionBaseMetadata,
+        ...subscriptionCookieMetadata, // Cookie tracking data with validation
       },
     }
   }
@@ -556,21 +692,55 @@ export async function createCheckoutSession({
     line_items_count: sessionParams.line_items?.length,
   })
 
-  // DEBUG: Count metadata keys
+  // FIXED: Enhanced metadata validation and logging
   const metadataKeys = Object.keys(sessionParams.metadata || {})
-  console.log('📊 Metadata key count:', metadataKeys.length)
-  console.log('📊 Metadata keys:', metadataKeys)
+  console.log('📊 STRIPE METADATA: Session has', metadataKeys.length, 'keys')
 
-  // Check for long values
+  // FIXED: Validate against Stripe limits
+  if (metadataKeys.length > 500) {
+    console.error(`🚨 STRIPE METADATA: Exceeded 500-key limit! (${metadataKeys.length} keys)`)
+    console.error('🚨 STRIPE METADATA: This will cause checkout to fail!')
+  } else if (metadataKeys.length > 450) {
+    console.warn(`⚠️ STRIPE METADATA: Approaching 500-key limit (${metadataKeys.length}/500 keys)`)
+  } else {
+    console.log(`✅ STRIPE METADATA: Safe key count (${metadataKeys.length}/500 keys)`)
+  }
+
+  // FIXED: Check for long values and truncation
+  let longValueCount = 0;
+  let truncatedCount = 0;
   Object.entries(sessionParams.metadata || {}).forEach(([key, value]) => {
-    if (value && typeof value === 'string' && value.length > 100) {
-      console.log(`⚠️ Long metadata value: ${key} = ${value.length} chars`)
+    if (value && typeof value === 'string') {
+      if (value.length > 500) {
+        console.error(`🚨 STRIPE METADATA: Value exceeds 500-char limit: ${key} = ${value.length} chars (WILL FAIL)`)
+      } else if (value.length > 100) {
+        longValueCount++;
+        if (value.length === 500) {
+          truncatedCount++;
+        }
+      }
     }
   })
+
+  if (longValueCount > 0) {
+    console.log(`📊 STRIPE METADATA: ${longValueCount} values >100 chars (${truncatedCount} were truncated to 500 chars)`)
+  }
+
+  // FIXED: Log payment intent and subscription metadata stats
+  if (sessionParams.payment_intent_data?.metadata) {
+    const piMetadataKeys = Object.keys(sessionParams.payment_intent_data.metadata);
+    console.log(`📊 STRIPE METADATA: Payment Intent has ${piMetadataKeys.length} keys`);
+  }
+
+  if (sessionParams.subscription_data?.metadata) {
+    const subMetadataKeys = Object.keys(sessionParams.subscription_data.metadata);
+    console.log(`📊 STRIPE METADATA: Subscription has ${subMetadataKeys.length} keys`);
+  }
 
   try {
     const session = await stripe.checkout.sessions.create(sessionParams)
     console.log('✅ Stripe session created successfully:', session.id)
+    console.log('✅ STRIPE METADATA: All metadata embedded successfully')
     return session
   } catch (stripeError: any) {
     console.error('❌ Stripe API Error:', {
@@ -579,6 +749,14 @@ export async function createCheckoutSession({
       code: stripeError.code,
       param: stripeError.param,
     })
+
+    // FIXED: Enhanced error logging for metadata issues
+    if (stripeError.message && stripeError.message.includes('metadata')) {
+      console.error('🚨 STRIPE METADATA ERROR: Issue with metadata detected!')
+      console.error('🚨 Session metadata keys:', metadataKeys.length)
+      console.error('🚨 Check logs above for size limit violations')
+    }
+
     throw stripeError
   }
 }

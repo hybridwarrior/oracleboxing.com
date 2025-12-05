@@ -56,14 +56,24 @@ export interface TrackingData {
 
 /**
  * Set a cookie with the given name and value
+ * Returns boolean indicating success/failure
  */
-export function setCookie(name: string, value: any, days: number = 30): void {
-  if (typeof window === 'undefined') return;
-  
-  const expires = new Date(Date.now() + days * 24 * 60 * 60 * 1000);
-  const cookieValue = typeof value === 'object' ? JSON.stringify(value) : value;
-  
-  document.cookie = `${name}=${encodeURIComponent(cookieValue)}; expires=${expires.toUTCString()}; path=/; SameSite=Lax`;
+export function setCookie(name: string, value: any, days: number = 30): boolean {
+  if (typeof window === 'undefined') return false;
+
+  try {
+    const expires = new Date(Date.now() + days * 24 * 60 * 60 * 1000);
+    const cookieValue = typeof value === 'object' ? JSON.stringify(value) : value;
+
+    document.cookie = `${name}=${encodeURIComponent(cookieValue)}; expires=${expires.toUTCString()}; path=/; SameSite=Lax`;
+
+    // Verify cookie was set by reading it back
+    const savedValue = getCookie(name);
+    return savedValue !== null;
+  } catch (error) {
+    console.error('Failed to set cookie:', error);
+    return false;
+  }
 }
 
 /**
@@ -71,22 +81,64 @@ export function setCookie(name: string, value: any, days: number = 30): void {
  */
 export function getCookie(name: string): any {
   if (typeof window === 'undefined') return null;
-  
+
   const value = `; ${document.cookie}`;
   const parts = value.split(`; ${name}=`);
-  
+
   if (parts.length === 2) {
     const cookieValue = parts.pop()?.split(';').shift();
     if (!cookieValue) return null;
-    
+
     try {
       return JSON.parse(decodeURIComponent(cookieValue));
     } catch {
       return decodeURIComponent(cookieValue);
     }
   }
-  
+
   return null;
+}
+
+/**
+ * Atomically update tracking data with first-touch protection
+ * CRITICAL: Never overwrites first-touch attribution data
+ */
+function atomicUpdateTrackingData(updates: Partial<TrackingData>): boolean {
+  const existing = getCookie('ob_track') || {};
+
+  // Merge updates with existing data
+  const merged = { ...existing, ...updates };
+
+  // CRITICAL: Preserve first-touch attribution if it exists
+  // Never allow first-touch to be overwritten or deleted
+  if (existing.first_referrer && existing.first_referrer !== 'direct') {
+    merged.first_referrer = existing.first_referrer;
+    merged.first_referrer_time = existing.first_referrer_time;
+  }
+
+  if (existing.first_utm_source) {
+    merged.first_utm_source = existing.first_utm_source;
+    merged.first_utm_medium = existing.first_utm_medium;
+    merged.first_utm_campaign = existing.first_utm_campaign;
+    merged.first_utm_content = existing.first_utm_content;
+    merged.first_utm_term = existing.first_utm_term;
+  }
+
+  // Save with fallback to sessionStorage if cookie fails
+  const cookieSuccess = setCookie('ob_track', merged, 30);
+
+  if (!cookieSuccess) {
+    console.warn('⚠️ Cookie save failed, using sessionStorage fallback');
+    try {
+      sessionStorage.setItem('ob_track_fallback', JSON.stringify(merged));
+      return true;
+    } catch (e) {
+      console.error('❌ All storage methods failed:', e);
+      return false;
+    }
+  }
+
+  return true;
 }
 
 /**
@@ -140,74 +192,87 @@ export function hasTrackingConsent(): boolean {
  * Get or initialize tracking data
  * ALWAYS returns UTM/attribution data (it's from user's URL)
  * Session/event IDs only initialized after consent
+ * FIXED: Never overwrites first-touch attribution
  */
 export function getOrInitTrackingData(): TrackingData {
-  // Check for existing tracking data
-  let trackingData = getCookie('ob_track') || {};
+  // Check for existing tracking data (including sessionStorage fallback)
+  let trackingData = getCookie('ob_track');
+
+  // Fallback to sessionStorage if cookie failed
+  if (!trackingData && typeof window !== 'undefined') {
+    try {
+      const fallback = sessionStorage.getItem('ob_track_fallback');
+      if (fallback) {
+        trackingData = JSON.parse(fallback);
+        console.log('📊 Using sessionStorage fallback for tracking data');
+      }
+    } catch (e) {
+      console.warn('Failed to read sessionStorage fallback:', e);
+    }
+  }
+
+  trackingData = trackingData || {};
 
   // If no consent, return existing data (may contain UTM params) but don't initialize new session
   if (!hasTrackingConsent()) {
     return trackingData;
   }
 
+  const updates: Partial<TrackingData> = {};
+  const now = new Date().toISOString();
+
   // Initialize session and event ID if new (after consent)
   if (!trackingData.session_id) {
-    trackingData.session_id = generateSessionId();
-    trackingData.landing_time = new Date().toISOString();
-    trackingData.cookie_version = 1;
-    trackingData.consent_given = true;
-    trackingData.user_agent = typeof navigator !== 'undefined' ? navigator.userAgent : '';
+    updates.session_id = generateSessionId();
+    updates.landing_time = now;
+    updates.cookie_version = 1;
+    updates.consent_given = true;
+    updates.user_agent = typeof navigator !== 'undefined' ? navigator.userAgent : '';
   }
 
   // Generate event ID if not exists (single ID for entire session)
   if (!trackingData.event_id) {
-    trackingData.event_id = generateEventId();
+    updates.event_id = generateEventId();
   }
 
   // Fix old landing_time format (number to ISO string)
   if (trackingData.landing_time && typeof trackingData.landing_time === 'number') {
-    trackingData.landing_time = new Date(trackingData.landing_time).toISOString();
+    updates.landing_time = new Date(trackingData.landing_time).toISOString();
   }
 
   // Ensure cookie_version exists (migration)
   if (!trackingData.cookie_version) {
-    trackingData.cookie_version = 1;
+    updates.cookie_version = 1;
   }
 
   // Ensure consent_given exists
   if (trackingData.consent_given === undefined) {
-    trackingData.consent_given = true;
+    updates.consent_given = true;
   }
 
   // Ensure user_agent exists
   if (!trackingData.user_agent && typeof navigator !== 'undefined') {
-    trackingData.user_agent = navigator.userAgent;
+    updates.user_agent = navigator.userAgent;
   }
 
-  // Initialize empty attribution fields if they don't exist
-  if (!trackingData.first_referrer) {
-    trackingData.first_referrer = 'direct';
-    trackingData.first_referrer_time = trackingData.landing_time;
-  }
-  if (!trackingData.last_referrer) {
-    trackingData.last_referrer = 'direct';
-    trackingData.last_referrer_time = trackingData.landing_time;
-  }
+  // CRITICAL FIX: Only set 'direct' as default on very first visit
+  // Never overwrite existing first-touch attribution
+  const isVeryFirstVisit = !trackingData.landing_time && !trackingData.first_referrer && !trackingData.first_utm_source;
 
-  // Initialize empty UTM fields with null/undefined if not set
-  if (trackingData.first_utm_source === undefined) {
-    trackingData.first_utm_source = undefined;
-    trackingData.first_utm_medium = undefined;
-    trackingData.first_utm_campaign = undefined;
-    trackingData.first_utm_content = undefined;
-    trackingData.first_utm_term = undefined;
-  }
-  if (trackingData.last_utm_source === undefined) {
-    trackingData.last_utm_source = undefined;
-    trackingData.last_utm_medium = undefined;
-    trackingData.last_utm_campaign = undefined;
-    trackingData.last_utm_content = undefined;
-    trackingData.last_utm_term = undefined;
+  if (isVeryFirstVisit) {
+    // This is the absolute first time we're seeing this user
+    // Set 'direct' as placeholder - will be overwritten by captureUTMParameters if there's real attribution
+    updates.first_referrer = 'direct';
+    updates.first_referrer_time = updates.landing_time || now;
+    updates.last_referrer = 'direct';
+    updates.last_referrer_time = updates.landing_time || now;
+    console.log('📊 First visit detected - setting placeholder "direct" attribution');
+  } else {
+    // Returning visitor - preserve existing first-touch, only update last-touch if missing
+    if (!trackingData.last_referrer) {
+      updates.last_referrer = trackingData.first_referrer || 'direct';
+      updates.last_referrer_time = trackingData.first_referrer_time || trackingData.landing_time || now;
+    }
   }
 
   // Fetch and set country/currency if not already set
@@ -215,8 +280,12 @@ export function getOrInitTrackingData(): TrackingData {
     fetchAndSetLocation(trackingData);
   }
 
-  // Save initialized data
-  setCookie('ob_track', trackingData, 30);
+  // Save initialized data using atomic update to protect first-touch
+  if (Object.keys(updates).length > 0) {
+    const merged = { ...trackingData, ...updates };
+    atomicUpdateTrackingData(updates);
+    return merged;
+  }
 
   return trackingData;
 }
@@ -260,6 +329,7 @@ async function fetchAndSetLocation(trackingData: TrackingData): Promise<void> {
 
 /**
  * Update tracking data in cookie (only if consent given)
+ * FIXED: Uses atomic update to protect first-touch attribution
  */
 export function updateTrackingData(updates: Partial<TrackingData>): void {
   if (!hasTrackingConsent()) {
@@ -267,9 +337,8 @@ export function updateTrackingData(updates: Partial<TrackingData>): void {
     return;
   }
 
-  const currentData = getOrInitTrackingData();
-  const updatedData = { ...currentData, ...updates };
-  setCookie('ob_track', updatedData, 30);
+  // Use atomic update to ensure first-touch is never overwritten
+  atomicUpdateTrackingData(updates);
 }
 
 /**
@@ -305,6 +374,7 @@ export function isDuplicatePurchase(): boolean {
  * ALWAYS saves UTM params immediately (they're from the URL, not generated tracking)
  * Session/event IDs still require consent
  * Returns captured data
+ * FIXED: Preserves partial UTM data, reduces session window, handles missing referrer
  */
 export function captureUTMParameters(): Partial<TrackingData> | null {
   if (typeof window === 'undefined') return null;
@@ -322,7 +392,21 @@ export function captureUTMParameters(): Partial<TrackingData> | null {
 
   // IMPORTANT: Always get existing data even without consent
   // We need to check if UTM params are already saved
-  let existingData = getCookie('ob_track') || {};
+  let existingData = getCookie('ob_track');
+
+  // Fallback to sessionStorage if cookie not available
+  if (!existingData && typeof window !== 'undefined') {
+    try {
+      const fallback = sessionStorage.getItem('ob_track_fallback');
+      if (fallback) {
+        existingData = JSON.parse(fallback);
+      }
+    } catch (e) {
+      // Ignore
+    }
+  }
+
+  existingData = existingData || {};
 
   const updates: Partial<TrackingData> = {};
 
@@ -330,17 +414,18 @@ export function captureUTMParameters(): Partial<TrackingData> | null {
   // If last_referrer_time is the same as landing_time, this is the first capture
   const isFirstCapture = existingData.last_referrer_time === existingData.landing_time;
 
-  // Also consider it a new session if significant time has passed (e.g., 30 minutes)
+  // FIXED: Reduced from 30 minutes to 15 minutes for better attribution tracking
   let isNewSession = isFirstCapture;
   if (existingData.last_referrer_time) {
     const timeSinceLastUpdate = Date.now() - new Date(existingData.last_referrer_time).getTime();
-    const thirtyMinutesInMs = 30 * 60 * 1000;
-    if (timeSinceLastUpdate > thirtyMinutesInMs) {
+    const fifteenMinutesInMs = 15 * 60 * 1000; // FIXED: Was 30 minutes
+    if (timeSinceLastUpdate > fifteenMinutesInMs) {
       isNewSession = true;
     }
   }
 
   // --- FIRST TOUCH ATTRIBUTION (never overwrite if already set) ---
+  // Handle document.referrer
   if (document.referrer && !existingData.first_referrer) {
     const referrer = document.referrer;
     const currentDomain = window.location.hostname;
@@ -359,11 +444,28 @@ export function captureUTMParameters(): Partial<TrackingData> | null {
   // Capture first UTM parameters (only if not already set)
   if (utmSource && !existingData.first_utm_source) {
     updates.first_utm_source = utmSource;
-    updates.first_utm_medium = utmMedium || undefined;
-    updates.first_utm_campaign = utmCampaign || undefined;
-    updates.first_utm_content = utmContent || undefined;
-    updates.first_utm_term = utmTerm || undefined;
+    // FIXED: Only update fields that are actually present in URL
+    if (utmMedium !== null && utmMedium !== undefined) {
+      updates.first_utm_medium = utmMedium;
+    }
+    if (utmCampaign !== null && utmCampaign !== undefined) {
+      updates.first_utm_campaign = utmCampaign;
+    }
+    if (utmContent !== null && utmContent !== undefined) {
+      updates.first_utm_content = utmContent;
+    }
+    if (utmTerm !== null && utmTerm !== undefined) {
+      updates.first_utm_term = utmTerm;
+    }
     console.log('📊 First touch UTM captured:', { utmSource, utmMedium, utmCampaign });
+
+    // FIXED Bug #6: If UTM params exist but no referrer header (email/SMS/QR codes)
+    // Set first_referrer to the utm_source to avoid 'direct' being set later
+    if (!existingData.first_referrer && !updates.first_referrer) {
+      updates.first_referrer = utmSource; // Use utm_source as referrer
+      updates.first_referrer_time = now;
+      console.log('📊 First referrer set from utm_source (no document.referrer):', utmSource);
+    }
   }
 
   // --- LAST TOUCH ATTRIBUTION (update only from external marketing sources) ---
@@ -405,10 +507,34 @@ export function captureUTMParameters(): Partial<TrackingData> | null {
   // Update last UTM parameters if they've changed
   if (utmSource && utmSource !== existingData.last_utm_source) {
     updates.last_utm_source = utmSource;
-    updates.last_utm_medium = utmMedium || undefined;
-    updates.last_utm_campaign = utmCampaign || undefined;
-    updates.last_utm_content = utmContent || undefined;
-    updates.last_utm_term = utmTerm || undefined;
+
+    // FIXED Bug #4: Only update fields that are actually present in URL
+    // Preserve existing values if not in current URL
+    if (utmMedium !== null && utmMedium !== undefined) {
+      updates.last_utm_medium = utmMedium;
+    } else {
+      // Keep existing value if not in URL
+      updates.last_utm_medium = existingData.last_utm_medium;
+    }
+
+    if (utmCampaign !== null && utmCampaign !== undefined) {
+      updates.last_utm_campaign = utmCampaign;
+    } else {
+      updates.last_utm_campaign = existingData.last_utm_campaign;
+    }
+
+    if (utmContent !== null && utmContent !== undefined) {
+      updates.last_utm_content = utmContent;
+    } else {
+      updates.last_utm_content = existingData.last_utm_content;
+    }
+
+    if (utmTerm !== null && utmTerm !== undefined) {
+      updates.last_utm_term = utmTerm;
+    } else {
+      updates.last_utm_term = existingData.last_utm_term;
+    }
+
     shouldUpdateTime = true; // UTM changed, update time
     console.log('📊 Last touch UTM updated:', { utmSource, utmMedium, utmCampaign });
   }
@@ -436,11 +562,14 @@ export function captureUTMParameters(): Partial<TrackingData> | null {
   if (Object.keys(updates).length > 0) {
     console.log('📊 Saving attribution updates to cookies:', updates);
 
-    // Merge updates with existing data and save directly
-    const updatedData = { ...existingData, ...updates };
-    setCookie('ob_track', updatedData, 30);
+    // FIXED Bug #5: Use atomic update with error handling and fallback
+    const success = atomicUpdateTrackingData(updates);
 
-    console.log('✅ Attribution saved successfully (consent not required for UTM params)');
+    if (success) {
+      console.log('✅ Attribution saved successfully (consent not required for UTM params)');
+    } else {
+      console.error('❌ Failed to save attribution data - all storage methods failed');
+    }
   }
 
   return updates;

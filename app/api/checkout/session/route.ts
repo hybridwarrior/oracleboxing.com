@@ -184,9 +184,21 @@ export async function POST(req: NextRequest) {
         tracking: trackingParams ? {
           sessionId: trackingParams.session_id,
           eventId: trackingParams.event_id,
+          // Last touch attribution
           utmSource: trackingParams.last_utm_source,
           utmMedium: trackingParams.last_utm_medium,
           utmCampaign: trackingParams.last_utm_campaign,
+          utmContent: trackingParams.last_utm_content,
+          utmTerm: trackingParams.last_utm_term,
+          // FIXED: First touch attribution (CRITICAL for abandoned cart emails)
+          firstUtmSource: trackingParams.first_utm_source,
+          firstUtmMedium: trackingParams.first_utm_medium,
+          firstUtmCampaign: trackingParams.first_utm_campaign,
+          firstUtmContent: trackingParams.first_utm_content,
+          firstUtmTerm: trackingParams.first_utm_term,
+          firstReferrer: trackingParams.referrer, // First referrer
+          firstReferrerTime: trackingParams.first_referrer_time,
+          // Facebook
           fbclid: trackingParams.fbclid,
         } : undefined,
         cookieData: cookieData, // ALL cookie tracking data
