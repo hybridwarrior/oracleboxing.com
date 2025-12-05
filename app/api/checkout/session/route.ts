@@ -8,20 +8,10 @@ import { extractFacebookParams } from '@/lib/fb-param-builder'
 
 export async function POST(req: NextRequest) {
   try {
-    console.log('🚀 ABANDONED CART: /api/checkout/session endpoint HIT at', new Date().toISOString());
-
     // Extract Facebook parameters using Parameter Builder
     const fbParams = extractFacebookParams(req)
-    console.log('📊 Facebook Parameters extracted:', {
-      hasFbc: !!fbParams.fbc,
-      hasFbp: !!fbParams.fbp,
-      hasIp: !!fbParams.client_ip_address,
-      fbclid: fbParams.fbclid,
-    })
 
     const body = await req.json()
-
-    console.log('🚀 ABANDONED CART: Request body received, parsing...');
 
     const { items, customerInfo, currency, trackingParams, cookieData, pageUrl }: {
       items: CartItem[],
@@ -52,12 +42,6 @@ export async function POST(req: NextRequest) {
       pageUrl?: string
     } = body
 
-    // Debug logging
-    console.log('🔍 DEBUG: Stripe Secret Key loaded:', !!process.env.STRIPE_SECRET_KEY)
-    console.log('🔍 DEBUG: Number of items in cart:', items?.length)
-    console.log('🔍 DEBUG: Customer info provided:', !!customerInfo)
-    console.log('🔍 DEBUG: Currency:', currency || 'USD (default)')
-
     // Validate cart
     if (!items || items.length === 0) {
       return NextResponse.json(
@@ -71,7 +55,6 @@ export async function POST(req: NextRequest) {
     const serverSideItems = items.map(item => {
       const serverProduct = getProductById(item.product.id);
       if (!serverProduct) {
-        console.warn(`⚠️ Product not found: ${item.product.id}, using client product`);
         return item;
       }
       // Replace client product with server product (has correct env vars)
@@ -82,16 +65,6 @@ export async function POST(req: NextRequest) {
         price_id: item.price_id || serverProduct.stripe_price_id,
       };
     });
-
-    // Log each item's price ID
-    serverSideItems.forEach((item: CartItem, index: number) => {
-      console.log(`🔍 DEBUG Item ${index + 1}:`, {
-        product: item.product?.title,
-        price_id: item.price_id,
-        stripe_price_id: item.product?.stripe_price_id,
-        type: item.product?.type,
-      })
-    })
 
     // Detect physical items
     const hasPhysicalItems = serverSideItems.some(item => item.product.type === 'merch')
@@ -114,12 +87,6 @@ export async function POST(req: NextRequest) {
       fbParams, // Facebook Conversions API parameters
     })
 
-    console.log('🔍 DEBUG: Session created:', {
-      id: session.id,
-      url: session.url,
-      status: session.status
-    })
-
     if (!session.url) {
       throw new Error('Stripe session created but URL is missing')
     }
@@ -129,15 +96,7 @@ export async function POST(req: NextRequest) {
     // Skip for merchandise orders (type: 'merch')
     const isMerchandiseOrder = serverSideItems.every(item => item.product.type === 'merch');
 
-    console.log('🔍 ABANDONED CART CHECK: customerInfo exists?', !!customerInfo);
-    console.log('🔍 ABANDONED CART CHECK: customerInfo.email?', customerInfo?.email);
-    console.log('🔍 ABANDONED CART CHECK: customerInfo.firstName?', customerInfo?.firstName);
-    console.log('🔍 ABANDONED CART CHECK: isMerchandiseOrder?', isMerchandiseOrder);
-    console.log('🔍 ABANDONED CART CHECK: Full customerInfo:', JSON.stringify(customerInfo, null, 2));
-
     if (customerInfo?.email && !isMerchandiseOrder) {
-      console.log('✅ ABANDONED CART: Condition passed - customerInfo.email exists, proceeding to send webhook');
-
       // Calculate total amount from cart items (use server-side items)
       const totalAmount = serverSideItems.reduce((sum, item) => {
         return sum + (item.product.price * item.quantity);
@@ -147,11 +106,6 @@ export async function POST(req: NextRequest) {
       const nameParts = customerInfo.firstName?.trim().split(' ') || [];
       const firstName = nameParts[0] || '';
       const lastName = nameParts.slice(1).join(' ') || nameParts[0] || '';
-
-      console.log('🔍 ABANDONED CART: Calculated firstName:', firstName);
-      console.log('🔍 ABANDONED CART: Calculated lastName:', lastName);
-      console.log('🔍 ABANDONED CART: Total amount:', totalAmount);
-      console.log('🔍 ABANDONED CART: About to call sendInitiatedCheckout...');
 
       // Send webhook with all data (fire-and-forget, returns immediately)
       sendInitiatedCheckout({
@@ -204,15 +158,6 @@ export async function POST(req: NextRequest) {
         cookieData: cookieData, // ALL cookie tracking data
         facebookParams: fbParams, // Facebook Parameter Builder data
       });
-
-      console.log('✅ ABANDONED CART: sendInitiatedCheckout queued for background processing');
-    } else {
-      if (isMerchandiseOrder) {
-        console.log('⏭️ ABANDONED CART: Webhook NOT sent - merchandise order (excluded from abandoned cart)');
-      } else {
-        console.error('❌ ABANDONED CART: Webhook NOT sent - customerInfo.email is missing!');
-        console.error('❌ ABANDONED CART: customerInfo value:', customerInfo);
-      }
     }
 
     return NextResponse.json({ url: session.url })

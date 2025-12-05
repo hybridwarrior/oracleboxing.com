@@ -17,6 +17,8 @@ export function Header() {
   const isHomePage = pathname === '/'
 
   useEffect(() => {
+    let ticking = false
+
     const handleScroll = () => {
       // Don't hide header when mobile menu is open
       if (mobileMenuOpen) {
@@ -24,20 +26,27 @@ export function Header() {
         return
       }
 
-      const currentScrollY = window.scrollY
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const currentScrollY = window.scrollY
 
-      if (currentScrollY > lastScrollY && currentScrollY > 100) {
-        // Scrolling down - hide header
-        setIsVisible(false)
-      } else if (currentScrollY < lastScrollY) {
-        // Scrolling up - show header
-        setIsVisible(true)
-      } else if (currentScrollY === 0) {
-        // At the very top - show header
-        setIsVisible(true)
+          if (currentScrollY > lastScrollY && currentScrollY > 100) {
+            // Scrolling down - hide header
+            setIsVisible(false)
+          } else if (currentScrollY < lastScrollY) {
+            // Scrolling up - show header
+            setIsVisible(true)
+          } else if (currentScrollY === 0) {
+            // At the very top - show header
+            setIsVisible(true)
+          }
+
+          setLastScrollY(currentScrollY)
+          ticking = false
+        })
+
+        ticking = true
       }
-
-      setLastScrollY(currentScrollY)
     }
 
     window.addEventListener('scroll', handleScroll, { passive: true })

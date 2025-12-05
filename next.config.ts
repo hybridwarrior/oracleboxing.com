@@ -1,6 +1,14 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Performance optimizations
+  compiler: {
+    // Remove console logs in production
+    removeConsole: process.env.NODE_ENV === 'production' ? {
+      exclude: ['error', 'warn'],
+    } : false,
+  },
+
   images: {
     remotePatterns: [
       {
@@ -9,6 +17,14 @@ const nextConfig: NextConfig = {
         pathname: '/**',
       },
     ],
+    // Optimize image loading
+    formats: ['image/webp'],
+    minimumCacheTTL: 60,
+  },
+
+  // Enable experimental features for better performance
+  experimental: {
+    optimizePackageImports: ['lucide-react', '@radix-ui/react-dialog', '@radix-ui/react-slot'],
   },
   async redirects() {
     return [

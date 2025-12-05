@@ -1,15 +1,20 @@
 'use client'
 
 import { useState } from 'react'
+import dynamic from 'next/dynamic'
 import { Header } from '@/components/Header'
-import { Footer } from '@/components/Footer'
-import { TestimonialCarousel } from '@/components/TestimonialCarousel'
-import { ApparelCarousel } from '@/components/ApparelCarousel'
-import { NotifyMeModal } from '@/components/NotifyMeModal'
 import { globalTestimonials } from '@/lib/testimonials'
 import { useAnalytics } from '@/hooks/useAnalytics'
 import Image from 'next/image'
 import Link from 'next/link'
+
+// Lazy load heavy components
+const Footer = dynamic(() => import('@/components/Footer').then(mod => ({ default: mod.Footer })), {
+  ssr: false
+})
+const TestimonialCarousel = dynamic(() => import('@/components/TestimonialCarousel').then(mod => ({ default: mod.TestimonialCarousel })))
+const ApparelCarousel = dynamic(() => import('@/components/ApparelCarousel').then(mod => ({ default: mod.ApparelCarousel })))
+const NotifyMeModal = dynamic(() => import('@/components/NotifyMeModal').then(mod => ({ default: mod.NotifyMeModal })))
 
 export default function HomePage() {
   const [isNotifyModalOpen, setIsNotifyModalOpen] = useState(false)
@@ -427,6 +432,7 @@ export default function HomePage() {
                     muted
                     playsInline
                     loop
+                    preload="none"
                     poster={`https://media.oracleboxing.com/Website/transfo/${item.poster}`}
                     className="w-full h-full object-cover"
                   >
@@ -450,6 +456,7 @@ export default function HomePage() {
                       muted
                       playsInline
                       loop
+                      preload="none"
                       poster={`https://media.oracleboxing.com/Website/transfo/${item.poster}`}
                       className="w-full h-full object-cover"
                     >
