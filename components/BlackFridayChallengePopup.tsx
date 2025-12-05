@@ -5,6 +5,9 @@ import Link from 'next/link'
 import { X } from 'lucide-react'
 
 export function BlackFridayChallengePopup() {
+  // Popup disabled - return null to hide completely
+  return null
+
   const [isOpen, setIsOpen] = useState(false)
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
