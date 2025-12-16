@@ -13,7 +13,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'media.oracleboxing.com',
+        hostname: 'sb.oracleboxing.com',
         pathname: '/**',
       },
     ],
