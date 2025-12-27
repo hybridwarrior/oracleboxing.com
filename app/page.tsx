@@ -523,10 +523,13 @@ export default function HomePage() {
                 Get special deals, training tips, and find out first about new courses.
               </p>
               <form onSubmit={handleNewsletterSubmit} className="flex flex-row gap-3 max-w-xl mx-auto">
+                <label htmlFor="newsletter-email" className="sr-only">Email address</label>
                 <input
+                  id="newsletter-email"
                   type="email"
                   name="email"
                   placeholder="Enter your email"
+                  aria-label="Email address for newsletter"
                   className="flex-1 px-6 py-4 rounded-full bg-transparent border-2 border-white text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white"
                   required
                 />

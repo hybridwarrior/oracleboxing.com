@@ -64,9 +64,16 @@ export default function RootLayout({
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
 
-        {/* Favicon */}
+        {/* Favicons - SVG primary with PNG fallbacks */}
         <link rel="icon" type="image/svg+xml" href="https://sb.oracleboxing.com/Website/infinity_squared_white.svg" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/favicons/favicon-180x180.png" />
+        <link rel="manifest" href="/favicons/site.webmanifest" />
 
+        {/* Preconnect to external resources for performance */}
+        <link rel="preconnect" href="https://sb.oracleboxing.com" />
+        <link rel="dns-prefetch" href="https://sb.oracleboxing.com" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Lilita+One&display=swap" rel="stylesheet" />
