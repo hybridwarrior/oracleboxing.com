@@ -114,9 +114,9 @@ export default function TransformationStory({ onCTAClick }: TransformationStoryP
   const currentTestimonial = testimonials[currentIndex]
 
   return (
-    <section className="relative bg-white py-12 sm:py-16 lg:py-20 overflow-hidden" style={{ fontFamily }}>
+    <section className="relative bg-[rgba(55,50,47,0.04)] py-12 sm:py-16 lg:py-20 overflow-hidden" style={{ fontFamily }}>
 
-      <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 bg-white rounded-2xl py-8 sm:py-12">
         {/* Header */}
         <div className="text-center mb-8 sm:mb-12">
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold px-4" style={{ fontFamily: 'Satoshi, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', fontWeight: '700', color: '#222', letterSpacing: '0.02em', lineHeight: '1.2' }}>

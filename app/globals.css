@@ -1,41 +1,106 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
-@theme {
-  /* ========================================
-     Oracle Boxing Color Palette
-     ======================================== */
+@custom-variant dark (&:is(.dark *));
 
-  /* Primary Brand Colors */
-  --color-whitesmoke: #F5F5F5;
-  --color-cta-yellow: #fef9c3;
-  --color-header-footer: #171717; /* neutral-900 */
+:root {
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --radius: 0.625rem;
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+  /* Oracle Boxing font variables */
+  --font-satoshi: "Satoshi", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-zodiak: "Zodiak", ui-serif, serif;
+  --font-clash: "ClashDisplay", ui-sans-serif, system-ui, sans-serif;
+}
 
-  /* Create Tailwind-compatible color utilities */
-  --color-ob-whitesmoke: #F5F5F5;
-  --color-ob-yellow: #fef9c3;
-  --color-ob-dark: #171717;
+@theme inline {
+  --font-sans: var(--font-satoshi);
+  --font-serif: var(--font-zodiak);
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
 
-  /* Theme Colors (updated to use whitesmoke) */
-  --color-background: #F5F5F5;
-  --color-foreground: #0e0e0e;
-  --color-accent: #dc2626;
-  --color-muted: #f3f4f6;
-  --color-muted-foreground: #6b7280;
-  --color-card: #F5F5F5;
-  --color-card-foreground: #0e0e0e;
-  --color-popover: #F5F5F5;
-  --color-popover-foreground: #0e0e0e;
-  --color-primary: #0e0e0e;
-  --color-primary-foreground: #F5F5F5;
-  --color-secondary: #f3f4f6;
-  --color-secondary-foreground: #0e0e0e;
-  --color-destructive: #ef4444;
-  --color-destructive-foreground: #F5F5F5;
-  --color-border: #e5e7eb;
-  --color-input: #e5e7eb;
-  --color-ring: #dc2626;
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
 
-  --radius: 0.5rem;
+/* Custom styles for the landing page */
+.text-balance {
+  text-wrap: balance;
+}
+
+.text-pretty {
+  text-wrap: pretty;
 }
 
 /* Satoshi Font Family */
@@ -96,19 +161,10 @@
   font-display: swap;
 }
 
-@font-face {
-  font-family: 'Zodiak';
-  src: url('/fonts/Zodiak/Zodiak-Black.woff2') format('woff2');
-  font-weight: 900;
-  font-style: normal;
-  font-display: swap;
-}
-
 /* ClashDisplay Font Family */
 @font-face {
   font-family: 'ClashDisplay';
-  src: url('/fonts/ClashDisplay/ClashDisplay-Variable.woff2') format('woff2-variations'),
-       url('/fonts/ClashDisplay/ClashDisplay-Variable.woff') format('woff');
+  src: url('/fonts/ClashDisplay/ClashDisplay-Variable.woff2') format('woff2-variations');
   font-weight: 200 700;
   font-display: swap;
   font-style: normal;
@@ -116,17 +172,7 @@
 
 @font-face {
   font-family: 'ClashDisplay';
-  src: url('/fonts/ClashDisplay/ClashDisplay-Regular.woff2') format('woff2'),
-       url('/fonts/ClashDisplay/ClashDisplay-Regular.woff') format('woff');
-  font-weight: 400;
-  font-display: swap;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'ClashDisplay';
-  src: url('/fonts/ClashDisplay/ClashDisplay-Medium.woff2') format('woff2'),
-       url('/fonts/ClashDisplay/ClashDisplay-Medium.woff') format('woff');
+  src: url('/fonts/ClashDisplay/ClashDisplay-Medium.woff2') format('woff2');
   font-weight: 500;
   font-display: swap;
   font-style: normal;
@@ -134,8 +180,7 @@
 
 @font-face {
   font-family: 'ClashDisplay';
-  src: url('/fonts/ClashDisplay/ClashDisplay-Semibold.woff2') format('woff2'),
-       url('/fonts/ClashDisplay/ClashDisplay-Semibold.woff') format('woff');
+  src: url('/fonts/ClashDisplay/ClashDisplay-Semibold.woff2') format('woff2');
   font-weight: 600;
   font-display: swap;
   font-style: normal;
@@ -143,406 +188,16 @@
 
 @font-face {
   font-family: 'ClashDisplay';
-  src: url('/fonts/ClashDisplay/ClashDisplay-Bold.woff2') format('woff2'),
-       url('/fonts/ClashDisplay/ClashDisplay-Bold.woff') format('woff');
+  src: url('/fonts/ClashDisplay/ClashDisplay-Bold.woff2') format('woff2');
   font-weight: 700;
   font-display: swap;
   font-style: normal;
 }
 
-/* Apply Satoshi to all elements */
-* {
-  font-family: 'Satoshi', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+.mix-blend-multiply {
+  mix-blend-mode: multiply;
 }
 
-body {
-  font-family: 'Satoshi', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-}
-
-/* Ensure all headings use Satoshi */
-h1, h2, h3, h4, h5, h6 {
-  font-family: 'Satoshi', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-}
-
-/* Ensure buttons and inputs use Satoshi */
-button, input, textarea, select {
-  font-family: 'Satoshi', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-}
-
-/* Ensure all text elements use Satoshi */
-p, span, a, label, li, td, th {
-  font-family: 'Satoshi', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-}
-
-/* Hide scrollbar while keeping functionality */
-.scrollbar-hide {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
-}
-
-.scrollbar-hide::-webkit-scrollbar {
-  display: none;  /* Chrome, Safari and Opera */
-}
-
-/* Subtle bounce animation for CTA buttons */
-@keyframes bounce-subtle {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-8px);
-  }
-}
-
-.animate-bounce-subtle {
-  animation: bounce-subtle 2s ease-in-out infinite;
-}
-
-/* Mobile menu waterfall animation */
-@keyframes slideIn {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Payment icons styling */
-.payment_icons-group {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-}
-
-.image-55 {
-  height: 1.125rem;
-}
-
-.image-55.second {
-  height: 1.25rem;
-}
-
-.image-55.bigger {
-  height: 1.125rem;
-}
-
-.image-55.bigger-mobile {
-  height: 1.125rem;
-}
-
-@media (min-width: 640px) {
-  .payment_icons-group {
-    gap: 1rem;
-  }
-
-  .image-55 {
-    height: 1.25rem;
-  }
-
-  .image-55.second {
-    height: 1.375rem;
-  }
-
-  .image-55.bigger {
-    height: 1.25rem;
-  }
-
-  .image-55.bigger-mobile {
-    height: 1.25rem;
-  }
-}
-
-/* ========================================
-   Apple-Style CTA Button System
-   ======================================== */
-
-:root {
-  /* Yellow & Black CTA Colors */
-  --ob-cta-primary-bg: #000000;
-  --ob-cta-primary-text: #fef9c3;
-  --ob-cta-primary-border: #fef9c3;
-  --ob-cta-primary-hover-bg: #fef9c3;
-  --ob-cta-primary-hover-text: #000000;
-  --ob-cta-primary-hover-border: #000000;
-  --ob-cta-primary-focus-ring: rgba(254, 249, 195, 0.6);
-
-  /* Secondary CTA Colors (reversed) */
-  --ob-cta-secondary-bg: #fef9c3;
-  --ob-cta-secondary-text: #000000;
-  --ob-cta-secondary-border: #000000;
-  --ob-cta-secondary-hover-bg: #000000;
-  --ob-cta-secondary-hover-text: #fef9c3;
-  --ob-cta-secondary-hover-border: #fef9c3;
-
-  /* Body & UI Colors */
-  --ob-body-text: #1d1d1f;
-  --ob-muted-text: #86868b;
-  --ob-card-bg: #F5F5F5;
-  --ob-card-border-radius: 18px;
-}
-
-/* Base Button Class */
-.ob-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.4rem;
-  font-family: 'Satoshi', system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
-  font-weight: 500;
-  font-size: 1rem;
-  line-height: 1.3;
-  letter-spacing: -0.01em;
-  padding: 0.7rem 1.6rem;
-  border-radius: 12px;
-  border: none;
-  cursor: pointer;
-  text-decoration: none;
-  transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
-}
-
-.ob-btn:focus-visible {
-  outline: 2px solid var(--ob-cta-primary-focus-ring);
-  outline-offset: 2px;
-}
-
-/* Primary CTA (black background, whitesmoke text) */
-.ob-btn-primary {
-  background-color: var(--ob-cta-primary-bg);
-  color: #F5F5F5;
-  border: 2px solid var(--ob-cta-primary-bg);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-.ob-btn-primary:hover {
-  background-color: var(--ob-cta-primary-hover-bg);
-  color: var(--ob-cta-primary-hover-text);
-  border-color: var(--ob-cta-primary-hover-border);
-  transform: translateY(-1px);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
-}
-
-.ob-btn-primary:active {
-  transform: translateY(0);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-}
-
-/* Secondary CTA (black background, yellow text) */
-.ob-btn-secondary {
-  background-color: var(--ob-cta-secondary-bg);
-  color: var(--ob-cta-secondary-text);
-  border: 2px solid var(--ob-cta-secondary-border);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-.ob-btn-secondary:hover {
-  background-color: #000000;
-  color: #F5F5F5;
-  border-color: #000000;
-  transform: translateY(-1px);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
-}
-
-/* Small CTA variant */
-.ob-btn-small {
-  font-size: 0.875rem;
-  padding: 0.5rem 1.2rem;
-}
-
-/* Large CTA variant */
-.ob-btn-large {
-  font-size: 1.125rem;
-  padding: 0.9rem 2rem;
-}
-
-/* Card Styling */
-.ob-card {
-  background: var(--ob-card-bg);
-  border-radius: var(--ob-card-border-radius);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
-  padding: 1.8rem;
-}
-
-/* Badge Styling */
-.ob-badge {
-  display: inline-block;
-  padding: 0.3rem 0.8rem;
-  border-radius: 9999px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-}
-
-.ob-badge-primary {
-  background-color: var(--ob-cta-primary);
-  color: var(--ob-cta-text-on-primary);
-}
-
-/* ========================================
-   Glow Pulse Button Styles (All Variants)
-   ======================================== */
-
-/* GP-BYG-P: Black bg, Yellow text */
-.ob-btn-gp-byg-p {
-  background: #000000;
-  color: #fef9c3;
-  border: 2px solid #fef9c3;
-  box-shadow: 0 0 20px rgba(254, 249, 195, 0.4);
-  animation: pulse-glow-byg 2s ease-in-out infinite;
-}
-
-.ob-btn-gp-byg-p:hover {
-  background: #fef9c3;
-  color: #000000;
-  transform: scale(1.05);
-  box-shadow: 0 0 30px rgba(254, 249, 195, 0.6);
-}
-
-/* GP-BYG-S: Transparent bg, Whitesmoke text/border */
-.ob-btn-gp-byg-s {
-  background: transparent;
-  color: #F5F5F5;
-  border: 2px solid #F5F5F5;
-  animation: pulse-glow-white-byg 2s ease-in-out infinite;
-}
-
-.ob-btn-gp-byg-s:hover {
-  background: #F5F5F5;
-  color: #000000;
-  transform: scale(1.05);
-}
-
-@keyframes pulse-glow-byg {
-  0%, 100% { box-shadow: 0 0 20px rgba(254, 249, 195, 0.4); }
-  50% { box-shadow: 0 0 30px rgba(254, 249, 195, 0.7); }
-}
-
-@keyframes pulse-glow-white-byg {
-  0%, 100% { box-shadow: 0 0 20px rgba(255, 255, 255, 0.3); }
-  50% { box-shadow: 0 0 30px rgba(255, 255, 255, 0.5); }
-}
-
-/* GP-WBG-P: Whitesmoke bg, Black text */
-.ob-btn-gp-wbg-p {
-  background: #F5F5F5;
-  color: #000000;
-  border: 2px solid #000000;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
-  animation: pulse-glow-wbg 2s ease-in-out infinite;
-}
-
-.ob-btn-gp-wbg-p:hover {
-  background: #000000;
-  color: #F5F5F5;
-  transform: scale(1.05);
-  box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
-}
-
-/* GP-WBG-S: Transparent bg, Black text/border */
-.ob-btn-gp-wbg-s {
-  background: transparent;
-  color: #000000;
-  border: 2px solid #000000;
-  animation: pulse-glow-black-wbg 2s ease-in-out infinite;
-}
-
-.ob-btn-gp-wbg-s:hover {
-  background: #000000;
-  color: #ffffff;
-  transform: scale(1.05);
-}
-
-@keyframes pulse-glow-wbg {
-  0%, 100% { box-shadow: 0 0 20px rgba(0, 0, 0, 0.3); }
-  50% { box-shadow: 0 0 30px rgba(0, 0, 0, 0.5); }
-}
-
-@keyframes pulse-glow-black-wbg {
-  0%, 100% { box-shadow: 0 0 20px rgba(0, 0, 0, 0.2); }
-  50% { box-shadow: 0 0 30px rgba(0, 0, 0, 0.4); }
-}
-
-/* GP-YBG-P: Yellow bg, Black text */
-.ob-btn-gp-ybg-p {
-  background: #fef9c3;
-  color: #000000;
-  border: 2px solid #000000;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
-  animation: pulse-glow-ybg 2s ease-in-out infinite;
-}
-
-.ob-btn-gp-ybg-p:hover {
-  background: #000000;
-  color: #fef9c3;
-  border-color: #fef9c3;
-  transform: scale(1.05);
-  box-shadow: 0 0 30px rgba(254, 249, 195, 0.6);
-}
-
-/* GP-YBG-S: Transparent bg, Black text/border */
-.ob-btn-gp-ybg-s {
-  background: transparent;
-  color: #000000;
-  border: 2px solid #000000;
-  animation: pulse-glow-black-ybg 2s ease-in-out infinite;
-}
-
-.ob-btn-gp-ybg-s:hover {
-  background: #000000;
-  color: #fef9c3;
-  transform: scale(1.05);
-}
-
-@keyframes pulse-glow-ybg {
-  0%, 100% { box-shadow: 0 0 20px rgba(0, 0, 0, 0.3); }
-  50% { box-shadow: 0 0 30px rgba(0, 0, 0, 0.5); }
-}
-
-@keyframes pulse-glow-black-ybg {
-  0%, 100% { box-shadow: 0 0 20px rgba(0, 0, 0, 0.2); }
-  50% { box-shadow: 0 0 30px rgba(0, 0, 0, 0.4); }
-}
-
-/* GP-TRY-P: Transparent bg, Yellow text/border */
-.ob-btn-gp-try-p {
-  background: transparent;
-  color: #fef9c3;
-  border: 2px solid #fef9c3;
-  box-shadow: 0 0 20px rgba(254, 249, 195, 0.4);
-  animation: pulse-glow-try 2s ease-in-out infinite;
-}
-
-.ob-btn-gp-try-p:hover {
-  background: #fef9c3;
-  color: #000000;
-  transform: scale(1.05);
-  box-shadow: 0 0 30px rgba(254, 249, 195, 0.6);
-}
-
-/* GP-TRY-S: Transparent bg, Whitesmoke text/border */
-.ob-btn-gp-try-s {
-  background: transparent;
-  color: #F5F5F5;
-  border: 2px solid #F5F5F5;
-  animation: pulse-glow-white-try 2s ease-in-out infinite;
-}
-
-.ob-btn-gp-try-s:hover {
-  background: #F5F5F5;
-  color: #000000;
-  transform: scale(1.05);
-}
-
-@keyframes pulse-glow-try {
-  0%, 100% { box-shadow: 0 0 20px rgba(254, 249, 195, 0.4); }
-  50% { box-shadow: 0 0 30px rgba(254, 249, 195, 0.7); }
-}
-
-@keyframes pulse-glow-white-try {
-  0%, 100% { box-shadow: 0 0 20px rgba(255, 255, 255, 0.3); }
-  50% { box-shadow: 0 0 30px rgba(255, 255, 255, 0.5); }
+.backdrop-blur-custom {
+  backdrop-filter: blur(8.25px);
 }

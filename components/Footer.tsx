@@ -7,7 +7,7 @@ export function Footer() {
     <footer className="bg-neutral-900 text-[#F5F5F5]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
         {/* Main Footer Content */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 mb-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 lg:gap-12 mb-12">
           {/* Column 1: Brand & Description */}
           <div className="text-center sm:text-left">
             <div className="mb-4 flex justify-center sm:justify-start">
@@ -58,59 +58,15 @@ export function Footer() {
             </div>
           </div>
 
-          {/* Column 2: Courses */}
-          <div className="text-center sm:text-left">
-            <h3 className="font-bold text-[#F5F5F5] mb-4 text-sm uppercase tracking-wider">Courses</h3>
-            <ul className="space-y-3">
-              <li>
-                <Link to="/courses/bundle" className="text-gray-400 hover:text-[#F5F5F5] transition-colors text-sm">
-                  Oracle Boxing Bundle
-                </Link>
-              </li>
-              <li>
-                <Link to="/courses/bffp" className="text-gray-400 hover:text-[#F5F5F5] transition-colors text-sm">
-                  Boxing Masterclass
-                </Link>
-              </li>
-              <li>
-                <Link to="/courses/roadmap" className="text-gray-400 hover:text-[#F5F5F5] transition-colors text-sm">
-                  Boxing Roadmap
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Column 3: Community */}
-          <div className="text-center sm:text-left">
-            <h3 className="font-bold text-[#F5F5F5] mb-4 text-sm uppercase tracking-wider">Community</h3>
-            <ul className="space-y-3">
-              <li>
-                <Link to="/membership" className="text-gray-400 hover:text-[#F5F5F5] transition-colors text-sm">
-                  Membership
-                </Link>
-              </li>
-              <li>
-                <Link to="/6wc" className="text-gray-400 hover:text-[#F5F5F5] transition-colors text-sm">
-                  6-Week Challenge
-                </Link>
-              </li>
-              <li>
-                <a
-                  href="https://shop.oracleboxing.com/collections/catalog?utm_source=oracleboxing.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-gray-400 hover:text-[#F5F5F5] transition-colors text-sm"
-                >
-                  Apparel Shop
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          {/* Column 4: Company */}
+          {/* Column 2: Company / Legal */}
           <div className="text-center sm:text-left">
             <h3 className="font-bold text-[#F5F5F5] mb-4 text-sm uppercase tracking-wider">Company</h3>
             <ul className="space-y-3">
+              <li>
+                <Link to="/contact" className="text-gray-400 hover:text-[#F5F5F5] transition-colors text-sm">
+                  Contact
+                </Link>
+              </li>
               <li>
                 <Link to="/terms" className="text-gray-400 hover:text-[#F5F5F5] transition-colors text-sm">
                   Terms of Service

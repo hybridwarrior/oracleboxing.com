@@ -303,6 +303,83 @@ export default function CheckoutPage() {
         return
       }
 
+      // 21-Day Challenge products → Direct to Stripe (packages are complete)
+      if (['21dc-entry', '21dc-premium', '21dc-vip'].includes(productParam)) {
+        console.log('→ Routing 21-Day Challenge direct to Stripe')
+
+        const product = getProductById(productParam)
+        if (!product) {
+          throw new Error(`Product not found: ${productParam}`)
+        }
+
+        // Track InitiateCheckout
+        const priceInUserCurrency = product.price || 0
+
+        trackInitiateCheckout(
+          fullName,
+          email,
+          priceInUserCurrency,
+          [productParam],
+          '/checkout',
+          trackingParams.referrer || 'direct',
+          {
+            funnel: '21dc',
+            currency: currency,
+            source: sourceParam || 'homepage',
+          }
+        )
+
+        // Get full cookie data
+        const cookieData = getCookie('ob_track')
+
+        // Create checkout session
+        const response = await fetch('/api/checkout/session', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            items: [{
+              product: product,
+              quantity: 1,
+              price_id: product.stripe_price_id,
+            }],
+            currency: currency,
+            customerInfo: {
+              firstName: fullName,
+              lastName: fullName,
+              email: email,
+              phone: '',
+              address: {
+                line1: '',
+                line2: '',
+                city: '',
+                state: '',
+                postal_code: '',
+                country: 'US',
+              },
+            },
+            trackingParams: trackingParams,
+            cookieData: cookieData,
+            pageUrl: window.location.href,
+          }),
+        })
+
+        const data = await response.json()
+
+        if (!response.ok) {
+          throw new Error(data.error || 'Failed to create checkout session')
+        }
+
+        if (!data.url) {
+          throw new Error('No checkout URL returned')
+        }
+
+        // Redirect to Stripe
+        window.location.href = data.url
+        return
+      }
+
       // Bundle or Membership → Direct to Stripe
       if (['bundle', 'membership-monthly', 'membership-6month', 'membership-annual'].includes(productParam)) {
         console.log('→ Routing direct to Stripe')
@@ -418,26 +495,26 @@ export default function CheckoutPage() {
   // }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#FFFCF5] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="w-full max-w-md">
         <form onSubmit={handleContactSubmit}>
           {/* Logo */}
           <div className="flex justify-center mb-4">
             <img
-              src="https://sb.oracleboxing.com/Website/optimized/logos/long_black-large.webp"
+              src="https://sb.oracleboxing.com/Website/ob_logo_long_black.webp"
               alt="Oracle Boxing"
               className="h-4"
             />
           </div>
 
           {/* Heading */}
-          <p className="text-center text-gray-900 text-sm font-medium mb-8">
+          <p className="text-center text-[#37322F] text-sm font-medium mb-8">
             Just a few details to get started
           </p>
 
           {/* Email Input */}
           <div className="mb-4">
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="email" className="block text-sm font-medium text-[#49423D] mb-2">
               Email *
             </label>
             <input
@@ -445,7 +522,7 @@ export default function CheckoutPage() {
               id="email"
               value={customerInfo.email}
               onChange={(e) => setCustomerInfo({ ...customerInfo, email: e.target.value })}
-              className="w-full px-5 py-3 bg-white border border-gray-300 rounded-full focus:ring-2 focus:ring-[#000000] focus:border-transparent transition-all"
+              className="w-full px-5 py-3 bg-white border border-[rgba(55,50,47,0.20)] rounded-full focus:ring-2 focus:ring-[#37322F] focus:border-transparent transition-all"
               placeholder="your@email.com"
               required
               style={{ cursor: 'text' }}
@@ -454,7 +531,7 @@ export default function CheckoutPage() {
 
           {/* Full Name Input */}
           <div className="mb-6">
-            <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="fullName" className="block text-sm font-medium text-[#49423D] mb-2">
               Full Name *
             </label>
             <input
@@ -462,7 +539,7 @@ export default function CheckoutPage() {
               id="fullName"
               value={customerInfo.firstName}
               onChange={(e) => setCustomerInfo({ ...customerInfo, firstName: e.target.value })}
-              className="w-full px-5 py-3 bg-white border border-gray-300 rounded-full focus:ring-2 focus:ring-[#000000] focus:border-transparent transition-all"
+              className="w-full px-5 py-3 bg-white border border-[rgba(55,50,47,0.20)] rounded-full focus:ring-2 focus:ring-[#37322F] focus:border-transparent transition-all"
               placeholder="John Doe"
               required
               style={{ cursor: 'text' }}
@@ -473,11 +550,11 @@ export default function CheckoutPage() {
           <button
             type="submit"
             disabled={isLoading}
-            className={`w-full py-3 px-6 font-bold text-base rounded-full shadow-lg transition-all duration-200 flex items-center justify-center gap-2 ${
+            className={`w-full py-3 px-6 font-bold text-base rounded-full shadow-[0px_2px_4px_rgba(55,50,47,0.12)] transition-all duration-200 flex items-center justify-center gap-2 ${
               isLoading
-                ? 'bg-gray-400 cursor-not-allowed'
-                : 'bg-[#000000] hover:bg-[#1a1a1a] cursor-pointer'
-            } text-white`}
+                ? 'bg-[#847971] cursor-not-allowed'
+                : 'bg-[#37322F] hover:bg-[#49423D] cursor-pointer'
+            } text-[#FBFAF9]`}
           >
             {isLoading ? (
               <>

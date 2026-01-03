@@ -85,57 +85,32 @@ Develop discipline, leadership, and long-term mastery mindset.`,
 Master every aspect of boxing technique through structured progression.`,
   },
 
-  // MEMBERSHIPS
+  // MEMBERSHIPS (Updated: Monthly + Annual only)
   {
     id: 'membership-monthly',
-    title: 'Oracle Membership (Quarterly)',
-    price: 297,
+    title: 'Oracle Membership (Monthly)',
+    price: 97,
     type: 'membership',
-    metadata: 'memq',
+    metadata: 'mem_monthly',
     recurring: true,
-    interval: '3 months',
-    stripe_product_id: 'prod_TKqg25PDS8om6s',
-    stripe_price_id: 'price_1SOAysKPvH4Ddlg1JTdPV3rt',
+    interval: 'month',
+    stripe_product_id: 'prod_TibyCQmwHqluFk',
+    stripe_price_id: 'price_1SlAksQNEdHwdojXS4Omuz1x',
     price_ids: {
-      multicurrency: 'price_1SOAysKPvH4Ddlg1JTdPV3rt',
+      multicurrency: 'price_1SlAksQNEdHwdojXS4Omuz1x',
     },
     image: 'https://sb.oracleboxing.com/Website/optimized/products/boxing_clinic-large.webp',
-    description: `**Quarterly access to live coaching, community, and all courses**
+    description: `**Monthly access to live coaching, community, and all courses**
 
-✓ Weekly live coaching calls with Oliver & Toni
+✓ Daily live coaching calls with Oliver & Toni
 ✓ Access to all courses (BFFP, Roadmap, Vault)
 ✓ Private community with expert feedback
-✓ Monthly technique breakdowns and Q&A
-✓ Switch to monthly billing at $97/month after purchase
+✓ Personal video feedback on your training
+✓ Cancel anytime
 
 Transform your boxing with ongoing expert guidance.`,
-    shortDescription: 'Full Quarterly Access to Coaching & Community',
-    perfectFor: 'Boxers who want ongoing coaching and support',
-  },
-  {
-    id: 'membership-6month',
-    title: 'Oracle Membership (6-Month)',
-    price: 497,
-    type: 'membership',
-    metadata: 'mem6',
-    recurring: true,
-    interval: '6 months',
-    stripe_product_id: 'prod_TKqg25PDS8om6s',
-    stripe_price_id: 'price_1SOAysKPvH4Ddlg1DLECvdXA',
-    price_ids: {
-      multicurrency: 'price_1SOAysKPvH4Ddlg1DLECvdXA',
-    },
-    image: 'https://sb.oracleboxing.com/Website/optimized/products/boxing_clinic-large.webp',
-    description: `**6 months of access — save vs quarterly**
-
-✓ Everything in Quarterly Membership
-✓ Save $98 vs quarterly ($497 vs $595)
-✓ Commit to mastery with 6 months of expert guidance
-✓ Perfect for serious skill development
-
-Best for dedicated students ready to transform their boxing.`,
-    shortDescription: 'Save With 6-Month Commitment',
-    perfectFor: 'Dedicated boxers ready for serious transformation',
+    shortDescription: 'Monthly Access to Coaching & Community',
+    perfectFor: 'Boxers who want flexible ongoing coaching',
   },
   {
     id: 'membership-annual',
@@ -153,14 +128,51 @@ Best for dedicated students ready to transform their boxing.`,
     image: 'https://sb.oracleboxing.com/Website/optimized/products/boxing_clinic-large.webp',
     description: `**Annual membership — best value**
 
-✓ Everything in Quarterly Membership
-✓ Save $291 vs quarterly ($897 vs $1,188)
+✓ Everything in Monthly Membership
+✓ Save vs monthly ($897 vs $1,164)
 ✓ Full year of expert coaching and community
 ✓ Maximum commitment to mastery
 
 Best value for serious boxers committed to long-term excellence.`,
     shortDescription: 'Best Value With Annual Commitment',
     perfectFor: 'Serious boxers committed to long-term excellence',
+  },
+  // Legacy memberships (hidden from UI but kept for existing subscribers)
+  {
+    id: 'membership-quarterly-legacy',
+    title: 'Oracle Membership (Quarterly)',
+    price: 297,
+    type: 'membership',
+    metadata: 'memq',
+    recurring: true,
+    interval: '3 months',
+    stripe_product_id: 'prod_TKqg25PDS8om6s',
+    stripe_price_id: 'price_1SOAysKPvH4Ddlg1JTdPV3rt',
+    price_ids: {
+      multicurrency: 'price_1SOAysKPvH4Ddlg1JTdPV3rt',
+    },
+    image: 'https://sb.oracleboxing.com/Website/optimized/products/boxing_clinic-large.webp',
+    description: `Legacy quarterly membership`,
+    shortDescription: 'Legacy Quarterly Membership',
+    perfectFor: 'Existing subscribers',
+  },
+  {
+    id: 'membership-6month-legacy',
+    title: 'Oracle Membership (6-Month)',
+    price: 497,
+    type: 'membership',
+    metadata: 'mem6',
+    recurring: true,
+    interval: '6 months',
+    stripe_product_id: 'prod_TKqg25PDS8om6s',
+    stripe_price_id: 'price_1SOAysKPvH4Ddlg1DLECvdXA',
+    price_ids: {
+      multicurrency: 'price_1SOAysKPvH4Ddlg1DLECvdXA',
+    },
+    image: 'https://sb.oracleboxing.com/Website/optimized/products/boxing_clinic-large.webp',
+    description: `Legacy 6-month membership`,
+    shortDescription: 'Legacy 6-Month Membership',
+    perfectFor: 'Existing subscribers',
   },
 
 ]
@@ -170,6 +182,81 @@ Best value for serious boxers committed to long-term excellence.`,
 // ===================================================================
 
 const internalProducts: Product[] = [
+  // 21-Day Challenge Products (NEW - Single Funnel Entry)
+  {
+    id: '21dc-entry',
+    title: '21-Day Challenge - Entry',
+    price: 147,
+    type: 'course',
+    metadata: '21dc_entry',
+    stripe_product_id: 'prod_TibyMvm7DSJSKg',
+    stripe_price_id: 'price_1SlAkqQNEdHwdojXsQWVxg41',
+    image: 'https://sb.oracleboxing.com/Website/6wc_tn.png',
+    description: `**21-Day Challenge - Entry Package**
+
+Learn the fundamental pillars of boxing so that your technique "just looks right."
+
+**What you get:**
+• Live Group Classes (11/week)
+• Oracle Boxing Community access
+• Boxing Roadmap Course
+• 1-1 Graduation Call
+• Win Your Money Back (WYMB) Guarantee
+
+**Requirements:**
+• Show up twice per week for live classes
+• Submit one video per week for review
+• Complete the graduation call`,
+    shortDescription: '21-Day Challenge with WYMB Guarantee',
+    perfectFor: 'Beginners ready to commit to fundamentals',
+  },
+  {
+    id: '21dc-premium',
+    title: '21-Day Challenge - Premium',
+    price: 297,
+    type: 'course',
+    metadata: '21dc_premium',
+    stripe_product_id: 'prod_TibyGUPKfq9qiC',
+    stripe_price_id: 'price_1SlAkrQNEdHwdojXVre97pmT',
+    image: 'https://sb.oracleboxing.com/Website/6wc_tn.png',
+    description: `**21-Day Challenge - Premium Package**
+
+Everything in Entry plus additional courses and resources.
+
+**What you get:**
+• Everything in Entry package
+• Coaching Call Recordings Vault
+• Boxing from First Principles Course
+
+Perfect for serious learners who want the complete curriculum.`,
+    shortDescription: '21-Day Challenge with full course access',
+    perfectFor: 'Serious learners wanting complete access',
+  },
+  {
+    id: '21dc-vip',
+    title: '21-Day Challenge - VIP',
+    price: 497,
+    type: 'course',
+    metadata: '21dc_vip',
+    stripe_product_id: 'prod_TibyBX5QePxybP',
+    stripe_price_id: 'price_1SlAkrQNEdHwdojXr942FuLA',
+    image: 'https://sb.oracleboxing.com/Website/6wc_tn.png',
+    description: `**21-Day Challenge - VIP Package**
+
+The complete experience with personal coaching and exclusive perks.
+
+**What you get:**
+• Everything in Premium package
+• "Jump-start" 1-1 Coaching Call
+• Oracle Boxing Tracksuit
+• Use Call Recordings as Challenge Credit
+• 3 Video Analysis sessions
+
+The ultimate commitment to mastering boxing fundamentals.`,
+    shortDescription: 'VIP 21-Day Challenge with 1-1 coaching and tracksuit',
+    perfectFor: 'Committed boxers who want personal attention',
+  },
+  // Legacy 6-Week Challenge (kept for existing customers)
   {
     id: '6wc',
     title: '6-Week Challenge',
@@ -519,7 +606,8 @@ export function getCourses(): Product[] {
 }
 
 export function getMemberships(): Product[] {
-  return products.filter(p => p.type === 'membership')
+  // Only return Monthly and Annual memberships (not legacy quarterly/6-month)
+  return products.filter(p => p.type === 'membership' && ['membership-monthly', 'membership-annual'].includes(p.id))
 }
 
 // Get products by metadata tag
@@ -550,4 +638,9 @@ export function getCourseUpsells(): Product[] {
 
 export function getBundleUpsells(): Product[] {
   return allProducts.filter(p => ['6wm', 'coach1'].includes(p.metadata || ''))
+}
+
+// Get 21-Day Challenge products
+export function get21DayChallengeProducts(): Product[] {
+  return allProducts.filter(p => ['21dc_entry', '21dc_premium', '21dc_vip'].includes(p.metadata || ''))
 }

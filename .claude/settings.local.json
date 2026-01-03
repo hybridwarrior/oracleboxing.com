@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx tsc:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(vercel:*)",
+      "Bash(node scripts/create-21dc-products.js:*)",
+      "Bash(npm run build:*)",
+      "Bash(npx shadcn@latest add \"https://v0.app/chat/b/QVAq2joDLcq?token=eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..9KQ1JlPQDbO-RmgG.ZPVOI4BX5TyZbFUgbMjps4RAeJXz1vjiHKi8VUGxtn45bpBQLxJ7xCYo.4soBOSpe05bKFqTuVa7LtQ\")",
+      "Bash(npx shadcn@latest add \"https://v0.app/chat/b/QVAq2joDLcq?token=eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..9KQ1JlPQDbO-RmgG.ZPVOI4BX5TyZbFUgbMjps4RAeJXz1vjiHKi8VUGxtn45bpBQLxJ7xCYo.4soBOSpe05bKFqTuVa7LtQ\" --yes --overwrite)",
+      "Bash(npx shadcn@latest init:*)",
+      "Bash(git checkout:*)",
+      "Bash(ls:*)",
+      "Bash(npm run dev:*)",
+      "Bash(grep:*)"
+    ]
+  }
+}

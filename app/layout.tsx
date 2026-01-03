@@ -1,106 +1,32 @@
-import type { Metadata } from "next";
-import "./globals.css";
+import type React from "react"
+import type { Metadata } from "next"
+import "./globals.css"
+import { Toaster } from "sonner"
+import { CurrencyProvider } from "@/contexts/CurrencyContext"
 
 export const metadata: Metadata = {
-  title: {
-    default: "Oracle Boxing",
-    template: "%s"
-  },
-  description: "Transform your boxing with expert courses, live coaching, and a thriving community. Master the fundamentals, techniques, and tactics of old school boxing.",
-  keywords: "boxing courses, boxing training, online boxing, boxing masterclass, boxing coaching, oracle boxing, learn boxing online, boxing fundamentals",
-  authors: [{ name: "Oracle Boxing" }],
-  creator: "Oracle Boxing",
-  publisher: "Oracle Boxing",
-  metadataBase: new URL('https://oracleboxing.com'),
-  alternates: {
-    canonical: '/',
-  },
-  icons: {
-    icon: { url: 'https://sb.oracleboxing.com/Website/infinity_squared_white.svg', type: 'image/svg+xml' },
-    apple: 'https://sb.oracleboxing.com/Website/infinity_squared_white.svg',
-  },
-  openGraph: {
-    title: "Oracle Boxing",
-    description: "Transform your boxing with expert courses, live coaching, and a thriving community.",
-    url: 'https://oracleboxing.com',
-    siteName: 'Oracle Boxing',
-    locale: 'en_US',
-    type: 'website',
-    images: [
-      {
-        url: 'https://sb.oracleboxing.com/Website/skool_art.webp',
-        width: 1200,
-        height: 630,
-        alt: 'Oracle Boxing - Master Old School Boxing',
-      },
-    ],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: "Oracle Boxing",
-    description: "Transform your boxing with expert courses, live coaching, and a thriving community.",
-    images: ['https://sb.oracleboxing.com/Website/skool_art.webp'],
-    creator: '@oracleboxing',
-  },
-};
-
-import { CartProvider } from "@/contexts/CartContext";
-import { CurrencyProvider } from "@/contexts/CurrencyContext";
-import { Toaster } from "sonner";
-import { UTMTracker } from "@/components/UTMTracker";
-import PageViewTracker from "@/components/PageViewTracker";
-import { CookieBanner } from "@/components/CookieBanner";
-import { ThirdPartyScripts } from "@/components/ThirdPartyScripts";
-import { SpeedInsights } from '@vercel/speed-insights/next';
-import { Analytics } from '@vercel/analytics/react';
+  title: "21-Day Fundamentals Challenge | Oracle Boxing",
+  description:
+    "Learn the fundamental pillars of boxing so that your technique just looks right. 21 days to master what matters.",
+}
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: {
+  children: React.ReactNode
+}) {
   return (
-    <html lang="en">
+    <html lang="en" className="antialiased">
       <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
-
-        {/* Favicons - SVG primary with PNG fallbacks */}
-        <link rel="icon" type="image/svg+xml" href="https://sb.oracleboxing.com/Website/infinity_squared_white.svg" />
-        <link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png" />
-        <link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/favicons/favicon-180x180.png" />
-        <link rel="manifest" href="/favicons/site.webmanifest" />
-
-        {/* Preconnect to external resources for performance */}
-        <link rel="preconnect" href="https://sb.oracleboxing.com" />
-        <link rel="dns-prefetch" href="https://sb.oracleboxing.com" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Lilita+One&display=swap" rel="stylesheet" />
       </head>
-      <body className="antialiased">
-        {/* Google Tag Manager (noscript) */}
-        <noscript>
-          <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NXKTDCT5"
-            height="0" width="0" style={{display:'none',visibility:'hidden'}}></iframe>
-        </noscript>
-        {/* End Google Tag Manager (noscript) */}
-
-        {/* Load tracking scripts after hydration */}
-        <ThirdPartyScripts />
-
-        <UTMTracker />
-        <PageViewTracker />
+      <body className="font-sans antialiased">
         <CurrencyProvider>
-          <CartProvider>
-            {children}
-            <Toaster position="top-center" />
-            <CookieBanner />
-          </CartProvider>
+          {children}
+          <Toaster position="top-center" richColors />
         </CurrencyProvider>
-        <SpeedInsights />
-        <Analytics />
       </body>
     </html>
-  );
+  )
 }

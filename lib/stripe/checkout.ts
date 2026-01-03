@@ -313,16 +313,22 @@ export async function createCheckoutSession({
   const mainProduct = items[0]?.product
   const addOns = items.slice(1).map(i => i.product.metadata || i.product.id).join(',')
 
-  // Check if cart contains 6WC, BFC, or BFC_VIP (needed for reliable detection when order bumps are present)
+  // Check if cart contains specific challenge products (needed for reliable detection when order bumps are present)
   const has6WC = items.some(item => item.product.id === '6wc' || item.product.metadata === '6wc')
   const hasBFC = items.some(item => item.product.metadata === 'bfc')
   const hasBFCVIP = items.some(item => item.product.metadata === 'bfc_vip')
+  const has21DC = items.some(item =>
+    item.product.metadata?.startsWith('21dc_') ||
+    item.product.id?.startsWith('21dc-')
+  )
 
   // Determine funnel type based on main product or cart contents
   let funnelType = 'course' // Default
 
   if (mainProduct?.type === 'merch') {
     funnelType = 'merch'
+  } else if (has21DC) {
+    funnelType = '21dc'
   } else if (has6WC) {
     funnelType = '6wc'
   } else if (hasBFC) {
@@ -347,6 +353,8 @@ export async function createCheckoutSession({
   let purchaseType = 'course' // Default
   if (mainProduct?.type === 'merch') {
     purchaseType = 'merch'
+  } else if (has21DC) {
+    purchaseType = '21dc'
   } else if (has6WC) {
     purchaseType = '6wc'
   } else if (hasBFC) {

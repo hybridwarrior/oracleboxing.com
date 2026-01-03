@@ -633,9 +633,9 @@ export default function MembershipsPage() {
             Choose the plan that fits your commitment level
           </p>
 
-          {/* Pricing Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-6 sm:mb-8">
-            {/* Annual - Left */}
+          {/* Pricing Cards - Monthly and Annual only */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-6 sm:mb-8 max-w-2xl mx-auto">
+            {/* Annual - Best Value */}
             <div className="relative">
               {/* Best Value Badge */}
               <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 px-4 py-1.5 bg-[#FFF8DC] text-black text-xs font-black uppercase rounded-full z-10 whitespace-nowrap border-2 border-black">
@@ -681,48 +681,7 @@ export default function MembershipsPage() {
               </div>
             </div>
 
-            {/* 6-Month - Middle */}
-            <div className="relative">
-              <div
-                onClick={() => setSelectedPlan('membership-6month')}
-                className={`cursor-pointer rounded-xl border-2 transition-all ${
-                  selectedPlan === 'membership-6month'
-                    ? 'border-[#FFF8DC] bg-gray-900'
-                    : 'border-gray-700 hover:border-gray-600 bg-gray-900'
-                }`}
-              >
-                <div className="p-4 sm:p-5">
-                  <div className="flex items-center justify-between mb-3">
-                    <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-                      selectedPlan === 'membership-6month' ? 'border-[#FFF8DC] bg-[#FFF8DC]' : 'border-gray-600 bg-gray-900'
-                    }`}>
-                      {selectedPlan === 'membership-6month' && (
-                        <div className="w-2.5 h-2.5 bg-black rounded-full"></div>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="flex items-baseline justify-between gap-3 mb-2">
-                    <h3 className="text-xl sm:text-2xl font-bold text-white">Bi-Annual</h3>
-                    <div className="text-3xl sm:text-4xl font-black text-white">
-                      <AdaptivePrice usdAmount={497} metadata="mem6" />
-                    </div>
-                  </div>
-                  <div className="text-sm text-gray-400 mb-3">Billed every 6 months</div>
-                  <div className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-1.5 text-center">
-                    <div className="flex items-baseline justify-center gap-1">
-                      <div className="text-xl sm:text-2xl font-bold text-white">
-                        <AdaptivePricePerMonth usdAmount={497} months={6} metadata="mem6" />
-                      </div>
-                      <div className="text-xs text-gray-400">/ month</div>
-                    </div>
-                  </div>
-                  <div className="text-xs text-gray-400 mt-2 text-center">incl. all taxes</div>
-                </div>
-              </div>
-            </div>
-
-            {/* Quarterly - Right */}
+            {/* Monthly */}
             <div className="relative">
               <div
                 onClick={() => setSelectedPlan('membership-monthly')}
@@ -744,21 +703,21 @@ export default function MembershipsPage() {
                   </div>
 
                   <div className="flex items-baseline justify-between gap-3 mb-2">
-                    <h3 className="text-xl sm:text-2xl font-bold text-white">Quarterly</h3>
+                    <h3 className="text-xl sm:text-2xl font-bold text-white">Monthly</h3>
                     <div className="text-3xl sm:text-4xl font-black text-white">
-                      <AdaptivePrice usdAmount={297} metadata="memq" />
+                      <AdaptivePrice usdAmount={97} metadata="mem_monthly" />
                     </div>
                   </div>
-                  <div className="text-sm text-gray-400 mb-3">Billed every 3 months</div>
+                  <div className="text-sm text-gray-400 mb-3">Billed every month</div>
                   <div className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-1.5 text-center">
                     <div className="flex items-baseline justify-center gap-1">
                       <div className="text-xl sm:text-2xl font-bold text-white">
-                        <AdaptivePricePerMonth usdAmount={297} months={3} metadata="memq" />
+                        <AdaptivePrice usdAmount={97} metadata="mem_monthly" />
                       </div>
                       <div className="text-xs text-gray-400">/ month</div>
                     </div>
                   </div>
-                  <div className="text-xs text-gray-400 mt-2 text-center">incl. all taxes</div>
+                  <div className="text-xs text-gray-400 mt-2 text-center">Cancel anytime</div>
                 </div>
               </div>
             </div>
@@ -775,10 +734,6 @@ export default function MembershipsPage() {
             </button>
           </div>
 
-          {/* Monthly billing note */}
-          <p className="text-center text-gray-400 text-xs sm:text-sm mb-4 sm:mb-6">
-            You can switch to monthly billing at <AdaptivePrice usdAmount={97} metadata="mem_monthly" className="inline" />/month after purchase
-          </p>
 
           {/* Payment Methods */}
           <div className="payment_icons-group mb-6 sm:mb-8">

@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation'
 
-export default function BFCUpgradePage() {
+export default function NotFound() {
   redirect('/')
 }

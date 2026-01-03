@@ -61,6 +61,10 @@ export const PRODUCT_PRICES: Record<string, Record<Currency, number>> = {
   bfc_vip: { USD: 497, GBP: 397, EUR: 457, AUD: 745, CAD: 674, AED: 1834 },
   // Tracksuit (20% discount already applied)
   tracksuit: { USD: 161, GBP: 128, EUR: 150, CAD: 219, AUD: 241, AED: 590 },
+  // 21-Day Challenge products
+  '21dc_entry': { USD: 147, GBP: 117, EUR: 136, AUD: 220, CAD: 199, AED: 540 },
+  '21dc_premium': { USD: 297, GBP: 237, EUR: 273, AUD: 445, CAD: 403, AED: 1095 },
+  '21dc_vip': { USD: 497, GBP: 397, EUR: 457, AUD: 745, CAD: 674, AED: 1834 },
 };
 
 // Membership products - now support multi-currency
