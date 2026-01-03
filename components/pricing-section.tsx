@@ -52,23 +52,14 @@ export default function PricingSection() {
       {/* Header Section */}
       <div className="self-stretch px-6 md:px-24 py-12 md:py-16 border-b border-[rgba(55,50,47,0.12)] flex justify-center items-center gap-6">
         <div className="w-full max-w-[700px] px-6 py-5 overflow-hidden rounded-lg flex flex-col justify-start items-center gap-4">
-          {/* Badge */}
-          <div className="px-[14px] py-[6px] bg-white shadow-[0px_0px_0px_4px_rgba(55,50,47,0.05)] overflow-hidden rounded-[90px] flex justify-start items-center gap-[8px] border border-[rgba(2,6,23,0.08)]">
-            <div className="text-center flex justify-center flex-col text-[#37322F] text-xs font-medium leading-3 font-sans">
-              21-Day Fundamentals Challenge
-            </div>
-          </div>
-
           {/* Title */}
           <div className="self-stretch text-center flex justify-center flex-col text-[#49423D] text-3xl md:text-5xl font-semibold leading-tight md:leading-[60px] font-sans tracking-tight">
-            Three Packages Tailored To Your Needs
+            Choose Your Package
           </div>
 
-          {/* Description */}
-          <div className="self-stretch text-center text-[#605A57] text-base font-normal leading-7 font-sans">
-            Not Having Solid Fundamentals Is Costing You Progress Every Single Day.
-            <br />
-            The Longer You Train Bad Habits, The Harder It Is To Correct Them Later.
+          {/* Subtitle */}
+          <div className="self-stretch text-center text-[#605A57] text-lg font-medium leading-7 font-sans">
+            All packages are for the 21-Day Fundamentals Challenge
           </div>
         </div>
       </div>
