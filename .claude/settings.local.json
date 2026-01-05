@@ -22,7 +22,8 @@
       "Bash(/Users/jordanlyne/Projects/oracleboxing.com/app/contact-library )",
       "Bash(/Users/jordanlyne/Projects/oracleboxing.com/app/tech-demo )",
       "Bash(/Users/jordanlyne/Projects/oracleboxing.com/app/success/call-booked )",
-      "Bash(/Users/jordanlyne/Projects/oracleboxing.com/app/checkout/bfc-upgrade)"
+      "Bash(/Users/jordanlyne/Projects/oracleboxing.com/app/checkout/bfc-upgrade)",
+      "Bash(npm install:*)"
     ]
   }
 }

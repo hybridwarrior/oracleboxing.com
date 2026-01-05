@@ -1,8 +1,8 @@
-// Webhook tracking utility for page views and purchases
-// Sends page view data to Make.com webhook and Facebook Pixel (browser-side)
-// Sends purchase data to Make.com webhook and Facebook Conversions API (server-side)
+// Tracking utility for page views, checkouts, and purchases
+// Stores tracking data in Supabase and sends to Facebook Pixel/CAPI
 
-const WEBHOOK_URL = 'https://hook.eu2.make.com/rmssfwgpgrbkihnly4ocxd2cf6kmfbo3';
+import { supabase } from './supabase';
+
 const FB_PIXEL_ID = process.env.NEXT_PUBLIC_FB_PIXEL_ID || '1474540100541059';
 const FB_ACCESS_TOKEN = process.env.FB_ACCESS_TOKEN || 'EAA2BabZBcKN4BP7zdm7EBpGJr6oFZCUWcei4YztbHRJXEyb2Ccy062KsatEjbzZAE65tEPZCKSntvC5dWJaT7CZCRdX0ldbpi6J5KadNwnLZACXdzZAhUIw8bYYZBFaE6bIht7qZCyOLcGezNKGxS1FBHqItE8et5dBoMsYYrUHZC5Lb6dSPWtbgWZA1dvH3Wgbw01i6wZDZD';
 const FB_CONVERSIONS_API_URL = `https://graph.facebook.com/v18.0/${FB_PIXEL_ID}/events`;
@@ -297,17 +297,28 @@ export async function trackPageView(page: string, referrer: string): Promise<voi
       cookieData, // Include full cookie data
     };
 
-    // Send to webhook (non-blocking)
-    fetch(WEBHOOK_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-      keepalive: true, // Ensure request completes even if page unloads
-    }).catch((error) => {
-      console.error('Failed to send page view to webhook:', error);
-    });
+    // Send to Supabase (non-blocking)
+    supabase
+      .from('page_views')
+      .insert({
+        date: data.date,
+        session_id: data.sessionId,
+        event_id: data.eventId,
+        page: data.page,
+        referrer: data.referrer,
+        country: data.country,
+        utm_source: data.utmSource,
+        utm_medium: data.utmMedium,
+        utm_campaign: data.utmCampaign,
+        utm_content: data.utmContent,
+      })
+      .then(({ error }) => {
+        if (error) {
+          console.error('Failed to save page view to Supabase:', error);
+        } else {
+          console.log('✅ Page view saved to Supabase');
+        }
+      });
 
     // Check if this is the initial page load (event_id already generated in layout.tsx)
     const isInitialPageLoad = typeof window !== 'undefined' &&
@@ -400,17 +411,30 @@ export async function trackPurchase(
       country,
     };
 
-    // Send to webhook (non-blocking)
-    fetch(WEBHOOK_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-      keepalive: true,
-    }).catch((error) => {
-      console.error('Failed to send purchase to webhook:', error);
-    });
+    // Send to Supabase (non-blocking)
+    supabase
+      .from('purchases')
+      .insert({
+        date: data.date,
+        session_id: data.sessionId,
+        event_id: data.eventId,
+        name: null, // Not available in this function
+        email: null, // Not available in this function
+        amount: data.value,
+        product: data.products.join(', '),
+        country: data.country,
+        referrer: null,
+        utm_source: data.utmSource,
+        utm_medium: data.utmMedium,
+        utm_content: data.utmContent,
+      })
+      .then(({ error }) => {
+        if (error) {
+          console.error('Failed to save purchase to Supabase:', error);
+        } else {
+          console.log('✅ Purchase saved to Supabase');
+        }
+      });
 
     // Send to Facebook Conversions API
     try {
@@ -538,23 +562,33 @@ export async function trackInitiateCheckout(
     // Log the complete data being sent
     console.log('💰 Initiate Checkout - Complete Data Being Sent:', JSON.stringify(data, null, 2));
 
-    // Send to webhook (non-blocking)
-    fetch(WEBHOOK_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-      keepalive: true,
-    }).then(response => {
-      if (response.ok) {
-        console.log('✅ Initiate checkout successfully sent to webhook');
-      } else {
-        console.error('❌ Webhook returned error status:', response.status);
-      }
-    }).catch((error) => {
-      console.error('❌ Failed to send initiate checkout to webhook:', error);
-    });
+    // Send to Supabase (non-blocking)
+    supabase
+      .from('initiate_checkouts')
+      .insert({
+        date: data.date,
+        session_id: data.sessionId,
+        event_id: data.eventId,
+        first_name: data.firstName,
+        last_name: data.lastName,
+        email: data.email,
+        amount: data.value,
+        product: data.products.join(', '),
+        funnel: data.funnel,
+        source: data.source,
+        country: data.country,
+        referrer: data.initialReferrer,
+        utm_source: data.utmSource,
+        utm_medium: data.utmMedium,
+        utm_content: data.utmContent,
+      })
+      .then(({ error }) => {
+        if (error) {
+          console.error('❌ Failed to save initiate checkout to Supabase:', error);
+        } else {
+          console.log('✅ Initiate checkout saved to Supabase');
+        }
+      });
 
     // Send to Facebook Pixel (browser-side tracking) with event_id
     if (typeof window !== 'undefined' && (window as any).fbq) {

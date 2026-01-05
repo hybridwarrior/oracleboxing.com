@@ -10,7 +10,7 @@ export const getStripe = (): Stripe => {
       throw new Error('STRIPE_SECRET_KEY is not defined in environment variables')
     }
     _stripe = new Stripe(stripeSecretKey, {
-      apiVersion: '2025-09-30.clover',
+      apiVersion: '2025-12-15.clover',
       typescript: true,
     })
   }

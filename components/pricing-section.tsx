@@ -3,9 +3,86 @@
 import Link from "next/link"
 import { useCurrency } from "@/contexts/CurrencyContext"
 import { getProductPrice, formatPrice } from "@/lib/currency"
+import { useAnalytics } from "@/hooks/useAnalytics"
+import { generateEventId } from "@/lib/tracking-cookies"
 
 export default function PricingSection() {
   const { currency, isLoading } = useCurrency()
+  const { trackAddToCart } = useAnalytics()
+
+  // Handle AddToCart tracking when user clicks to go to checkout
+  const handleCheckoutClick = (productId: string, productName: string, buttonLocation: string) => {
+    const price = getProductPrice('21dc_entry', currency) || 147
+    const eventId = generateEventId()
+
+    // Track AddToCart in Vercel Analytics
+    trackAddToCart({
+      product_id: productId,
+      product_name: productName,
+      value: price,
+      currency: currency,
+      button_location: buttonLocation,
+      funnel: '21dc',
+    })
+
+    // Track AddToCart in Facebook Pixel (browser-side)
+    if (typeof window !== 'undefined' && (window as any).fbq) {
+      (window as any).fbq('track', 'AddToCart', {
+        content_ids: [productId],
+        content_name: productName,
+        content_type: 'product',
+        value: price,
+        currency: currency,
+        button_location: buttonLocation,
+      }, {
+        eventID: eventId
+      })
+      console.log('📱 Facebook Pixel AddToCart event sent:', { productId, eventId })
+    }
+
+    // Send to Facebook Conversions API (server-side)
+    let cookieData = {}
+    let fbclid = null
+
+    if (typeof document !== 'undefined') {
+      const cookies = document.cookie.split(';').reduce((acc, cookie) => {
+        const [key, value] = cookie.trim().split('=')
+        acc[key] = value
+        return acc
+      }, {} as Record<string, string>)
+
+      const obTrackCookie = cookies['ob_track']
+      if (obTrackCookie) {
+        try {
+          cookieData = JSON.parse(decodeURIComponent(obTrackCookie))
+        } catch (e) {
+          console.warn('Failed to parse tracking cookie:', e)
+        }
+      }
+      fbclid = cookies['fbclid'] || null
+    }
+
+    fetch('/api/facebook-addtocart', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        event_id: eventId,
+        content_ids: [productId],
+        content_name: productName,
+        value: price,
+        currency: currency,
+        button_location: buttonLocation,
+        page_url: typeof window !== 'undefined' ? window.location.href : '',
+        cookie_data: cookieData,
+        fbclid: fbclid,
+      }),
+      keepalive: true,
+    }).catch((error) => {
+      console.error('Failed to send AddToCart to Facebook CAPI:', error)
+    })
+
+    console.log('🛒 AddToCart tracked:', { productId, productName, price, currency, buttonLocation })
+  }
   return (
     <div id="pricing" className="w-full relative overflow-hidden flex flex-col justify-center items-center scroll-mt-8 border-b border-[rgba(55,50,47,0.12)]">
       {/* Diagonal stripes background on margins */}
@@ -64,6 +141,7 @@ export default function PricingSection() {
             {/* CTA Button */}
             <Link
               href="/checkout?product=21dc-entry"
+              onClick={() => handleCheckoutClick('21dc-entry', '21-Day Challenge - Entry', 'pricing-card')}
               className="w-full px-6 py-4 bg-[#FBFAF9] hover:bg-white transition-colors rounded-full flex justify-center items-center shadow-[0px_2px_4px_rgba(55,50,47,0.12)]"
             >
               <span className="text-[#37322F] text-base font-semibold font-sans">

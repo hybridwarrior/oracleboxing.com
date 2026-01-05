@@ -21,7 +21,7 @@ const testimonials: Testimonial[] = [
     quote: "The value that the coaches bring is WAY BEYOND what I ever expected when I joined this challenge.",
     name: "Bruno Martins",
     role: "Engineer",
-    image: "https://sb.oracleboxing.com/1560863789646.jpeg"
+    image: "https://sb.oracleboxing.com/Website/1560863789646.jpeg"
   }
 ]
 

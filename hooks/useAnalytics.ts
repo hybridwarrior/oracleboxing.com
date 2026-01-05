@@ -2,6 +2,30 @@
 
 import { track } from '@vercel/analytics'
 
+// AddToCart event - fires when user clicks to go to checkout
+interface AddToCartEventData {
+  product_id: string // '21dc-entry' | '21dc-premium' | '21dc-vip' | '6wc' | 'bffp' | etc.
+  product_name: string // 'Entry Package' | 'Premium Package' | 'VIP Package'
+  value: number
+  currency: string
+  button_location: string // 'pricing-entry' | 'pricing-premium' | 'pricing-vip' | 'hero' | 'offer-stack'
+  funnel: string // '21dc' | '6wc' | 'course' | 'membership'
+}
+
+// InitiateCheckout event - fires when user proceeds to Stripe payment
+interface InitiateCheckoutEventData {
+  value: number
+  currency: string
+  products: string[] // All product IDs in cart
+  product_names: string[] // Human-readable product names
+  order_bumps: string[] // Order bump product IDs selected
+  order_bump_names: string[] // Human-readable order bump names
+  funnel: string // '21dc' | '6wc' | 'course' | 'bundle' | 'membership'
+  has_order_bumps: boolean
+  total_items: number
+}
+
+// Legacy checkout event data (for backward compatibility)
 interface CheckoutEventData {
   value: number
   currency: string
@@ -15,10 +39,12 @@ interface PurchaseEventData {
   currency: string
   transaction_id: string
   products?: string[]
+  product_names?: string[] // Human-readable product names
   product_count?: number
-  funnel_type?: '6wc' | 'course' | 'bundle' | 'membership'
+  funnel_type?: '6wc' | 'course' | 'bundle' | 'membership' | '21dc'
   has_order_bumps?: boolean
   order_bumps?: string[]
+  order_bump_names?: string[] // Human-readable order bump names
   item_name?: string // Keep for backward compatibility
 }
 
@@ -60,6 +86,48 @@ interface FAQEventData {
 }
 
 export const useAnalytics = () => {
+  // NEW: Track AddToCart - fires when user clicks to go to checkout page
+  const trackAddToCart = (data: AddToCartEventData) => {
+    console.log('Vercel Analytics: AddToCart event', data);
+
+    try {
+      track('add_to_cart', {
+        product_id: data.product_id,
+        product_name: data.product_name,
+        value: data.value,
+        currency: data.currency,
+        button_location: data.button_location,
+        funnel: data.funnel,
+      });
+      console.log('Vercel Analytics add_to_cart event sent');
+    } catch (error) {
+      console.error('Failed to send Vercel Analytics add_to_cart event:', error);
+    }
+  };
+
+  // NEW: Track InitiateCheckout with rich data - fires when proceeding to Stripe
+  const trackInitiateCheckoutEnriched = (data: InitiateCheckoutEventData) => {
+    console.log('Vercel Analytics: InitiateCheckout (enriched) event', data);
+
+    try {
+      track('initiate_checkout', {
+        value: data.value,
+        currency: data.currency,
+        products: data.products.join(','),
+        product_names: data.product_names.join(','),
+        order_bumps: data.order_bumps.join(','),
+        order_bump_names: data.order_bump_names.join(','),
+        funnel: data.funnel,
+        has_order_bumps: data.has_order_bumps,
+        total_items: data.total_items,
+      });
+      console.log('Vercel Analytics initiate_checkout event sent');
+    } catch (error) {
+      console.error('Failed to send Vercel Analytics initiate_checkout event:', error);
+    }
+  };
+
+  // Legacy: Track InitiateCheckout (kept for backward compatibility)
   const trackInitiateCheckout = (data: CheckoutEventData) => {
     // Track in Vercel Analytics
     track('initiate_checkout', { ...data })
@@ -157,7 +225,9 @@ export const useAnalytics = () => {
   }
 
   return {
+    trackAddToCart,
     trackInitiateCheckout,
+    trackInitiateCheckoutEnriched,
     trackPurchase,
     trackButtonClick,
     trackUpsellInteraction,

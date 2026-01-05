@@ -51,6 +51,43 @@ function getFbclid(): string | null {
   return cookies['fbclid'] || null;
 }
 
+/**
+ * Check if purchase event has already been sent for this session
+ * Uses sessionStorage to prevent duplicate events on page refresh
+ */
+function isPurchaseAlreadyTracked(sessionId: string): boolean {
+  if (typeof window === 'undefined') return false;
+
+  try {
+    const trackedPurchases = sessionStorage.getItem('ob_tracked_purchases');
+    if (!trackedPurchases) return false;
+
+    const purchases = JSON.parse(trackedPurchases) as string[];
+    return purchases.includes(sessionId);
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Mark a purchase as tracked to prevent duplicate events
+ */
+function markPurchaseAsTracked(sessionId: string): void {
+  if (typeof window === 'undefined') return;
+
+  try {
+    const trackedPurchases = sessionStorage.getItem('ob_tracked_purchases');
+    const purchases = trackedPurchases ? JSON.parse(trackedPurchases) as string[] : [];
+
+    if (!purchases.includes(sessionId)) {
+      purchases.push(sessionId);
+      sessionStorage.setItem('ob_tracked_purchases', JSON.stringify(purchases));
+    }
+  } catch (e) {
+    console.warn('Failed to mark purchase as tracked:', e);
+  }
+}
+
 export function SuccessContent({ sessionId }: SuccessContentProps) {
   const [session, setSession] = useState<any>(null)
   const [isLoading, setIsLoading] = useState(true)
@@ -78,6 +115,12 @@ export function SuccessContent({ sessionId }: SuccessContentProps) {
 
     async function sendPurchaseEvent(sessionData: any) {
       try {
+        // Check for duplicate purchase events
+        if (isPurchaseAlreadyTracked(sessionId)) {
+          console.log('⚠️ Purchase event already tracked for session:', sessionId);
+          return;
+        }
+
         console.log('Session data received for Purchase tracking:', {
           has_amount_total: !!sessionData.amount_total,
           has_line_items: !!sessionData.line_items,
@@ -179,18 +222,44 @@ export function SuccessContent({ sessionId }: SuccessContentProps) {
           console.error('Failed to send CAPI Purchase event:', error);
         });
 
-        // 3. Send Vercel Analytics Purchase event
+        // 3. Send Vercel Analytics Purchase event with enriched data
+        // Extract product names from line items for better analytics
+        const productNames = sessionData.line_items?.data?.map((item: any) => {
+          const product = item.price?.product;
+          return typeof product === 'object' ? product.name : item.description || 'Unknown Product';
+        }).filter(Boolean) || [];
+
+        // Get order bump names from metadata if available
+        const orderBumpNames = orderBumps.map((bumpId: string) => {
+          // Map order bump IDs to human-readable names
+          const bumpNameMap: Record<string, string> = {
+            'bffp': 'Boxing from First Principles',
+            'tracksuit': 'Oracle Boxing Tracksuit',
+            'recordings-vault': 'Recordings Vault',
+            'lifetime-bffp': 'Lifetime Masterclass Access',
+            'bundle': 'Oracle Boxing Bundle',
+            '6wm': '6-Week Membership',
+          };
+          return bumpNameMap[bumpId] || bumpId;
+        });
+
         trackPurchase({
           value: amountTotal,
           currency,
           transaction_id: sessionId,
           products,
+          product_names: productNames,
           product_count: products.length,
           funnel_type: funnelType as any,
           has_order_bumps: hasOrderBumps,
           order_bumps: orderBumps,
+          order_bump_names: orderBumpNames,
         });
         console.log('Vercel Analytics Purchase event sent');
+
+        // Mark purchase as tracked to prevent duplicates on page refresh
+        markPurchaseAsTracked(sessionId);
+        console.log('✅ Purchase marked as tracked for session:', sessionId);
 
       } catch (error) {
         console.error('Error sending Purchase event:', error);

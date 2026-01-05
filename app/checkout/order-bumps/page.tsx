@@ -2,7 +2,7 @@
 
 import { Suspense, useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { Check, ArrowRight, ArrowLeft } from 'lucide-react'
+import { Check, ArrowRight, ArrowLeft, Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
 
 import { get6WCAddOns, getCourseOrderBump, get21DCOrderBumps, getProductById } from '@/lib/products'
@@ -11,6 +11,7 @@ import { getTrackingParams, getCookie } from '@/lib/tracking-cookies'
 import { useCurrency } from '@/contexts/CurrencyContext'
 import { getProductPrice, formatPrice, formatProductDescription } from '@/lib/currency'
 import { trackInitiateCheckout } from '@/lib/webhook-tracking'
+import { useAnalytics } from '@/hooks/useAnalytics'
 
 // Force dynamic rendering for this page
 export const dynamic = 'force-dynamic'
@@ -25,6 +26,7 @@ function OrderBumpsContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { currency } = useCurrency()
+  const { trackInitiateCheckoutEnriched } = useAnalytics()
   const [email, setEmail] = useState('')
   const [name, setName] = useState('')
   const [funnelType, setFunnelType] = useState<'6wc' | 'course' | '21dc'>('6wc')
@@ -34,6 +36,7 @@ function OrderBumpsContent() {
   const [expandedBump, setExpandedBump] = useState<string | null>(null)
   const [currentIndex, setCurrentIndex] = useState(0)
   const [showAll, setShowAll] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const [trackingParams, setTrackingParams] = useState<{
     referrer: string
     first_utm_source?: string
@@ -136,6 +139,10 @@ function OrderBumpsContent() {
   }
 
   const handleContinue = async () => {
+    // Prevent double submissions
+    if (isLoading) return
+    setIsLoading(true)
+
     // Build the items array for checkout
     const items = []
 
@@ -240,6 +247,38 @@ function OrderBumpsContent() {
       }
     )
 
+    // Track enriched InitiateCheckout in Vercel Analytics
+    // Separate base products from order bumps for rich analytics
+    const baseProductIds: string[] = []
+    const baseProductNames: string[] = []
+    const orderBumpIds: string[] = []
+    const orderBumpNames: string[] = []
+
+    items.forEach(item => {
+      // Check if this is an order bump (was in the orderBumps array and was selected)
+      const isOrderBump = selectedBumps.includes(item.product.id) && orderBumps.some(ob => ob.id === item.product.id)
+
+      if (isOrderBump) {
+        orderBumpIds.push(item.product.id)
+        orderBumpNames.push(item.product.title)
+      } else {
+        baseProductIds.push(item.product.id)
+        baseProductNames.push(item.product.title)
+      }
+    })
+
+    trackInitiateCheckoutEnriched({
+      value: totalValue,
+      currency: currencyParam || 'USD',
+      products: baseProductIds,
+      product_names: baseProductNames,
+      order_bumps: orderBumpIds,
+      order_bump_names: orderBumpNames,
+      funnel: funnelParam || funnelType,
+      has_order_bumps: orderBumpIds.length > 0,
+      total_items: items.length,
+    })
+
     try {
       // Get full cookie data
       const cookieData = getCookie('ob_track')
@@ -288,6 +327,7 @@ function OrderBumpsContent() {
     } catch (error: any) {
       console.error('Checkout error:', error)
       toast.error(error.message || "Couldn't start checkout, try again")
+      setIsLoading(false)
     }
   }
 
@@ -651,10 +691,21 @@ function OrderBumpsContent() {
         {/* Continue Button */}
         <button
           onClick={handleContinue}
-          className="w-full py-3 px-6 bg-[#37322F] text-[#FBFAF9] font-medium text-base rounded-full shadow-[0px_2px_4px_rgba(55,50,47,0.12)] hover:bg-[#49423D] transition-all duration-200 font-sans"
-          style={{ cursor: 'pointer' }}
+          disabled={isLoading}
+          className={`w-full py-3 px-6 font-bold text-base rounded-full shadow-[0px_2px_4px_rgba(55,50,47,0.12)] transition-all duration-200 flex items-center justify-center gap-2 font-sans ${
+            isLoading
+              ? 'bg-[#847971] cursor-not-allowed'
+              : 'bg-[#37322F] hover:bg-[#49423D] cursor-pointer'
+          } text-[#FBFAF9]`}
         >
-          Continue to Payment
+          {isLoading ? (
+            <>
+              <Loader2 className="w-5 h-5 animate-spin" />
+              Processing...
+            </>
+          ) : (
+            'Continue to Payment'
+          )}
         </button>
         </div>
       </div>
