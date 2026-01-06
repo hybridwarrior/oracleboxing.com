@@ -48,6 +48,7 @@ export function LiquidGlassCarousel({ items = defaultItems }: LiquidGlassCarouse
   const [prevMagnify, setPrevMagnify] = useState(false)
   const [nextMagnify, setNextMagnify] = useState(false)
   const [autoScrollEnabled, setAutoScrollEnabled] = useState(true)
+  const [containerHeight, setContainerHeight] = useState<number | null>(null)
 
   const carouselRef = useRef<HTMLDivElement>(null)
   const thumbnailsRef = useRef<HTMLDivElement>(null)
@@ -96,6 +97,22 @@ export function LiquidGlassCarousel({ items = defaultItems }: LiquidGlassCarouse
     setAutoScrollEnabled(false)
   }, [])
 
+  // Update container height based on current video dimensions
+  const updateContainerHeight = useCallback(() => {
+    const currentVideo = videoRefs.current[currentIndex]
+    if (currentVideo && carouselRef.current) {
+      const containerWidth = carouselRef.current.offsetWidth
+      const videoWidth = currentVideo.videoWidth || currentVideo.offsetWidth
+      const videoHeight = currentVideo.videoHeight || currentVideo.offsetHeight
+
+      if (videoWidth && videoHeight) {
+        const aspectRatio = videoHeight / videoWidth
+        const newHeight = containerWidth * aspectRatio
+        setContainerHeight(newHeight)
+      }
+    }
+  }, [currentIndex])
+
   // Play/pause videos based on current index and set up ended event listener
   useEffect(() => {
     const currentVideo = videoRefs.current[currentIndex]
@@ -113,17 +130,21 @@ export function LiquidGlassCarousel({ items = defaultItems }: LiquidGlassCarouse
       }
     })
 
-    // Add ended event listener to current video for auto-advance
+    // Update height when video metadata is loaded
     if (currentVideo) {
       currentVideo.addEventListener('ended', advanceToNext)
+      currentVideo.addEventListener('loadedmetadata', updateContainerHeight)
+      // Also try to update immediately in case metadata is already loaded
+      updateContainerHeight()
     }
 
     return () => {
       if (currentVideo) {
         currentVideo.removeEventListener('ended', advanceToNext)
+        currentVideo.removeEventListener('loadedmetadata', updateContainerHeight)
       }
     }
-  }, [currentIndex, advanceToNext])
+  }, [currentIndex, advanceToNext, updateContainerHeight])
 
   const handlePrevClick = () => {
     if (currentIndex > 0) {
@@ -204,11 +225,12 @@ export function LiquidGlassCarousel({ items = defaultItems }: LiquidGlassCarouse
 
     const handleResize = () => {
       updateTranslate(currentIndex)
+      updateContainerHeight()
     }
 
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
-  }, [currentIndex, updateTranslate, scrollThumbnailsToIndex])
+  }, [currentIndex, updateTranslate, scrollThumbnailsToIndex, updateContainerHeight])
 
   useEffect(() => {
     if (isDragging) {
@@ -242,7 +264,8 @@ export function LiquidGlassCarousel({ items = defaultItems }: LiquidGlassCarouse
         {/* Main Carousel */}
         <div
           ref={carouselRef}
-          className="relative overflow-hidden rounded-t-lg bg-transparent cursor-grab select-none active:cursor-grabbing"
+          className="relative overflow-hidden rounded-t-lg bg-transparent cursor-grab select-none active:cursor-grabbing transition-[height] duration-300 ease-out"
+          style={{ height: containerHeight ? `${containerHeight}px` : 'auto' }}
           onMouseDown={handleDragStart}
           onTouchStart={handleDragStart}
         >
