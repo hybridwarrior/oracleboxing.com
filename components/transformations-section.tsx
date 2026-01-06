@@ -31,6 +31,9 @@ export default function TransformationsSection() {
             <br />
             First Approach
           </div>
+          <p className="text-center text-[#49423D]/70 text-sm sm:text-base max-w-[500px]">
+            Results vary, but on average it takes about 5-6 months in Oracle Boxing to achieve a transformation like what you see below.
+          </p>
         </div>
 
         {/* Carousel Container - Natural aspect ratio */}
