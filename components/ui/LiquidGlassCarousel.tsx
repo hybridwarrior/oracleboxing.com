@@ -16,14 +16,14 @@ interface LiquidGlassCarouselProps {
 
 const defaultItems: CarouselItem[] = [
   { id: 1, video: 'kris_prob4.webm', poster: 'kris_prob4_poster.webp', title: 'Kris' },
-  { id: 2, video: 'zyginta_prob4.webm', poster: 'zyginta_prob4_poster.webp', title: 'Zyginta' },
-  { id: 3, video: 'andre_prob4.webm', poster: 'andre_prob4_poster.webp', title: 'Andre' },
-  { id: 4, video: 'sha-lyn_prob4.webm', poster: 'sha-lyn_prob4_poster.webp', title: 'Sha-lyn' },
+  { id: 2, video: 'sha-lyn_prob4.webm', poster: 'sha-lyn_prob4_poster.webp', title: 'Sha-lyn' },
+  { id: 3, video: 'rod_prob4.webm', poster: 'rod_prob4_poster.webp', title: 'Rod' },
+  { id: 4, video: 'balal_prob4.webm', poster: 'balal_prob4_poster.webp', title: 'Balal' },
   { id: 5, video: 'Niclas_prob4.webm', poster: 'Niclas_prob4_poster.webp', title: 'Niclas' },
-  { id: 6, video: 'rod_prob4.webm', poster: 'rod_prob4_poster.webp', title: 'Rod' },
-  { id: 7, video: 'nico_prob4.webm', poster: 'nico_prob4_poster.webp', title: 'Nico' },
-  { id: 8, video: 'keli_prob4.webm', poster: 'keli_prob4_poster.webp', title: 'Keli' },
-  { id: 9, video: 'balal_prob4.webm', poster: 'balal_prob4_poster.webp', title: 'Balal' },
+  { id: 6, video: 'keli_prob4.webm', poster: 'keli_prob4_poster.webp', title: 'Keli' },
+  { id: 7, video: 'zyginta_prob4.webm', poster: 'zyginta_prob4_poster.webp', title: 'Zyginta' },
+  { id: 8, video: 'andre_prob4.webm', poster: 'andre_prob4_poster.webp', title: 'Andre' },
+  { id: 9, video: 'nico_prob4.webm', poster: 'nico_prob4_poster.webp', title: 'Nico' },
   { id: 10, video: 'daniel_prob4.webm', poster: 'daniel_prob4_poster.webp', title: 'Daniel' },
   { id: 11, video: 'David_prob4.webm', poster: 'David_prob4_poster.webp', title: 'David' },
   { id: 12, video: 'ilyas_prob4.webm', poster: 'ilyas_prob4_poster.webp', title: 'Ilyas' },
@@ -33,7 +33,6 @@ const defaultItems: CarouselItem[] = [
 
 const BASE_URL = 'https://sb.oracleboxing.com/transfo/'
 
-// Constants for thumbnails
 const FULL_WIDTH = 120
 const COLLAPSED_WIDTH = 35
 const GAP = 2
@@ -43,7 +42,6 @@ export function LiquidGlassCarousel({ items = defaultItems }: LiquidGlassCarouse
   const [currentIndex, setCurrentIndex] = useState(0)
   const [translateX, setTranslateX] = useState(0)
   const [containerHeight, setContainerHeight] = useState<number | null>(null)
-  const [isPlaying, setIsPlaying] = useState(false)
 
   const carouselRef = useRef<HTMLDivElement>(null)
   const thumbnailsRef = useRef<HTMLDivElement>(null)
@@ -57,25 +55,17 @@ export function LiquidGlassCarousel({ items = defaultItems }: LiquidGlassCarouse
 
   const scrollThumbnailsToIndex = useCallback((index: number) => {
     if (!thumbnailsRef.current) return
-
     let scrollPosition = 0
     for (let i = 0; i < index; i++) {
       scrollPosition += COLLAPSED_WIDTH + GAP
     }
-
     scrollPosition += MARGIN
-
     const containerWidth = thumbnailsRef.current.offsetWidth
     const centerOffset = containerWidth / 2 - FULL_WIDTH / 2
     scrollPosition -= centerOffset
-
-    thumbnailsRef.current.scrollTo({
-      left: scrollPosition,
-      behavior: 'smooth'
-    })
+    thumbnailsRef.current.scrollTo({ left: scrollPosition, behavior: 'smooth' })
   }, [])
 
-  // Auto-advance to next video when current one ends
   const advanceToNext = useCallback(() => {
     setCurrentIndex(prevIndex => {
       const nextIndex = prevIndex < items.length - 1 ? prevIndex + 1 : 0
@@ -85,14 +75,12 @@ export function LiquidGlassCarousel({ items = defaultItems }: LiquidGlassCarouse
     })
   }, [items.length, updateTranslate, scrollThumbnailsToIndex])
 
-  // Update container height based on current video dimensions
   const updateContainerHeight = useCallback(() => {
     const currentVideo = videoRefs.current[currentIndex]
     if (currentVideo && carouselRef.current) {
       const containerWidth = carouselRef.current.offsetWidth
       const videoWidth = currentVideo.videoWidth || currentVideo.offsetWidth
       const videoHeight = currentVideo.videoHeight || currentVideo.offsetHeight
-
       if (videoWidth && videoHeight) {
         const aspectRatio = videoHeight / videoWidth
         const newHeight = containerWidth * aspectRatio
@@ -101,23 +89,13 @@ export function LiquidGlassCarousel({ items = defaultItems }: LiquidGlassCarouse
     }
   }, [currentIndex])
 
-  // Start playing all videos (called on first user interaction)
-  const startPlaying = useCallback(() => {
-    if (isPlaying) return
-    setIsPlaying(true)
-    const currentVideo = videoRefs.current[currentIndex]
-    if (currentVideo) {
-      currentVideo.play().catch(() => {})
-    }
-  }, [isPlaying, currentIndex])
-
-  // Play current video, pause others, and set up ended event listener
+  // Handle video playback and advancement
   useEffect(() => {
     const currentVideo = videoRefs.current[currentIndex]
 
     videoRefs.current.forEach((video, index) => {
       if (video) {
-        if (index === currentIndex && isPlaying) {
+        if (index === currentIndex) {
           video.play().catch(() => {})
         } else {
           video.pause()
@@ -138,30 +116,16 @@ export function LiquidGlassCarousel({ items = defaultItems }: LiquidGlassCarouse
         currentVideo.removeEventListener('loadedmetadata', updateContainerHeight)
       }
     }
-  }, [currentIndex, isPlaying, advanceToNext, updateContainerHeight])
-
-  // Try to autoplay on mount
-  useEffect(() => {
-    const firstVideo = videoRefs.current[0]
-    if (firstVideo) {
-      firstVideo.play()
-        .then(() => setIsPlaying(true))
-        .catch(() => {
-          // Autoplay blocked, user will need to click
-        })
-    }
-  }, [])
+  }, [currentIndex, advanceToNext, updateContainerHeight])
 
   // Handle resize
   useEffect(() => {
     updateTranslate(currentIndex)
     scrollThumbnailsToIndex(currentIndex)
-
     const handleResize = () => {
       updateTranslate(currentIndex)
       updateContainerHeight()
     }
-
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
   }, [currentIndex, updateTranslate, scrollThumbnailsToIndex, updateContainerHeight])
@@ -188,11 +152,6 @@ export function LiquidGlassCarousel({ items = defaultItems }: LiquidGlassCarouse
     setCurrentIndex(index)
     updateTranslate(index)
     scrollThumbnailsToIndex(index)
-    if (!isPlaying) {
-      setIsPlaying(true)
-      const video = videoRefs.current[index]
-      if (video) video.play().catch(() => {})
-    }
   }
 
   const getThumbnailStyle = (index: number): React.CSSProperties => {
@@ -208,12 +167,10 @@ export function LiquidGlassCarousel({ items = defaultItems }: LiquidGlassCarouse
   return (
     <div className="w-full max-w-full mx-auto p-0">
       <div className="flex flex-col gap-0">
-        {/* Main Carousel */}
         <div
           ref={carouselRef}
           className="relative overflow-hidden rounded-t-lg bg-transparent transition-[height] duration-300 ease-out"
           style={{ height: containerHeight ? `${containerHeight}px` : 'auto' }}
-          onClick={startPlaying}
         >
           <div
             className="flex will-change-transform"
@@ -229,9 +186,9 @@ export function LiquidGlassCarousel({ items = defaultItems }: LiquidGlassCarouse
               >
                 <video
                   ref={(el) => { videoRefs.current[index] = el }}
+                  autoPlay={index === currentIndex}
                   muted
                   playsInline
-                  preload="auto"
                   poster={`${BASE_URL}${item.poster}`}
                   className="w-full h-auto rounded-t-lg"
                 >
@@ -241,21 +198,6 @@ export function LiquidGlassCarousel({ items = defaultItems }: LiquidGlassCarouse
             ))}
           </div>
 
-          {/* Play button overlay - shown when not playing */}
-          {!isPlaying && (
-            <div
-              className="absolute inset-0 flex items-center justify-center bg-black/20 cursor-pointer"
-              onClick={startPlaying}
-            >
-              <div className="w-16 h-16 bg-white/90 rounded-full flex items-center justify-center shadow-lg">
-                <svg className="w-8 h-8 text-gray-900 ml-1" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M8 5v14l11-7z" />
-                </svg>
-              </div>
-            </div>
-          )}
-
-          {/* Previous Button */}
           <button
             className="absolute top-1/2 left-4 -translate-y-1/2 z-10 w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-[20px] saturate-[180%] bg-slate-50/75 shadow-lg disabled:opacity-40 disabled:cursor-not-allowed opacity-70 hover:enabled:scale-110 hover:enabled:opacity-100 active:enabled:scale-95 transition-all duration-200"
             disabled={currentIndex === 0}
@@ -267,7 +209,6 @@ export function LiquidGlassCarousel({ items = defaultItems }: LiquidGlassCarouse
             </svg>
           </button>
 
-          {/* Next Button */}
           <button
             className="absolute top-1/2 right-4 -translate-y-1/2 z-10 w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-[20px] saturate-[180%] bg-slate-50/75 shadow-lg disabled:opacity-40 disabled:cursor-not-allowed opacity-70 hover:enabled:scale-110 hover:enabled:opacity-100 active:enabled:scale-95 transition-all duration-200"
             disabled={currentIndex === items.length - 1}
@@ -279,13 +220,11 @@ export function LiquidGlassCarousel({ items = defaultItems }: LiquidGlassCarouse
             </svg>
           </button>
 
-          {/* Video Counter */}
           <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/50 text-white py-1 px-3 rounded-full text-sm font-medium pointer-events-none">
             {currentIndex + 1} / {items.length}
           </div>
         </div>
 
-        {/* Thumbnails */}
         <div
           ref={thumbnailsRef}
           className="overflow-x-auto scrollbar-hide"
