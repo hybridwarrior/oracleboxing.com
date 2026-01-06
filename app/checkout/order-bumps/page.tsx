@@ -827,7 +827,7 @@ function OrderBumpsContent() {
           {/* Order Summary & Continue Button - Constrained Width */}
           <div className="max-w-lg mx-auto">
             {/* Order Summary */}
-            <div className="bg-gradient-to-b from-white to-[#FAFAF8] rounded-2xl border border-[rgba(55,50,47,0.1)] p-6 mb-6 shadow-sm">
+            <div className="bg-transparent p-6 mb-6">
               {/* Header */}
               <div className="flex items-center justify-between mb-5">
                 <h3 className="text-sm font-semibold text-[#37322F] uppercase tracking-wide">Your Order</h3>
