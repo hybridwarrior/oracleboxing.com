@@ -4,8 +4,8 @@ import { track } from '@vercel/analytics'
 
 // AddToCart event - fires when user clicks to go to checkout
 interface AddToCartEventData {
-  product_id: string // '21dc-entry' | '21dc-premium' | '21dc-vip' | '6wc' | 'bffp' | etc.
-  product_name: string // 'Entry Package' | 'Premium Package' | 'VIP Package'
+  product_id: string // '21dc-entry' | '6wc' | 'bffp' | 'tracksuit' | etc.
+  product_name: string // 'Entry Package' | '6-Week Challenge' | etc.
   value: number
   currency: string
   button_location: string // 'pricing-entry' | 'pricing-premium' | 'pricing-vip' | 'hero' | 'offer-stack'

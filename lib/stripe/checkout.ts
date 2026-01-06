@@ -236,12 +236,10 @@ export async function createCheckoutSession({
   let customerId: string | undefined = undefined
 
   if (customerInfo) {
-    // Split full name into first and last name
     const nameParts = customerInfo.firstName.trim().split(' ')
     const firstName = nameParts[0] || ''
-    const lastName = nameParts.slice(1).join(' ') || nameParts[0] || '' // Use first name as fallback if no last name
+    const lastName = nameParts.slice(1).join(' ') || nameParts[0] || ''
 
-    // Prepare customer data
     const customerData: Stripe.CustomerCreateParams = {
       email: customerInfo.email,
       name: customerInfo.firstName.trim(),
@@ -252,7 +250,7 @@ export async function createCheckoutSession({
       },
     }
 
-    // Add shipping and billing address if provided
+    // Add address if provided
     if (customerInfo.address) {
       const addressData = {
         line1: customerInfo.address.line1,
@@ -262,23 +260,17 @@ export async function createCheckoutSession({
         postal_code: customerInfo.address.postal_code,
         country: customerInfo.address.country,
       }
-
-      // Set shipping address
+      customerData.address = addressData
       customerData.shipping = {
         name: customerInfo.firstName.trim(),
         phone: customerInfo.phone || undefined,
         address: addressData,
       }
-
-      // Set billing address (same as shipping)
-      customerData.address = addressData
     }
 
-    // Create a Stripe Customer for off-session charges (upsells)
     const customer = await stripe.customers.create(customerData)
-
     customerId = customer.id
-    console.log('✅ Created Stripe Customer:', customerId, 'with shipping address:', !!customerData.shipping)
+    console.log('✅ Created Stripe Customer:', customerId)
   }
 
   // ===================================================================
@@ -295,20 +287,15 @@ export async function createCheckoutSession({
     success_url: successUrl,
     cancel_url: cancelUrl,
     allow_promotion_codes: true,
-    customer: customerId, // Attach customer to session
-    customer_creation: customerId ? undefined : 'always', // Create customer if not provided
+    customer: customerId,
+    customer_creation: customerId ? undefined : 'always',
     phone_number_collection: {
       enabled: true,
     },
   }
 
-  // Enable automatic tax if configured in Stripe
-  // Note: Requires origin address setup at https://dashboard.stripe.com/settings/tax
-  if (process.env.STRIPE_AUTO_TAX_ENABLED === 'true') {
-    sessionParams.automatic_tax = {
-      enabled: true,
-    }
-  }
+  // Require billing address collection
+  sessionParams.billing_address_collection = 'required'
 
   // ===================================================================
   // METADATA: Store customer info, funnel tracking, and recommended products

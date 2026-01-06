@@ -22,8 +22,8 @@ export default function TransformationsSection() {
         </div>
       </div>
 
-      {/* Content with solid background */}
-      <div className="mx-0 sm:mx-4 md:mx-8 lg:mx-12 my-0 self-stretch relative bg-[#FFFCF5] sm:border border-[rgba(55,50,47,0.12)] py-10 sm:py-12 md:py-16 flex flex-col justify-center items-center gap-6 sm:gap-8 z-10">
+      {/* Content with solid background - Full width */}
+      <div className="mx-0 my-0 self-stretch relative bg-[#FFFCF5] py-10 sm:py-12 md:py-16 flex flex-col justify-center items-center gap-6 sm:gap-8 z-10">
         {/* Header */}
         <div className="w-full max-w-[700px] flex flex-col items-center gap-4 relative z-20 px-6">
           <div className="self-stretch text-center text-[#49423D] text-xl sm:text-2xl md:text-3xl lg:text-5xl font-normal leading-tight md:leading-[60px] font-serif tracking-tight">
@@ -33,8 +33,8 @@ export default function TransformationsSection() {
           </div>
         </div>
 
-        {/* Carousel Container */}
-        <div className="w-full max-w-[400px] relative z-20 rounded-2xl overflow-hidden px-6">
+        {/* Carousel Container - Wider on desktop */}
+        <div className="w-full max-w-[400px] md:max-w-[500px] lg:max-w-[600px] relative z-20 rounded-2xl overflow-hidden px-4 sm:px-6">
           <LiquidGlassCarousel />
         </div>
       </div>

@@ -304,7 +304,7 @@ export default function CheckoutPage() {
       }
 
       // 21-Day Challenge products → Order bumps (BFFP + Tracksuit)
-      if (['21dc-entry', '21dc-premium', '21dc-vip'].includes(productParam)) {
+      if (productParam === '21dc-entry') {
         console.log('→ Routing 21-Day Challenge to order-bumps')
         const orderBumpsUrl = new URL('/checkout/order-bumps', window.location.origin)
         orderBumpsUrl.searchParams.set('email', email)

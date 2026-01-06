@@ -63,8 +63,8 @@ export const PRODUCT_PRICES: Record<string, Record<Currency, number>> = {
   tracksuit: { USD: 187, GBP: 149, EUR: 174, CAD: 254, AUD: 280, AED: 687 },
   // 21-Day Challenge products
   '21dc_entry': { USD: 147, GBP: 119, EUR: 139, AUD: 229, CAD: 199, AED: 539 },
-  '21dc_premium': { USD: 297, GBP: 237, EUR: 273, AUD: 445, CAD: 403, AED: 1095 },
-  '21dc_vip': { USD: 497, GBP: 397, EUR: 457, AUD: 745, CAD: 674, AED: 1834 },
+  // 2025 Vault
+  vault2025: { USD: 297, GBP: 237, EUR: 275, AUD: 455, CAD: 402, AED: 1090 },
 };
 
 // Membership products - now support multi-currency

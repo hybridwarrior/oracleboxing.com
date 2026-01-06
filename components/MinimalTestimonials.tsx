@@ -12,10 +12,40 @@ interface Testimonial {
 
 const testimonials: Testimonial[] = [
   {
+    quote: "Oracle Boxing is a team of top notch young dedicated boxers bringing sharpest boxing technique, attention and dedication to you individually. It is convenient, great schedule, well thought methodology and a welcoming atmosphere.",
+    name: "Anton Polyakov",
+    role: "PhD, Director at NVIDIA",
+    image: "https://sb.oracleboxing.com/Website/anton.webp"
+  },
+  {
+    quote: "Boxing elevated to a true martial art, curated for and shared by a dedicated, supportive and truly special community.",
+    name: "Rod Keher",
+    role: "CEO",
+    image: "https://sb.oracleboxing.com/Website/rod.webp"
+  },
+  {
     quote: "It's transformed me in so many ways and the real joy of it is I'm not the only one.",
     name: "Kristopher Saville",
-    role: "Consultant",
+    role: "Strategic Business Development & Programmes Director",
     image: "https://sb.oracleboxing.com/Website/kris.jpg"
+  },
+  {
+    quote: "As a minority in the martial arts world, I feel safe joining classes in this respectful community, where scientific coaching has truly transformed my movement.",
+    name: "Meiyan C",
+    role: "PhD, Organizational Culture Strategist at Google",
+    image: "https://sb.oracleboxing.com/Website/meiyan.webp"
+  },
+  {
+    quote: "Oracle Boxing is all about fun, form, and focus—embedded in a strong, supportive community of coaches and fellow boxing enthusiasts.",
+    name: "Mike Forouzanfar",
+    role: "Consultant Urologist & Pelvic-Floor Specialist",
+    image: "https://sb.oracleboxing.com/Website/Forouzanfar-M.-Uroloog_LR.webp"
+  },
+  {
+    quote: "I've improved more in 3 weeks with Oracle than 2 years at my local gym.",
+    name: "Kris Qually",
+    role: "Sales Professional",
+    image: "https://sb.oracleboxing.com/Website/kris_qually.webp"
   },
   {
     quote: "The value that the coaches bring is WAY BEYOND what I ever expected when I joined this challenge.",
@@ -30,9 +60,9 @@ export default function MinimalTestimonials() {
 
   return (
     <section className="w-full bg-[#FFFCF5] py-12 md:py-16 border-b border-[rgba(55,50,47,0.12)]">
-      <div className="max-w-3xl mx-auto px-4 sm:px-6">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6">
         {/* Quote */}
-        <div className="relative min-h-[80px] md:min-h-[60px] mb-8">
+        <div className="relative min-h-[140px] sm:min-h-[120px] md:min-h-[100px] mb-8">
           {testimonials.map((testimonial, index) => (
             <blockquote
               key={index}
@@ -42,7 +72,7 @@ export default function MinimalTestimonials() {
                   : 'opacity-0 translate-y-4 blur-sm pointer-events-none'
               }`}
             >
-              <p className="text-sm sm:text-base md:text-xl lg:text-2xl text-[#37322F] leading-relaxed font-medium" style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}>
+              <p className="text-sm sm:text-base md:text-lg lg:text-xl text-[#37322F] leading-relaxed font-medium" style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}>
                 "{testimonial.quote}"
               </p>
             </blockquote>

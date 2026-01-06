@@ -43,17 +43,17 @@ Complete access to the entire Oracle Boxing system — theory, technique, and ta
     },
     type: 'course',
     metadata: 'bffp',
-    stripe_product_id: 'prod_TjIiJYgN766HTt',
-    stripe_price_id: 'price_1Slq71QNEdHwdojXUEUJbrIU',
+    stripe_product_id: 'prod_TjkPgCnF8lLzKq',
+    stripe_price_id: 'price_1SmGvQKPvH4Ddlg1XL4zlhPO',
     price_ids: {
-      usd: 'price_1Slq71QNEdHwdojXUEUJbrIU',
-      gbp: 'price_1Sm8qaQNEdHwdojXvhXo0rCN',
-      aud: 'price_1Sm8qeQNEdHwdojXpGczJL6g',
-      aed: 'price_1Sm8qhQNEdHwdojXaGx0lUai',
-      eur: 'price_1Sm8qkQNEdHwdojXLvpASPou',
-      cad: 'price_1Sm8qnQNEdHwdojX36WUJke2',
+      usd: 'price_1SmGvQKPvH4Ddlg1XL4zlhPO',
+      gbp: 'price_1SmGvTKPvH4Ddlg1RC8rRN3V',
+      eur: 'price_1SmGvYKPvH4Ddlg1TNw3Kzii',
+      aud: 'price_1SmGvfKPvH4Ddlg1jHniTrRa',
+      cad: 'price_1SmGviKPvH4Ddlg1ljZD7PwL',
+      aed: 'price_1SmGvnKPvH4Ddlg1Spk8Cp4X',
     },
-    image: 'https://sb.oracleboxing.com/Website/optimized/products/bffp_tn5-large.webp',
+    image: 'https://sb.oracleboxing.com/Website/bffp_tn_3.webp',
     shortDescription: 'Learn how boxing really works. 26 lessons across 5 modules.',
     perfectFor: 'Beginners who crave a deep understanding',
     moduleCount: 5,
@@ -201,17 +201,17 @@ const internalProducts: Product[] = [
     },
     type: 'course',
     metadata: '21dc_entry',
-    stripe_product_id: 'prod_TibyMvm7DSJSKg',
-    stripe_price_id: 'price_1SlAkqQNEdHwdojXsQWVxg41',
+    stripe_product_id: 'prod_TjkI7d7aeLDQZA',
+    stripe_price_id: 'price_1SmGrnKPvH4Ddlg1PU9ADMJg',
     price_ids: {
-      usd: 'price_1SlAkqQNEdHwdojXsQWVxg41',
-      gbp: 'price_1Sm8q9QNEdHwdojXe0yL9kXT',
-      aud: 'price_1Sm8qDQNEdHwdojXNRxkEm12',
-      aed: 'price_1Sm8qGQNEdHwdojX5ar4u4tL',
-      eur: 'price_1Sm8qJQNEdHwdojXjadFJ78o',
-      cad: 'price_1Sm8qMQNEdHwdojXabKCtmUv',
+      usd: 'price_1SmGrnKPvH4Ddlg1PU9ADMJg',
+      gbp: 'price_1SmGtDKPvH4Ddlg1vfcmt0Ct',
+      eur: 'price_1SmGtIKPvH4Ddlg1CzC05OGL',
+      aud: 'price_1SmGtLKPvH4Ddlg14OIm6Q67',
+      cad: 'price_1SmGtPKPvH4Ddlg12vlBjV45',
+      aed: 'price_1SmGtSKPvH4Ddlg1Oqmbkyo3',
     },
-    image: 'https://sb.oracleboxing.com/Website/6wc_tn.png',
+    image: 'https://sb.oracleboxing.com/Website/skool_art2.webp',
     description: `**21-Day Challenge - Entry Package**
 
 Learn the fundamental pillars of boxing so that your technique "just looks right."
@@ -229,52 +229,6 @@ Learn the fundamental pillars of boxing so that your technique "just looks right
 • Complete the graduation call`,
     shortDescription: '21-Day Challenge with WYMB Guarantee',
     perfectFor: 'Beginners ready to commit to fundamentals',
-  },
-  {
-    id: '21dc-premium',
-    title: '21-Day Challenge - Premium',
-    price: 297,
-    type: 'course',
-    metadata: '21dc_premium',
-    stripe_product_id: 'prod_TibyGUPKfq9qiC',
-    stripe_price_id: 'price_1SlAkrQNEdHwdojXVre97pmT',
-    image: 'https://sb.oracleboxing.com/Website/6wc_tn.png',
-    description: `**21-Day Challenge - Premium Package**
-
-Everything in Entry plus additional courses and resources.
-
-**What you get:**
-• Everything in Entry package
-• Coaching Call Recordings Vault
-• Boxing from First Principles Course
-
-Perfect for serious learners who want the complete curriculum.`,
-    shortDescription: '21-Day Challenge with full course access',
-    perfectFor: 'Serious learners wanting complete access',
-  },
-  {
-    id: '21dc-vip',
-    title: '21-Day Challenge - VIP',
-    price: 497,
-    type: 'course',
-    metadata: '21dc_vip',
-    stripe_product_id: 'prod_TibyBX5QePxybP',
-    stripe_price_id: 'price_1SlAkrQNEdHwdojXr942FuLA',
-    image: 'https://sb.oracleboxing.com/Website/6wc_tn.png',
-    description: `**21-Day Challenge - VIP Package**
-
-The complete experience with personal coaching and exclusive perks.
-
-**What you get:**
-• Everything in Premium package
-• "Jump-start" 1-1 Coaching Call
-• Oracle Boxing Tracksuit
-• Use Call Recordings as Challenge Credit
-• 3 Video Analysis sessions
-
-The ultimate commitment to mastering boxing fundamentals.`,
-    shortDescription: 'VIP 21-Day Challenge with 1-1 coaching and tracksuit',
-    perfectFor: 'Committed boxers who want personal attention',
   },
   // Legacy 6-Week Challenge (kept for existing customers)
   {
@@ -326,6 +280,37 @@ Perfect for beginners or boxers who want rapid improvement with accountability.`
     updatedMonthly: true,
   },
   {
+    id: 'vault-2025',
+    title: '2025 Call Recording Vault',
+    price: 297,
+    prices: {
+      usd: 297,
+      gbp: 237,
+      aud: 455,
+      aed: 1090,
+      eur: 275,
+      cad: 402,
+    },
+    type: 'course',
+    metadata: 'vault2025',
+    stripe_product_id: 'prod_Tjz3jZ2Omr013y',
+    stripe_price_id: 'price_1SmV64KPvH4Ddlg1xyKtBY42',
+    price_ids: {
+      usd: 'price_1SmV64KPvH4Ddlg1xyKtBY42',
+      gbp: 'price_1SmV64KPvH4Ddlg1jd4shyub',
+      eur: 'price_1SmV65KPvH4Ddlg1fE461f96',
+      aud: 'price_1SmV65KPvH4Ddlg1ZdwjYubc',
+      cad: 'price_1SmV66KPvH4Ddlg1k8x6ls2M',
+      aed: 'price_1SmV66KPvH4Ddlg1SWVlrszl',
+    },
+    image: 'https://sb.oracleboxing.com/Website/2025_call_recording.webp',
+    shortDescription: '620+ coaching call recordings from 2025',
+    perfectFor: 'Students who want to study real coaching sessions',
+    lessonCount: 620,
+    lessonCountPrefix: '+',
+    description: `The complete 2025 Call Recording Vault. Access 200+ group coaching sessions and 420+ one-to-one calls covering footwork, kinetic chain mechanics, defence, combinations, flow, and mental skills. Study real coaching examples at your own pace.`,
+  },
+  {
     id: 'lifetime-bffp',
     title: 'Lifetime Access to Boxing Masterclass',
     price: 147,
@@ -333,7 +318,7 @@ Perfect for beginners or boxers who want rapid improvement with accountability.`
     metadata: 'ltbffp',
     stripe_product_id: 'prod_TKqgCP3kcRQ7Rw',
     stripe_price_id: 'price_1SOAyiKPvH4Ddlg1EuokXH49',
-    image: 'https://sb.oracleboxing.com/Website/optimized/products/bffp_tn5-large.webp',
+    image: 'https://sb.oracleboxing.com/Website/bffp_tn_3.webp',
     description: `Keep the entire Boxing Masterclass course forever. Review any lesson, any time — even after your Challenge ends. Normally $297, add lifetime access today for just $147.`,
     shortDescription: 'Keep Boxing Masterclass forever',
     perfectFor: '6-Week Challenge participants who want to keep learning',
@@ -582,15 +567,15 @@ Everything in the Challenge plus lifetime access and VIP perks.
     },
     type: 'course',
     metadata: 'tracksuit',
-    stripe_product_id: 'prod_TXkoI5vRqO7auz',
-    stripe_price_id: 'price_1Slq6MQNEdHwdojX0Woi30hN',
+    stripe_product_id: 'prod_TjkOwVVaNmP3xu',
+    stripe_price_id: 'price_1SmGu8KPvH4Ddlg1DFeeP234',
     price_ids: {
-      usd: 'price_1Slq6MQNEdHwdojX0Woi30hN',
-      gbp: 'price_1Sm8r2QNEdHwdojXUBPFiUmt',
-      aud: 'price_1Sm8r7QNEdHwdojXsa8Bsnhg',
-      aed: 'price_1Sm8rAQNEdHwdojXELQeFBlh',
-      eur: 'price_1Sm8rDQNEdHwdojX7Bd0cwBL',
-      cad: 'price_1Sm8rGQNEdHwdojXE4xvbxsg',
+      usd: 'price_1SmGu8KPvH4Ddlg1DFeeP234',
+      gbp: 'price_1SmGuHKPvH4Ddlg1hstrUKOK',
+      eur: 'price_1SmGufKPvH4Ddlg1zbn0I0Xb',
+      aud: 'price_1SmGunKPvH4Ddlg1tSt6Zsz1',
+      cad: 'price_1SmGutKPvH4Ddlg1JJSLG90g',
+      aed: 'price_1SmGuvKPvH4Ddlg1sOfG7Fip',
     },
     image: 'https://sb.oracleboxing.com/Website/ob_black_4.webp',
     description: `- 100% cotton for maximum comfort and durability
@@ -658,10 +643,10 @@ export function getBundleUpsells(): Product[] {
 
 // Get 21-Day Challenge products
 export function get21DayChallengeProducts(): Product[] {
-  return allProducts.filter(p => ['21dc_entry', '21dc_premium', '21dc_vip'].includes(p.metadata || ''))
+  return allProducts.filter(p => p.metadata === '21dc_entry')
 }
 
 // Get 21-Day Challenge order bumps (BFFP + Tracksuit)
 export function get21DCOrderBumps(): Product[] {
-  return allProducts.filter(p => ['bffp', 'tracksuit'].includes(p.metadata || ''))
+  return allProducts.filter(p => ['bffp', 'tracksuit', 'vault2025'].includes(p.metadata || ''))
 }

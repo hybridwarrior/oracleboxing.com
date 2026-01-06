@@ -5,7 +5,7 @@ import Image from "next/image"
 const team = [
   {
     name: "Oliver Betts",
-    role: "Founder",
+    role: "Co-Founder",
     image: "https://sb.oracleboxing.com/Website/team_ollie.webp",
   },
   {
@@ -49,7 +49,7 @@ export default function TeamSection() {
                 src={member.image}
                 alt={member.name}
                 fill
-                className="object-cover transition-all duration-500 group-hover:scale-105 grayscale group-hover:grayscale-0"
+                className="object-cover transition-all duration-500 group-hover:scale-105 grayscale-0 md:grayscale md:group-hover:grayscale-0"
               />
               {/* Overlay on hover */}
               <div className="absolute inset-0 bg-[#37322F]/0 group-hover:bg-[#37322F]/10 transition-all duration-300" />

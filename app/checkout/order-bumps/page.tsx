@@ -2,24 +2,218 @@
 
 import { Suspense, useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { Check, ArrowRight, ArrowLeft, Loader2 } from 'lucide-react'
+import { Check, ChevronDown, ChevronUp, ArrowRight, ArrowLeft, Loader2, X } from 'lucide-react'
 import { toast } from 'sonner'
 
 import { get6WCAddOns, getCourseOrderBump, get21DCOrderBumps, getProductById } from '@/lib/products'
 import { Product } from '@/lib/types'
 import { getTrackingParams, getCookie } from '@/lib/tracking-cookies'
 import { useCurrency } from '@/contexts/CurrencyContext'
-import { getProductPrice, formatPrice, formatProductDescription } from '@/lib/currency'
+import { getProductPrice, formatPrice, formatProductDescription, Currency } from '@/lib/currency'
 import { trackInitiateCheckout } from '@/lib/webhook-tracking'
 import { useAnalytics } from '@/hooks/useAnalytics'
 
 // Force dynamic rendering for this page
 export const dynamic = 'force-dynamic'
 
-// Helper function to convert markdown bold to HTML
-function formatDescription(text: string) {
-  // Convert **text** to <strong>text</strong>
-  return text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+// Module type for BFFP course
+interface CourseModule {
+  name: string
+  subtitle: string
+  description: string
+  bullets: string[]
+  image: string
+}
+
+// Product-specific expanded content
+const PRODUCT_DETAILS: Record<string, {
+  headline: string
+  description: string
+  features: string[]
+  images?: string[]
+  modules?: CourseModule[]
+}> = {
+  'bffp': {
+    headline: 'Boxing from First Principles',
+    description: 'Boxing from First Principles teaches boxing from the ground up so you understand how boxing really works, not just what to copy. This course is designed to fix bad habits, build real fundamentals, and help you become a smarter, more efficient boxer.',
+    features: [],
+    images: [],
+    modules: [
+      {
+        name: 'Sentience',
+        subtitle: 'Mind',
+        description: 'Sentience teaches you how to stay calm, focused, and aware so you can box without panicking or overthinking.',
+        bullets: [
+          'Learn how to stay relaxed under pressure',
+          'Control emotions during hard moments',
+          'See openings faster and react naturally',
+          'Enter a calm, focused flow state',
+        ],
+        image: 'https://sb.oracleboxing.com/Website/sentience.webp',
+      },
+      {
+        name: 'Anatomy',
+        subtitle: 'Body',
+        description: 'Anatomy shows you how your body really creates power using the brain, nerves, and connective tissue.',
+        bullets: [
+          'Understand how power moves through your body',
+          'Learn why fascia matters more than muscle',
+          'Improve speed without forcing strength',
+          'Move with less effort and less strain',
+        ],
+        image: 'https://sb.oracleboxing.com/Website/anatomy.webp',
+      },
+      {
+        name: 'FORMIS',
+        subtitle: 'Movement',
+        description: 'FORMIS teaches you how to stand, move, punch, and defend with balance so nothing falls apart.',
+        bullets: [
+          'Build strong stance and posture',
+          'Move smoothly in and out of range',
+          'Stay balanced while attacking and defending',
+          'Flow naturally between actions',
+        ],
+        image: 'https://sb.oracleboxing.com/Website/formis.webp',
+      },
+      {
+        name: 'Gambit',
+        subtitle: 'Tactics',
+        description: 'Gambit teaches you how to outthink your opponent and control the fight.',
+        bullets: [
+          'Learn how to control distance and angles',
+          'Spot patterns in your opponent\'s habits',
+          'Use feints and traps to create openings',
+          'Make smarter decisions in the ring',
+        ],
+        image: 'https://sb.oracleboxing.com/Website/gambit.webp',
+      },
+      {
+        name: 'Engine',
+        subtitle: 'Conditioning',
+        description: 'Engine teaches you how to stay strong, calm, and sharp even when you are tired.',
+        bullets: [
+          'Improve breathing and recovery',
+          'Learn how energy systems really work',
+          'Stay relaxed late in rounds',
+          'Perform better under fatigue',
+        ],
+        image: 'https://sb.oracleboxing.com/Website/engine.webp',
+      },
+    ],
+  },
+  'tracksuit': {
+    headline: 'Train in style',
+    description: 'The official Oracle Boxing tracksuit. Premium quality, made in Britain from 100% cotton. Designed for comfort during training and everyday wear.',
+    features: [],
+    images: [
+      'https://sb.oracleboxing.com/tracksuit/ob_black_4.webp',
+      'https://sb.oracleboxing.com/tracksuit/ob_black_1.webp',
+      'https://sb.oracleboxing.com/tracksuit/ob_forest_1.webp',
+      'https://sb.oracleboxing.com/tracksuit/ob_grey_2.webp',
+      'https://sb.oracleboxing.com/tracksuit/ob_hazel_1.webp',
+      'https://sb.oracleboxing.com/tracksuit/ob_steel_1.webp',
+    ]
+  },
+  'bundle': {
+    headline: 'Get everything in one package',
+    description: 'The Oracle Boxing Bundle includes all our courses at a significant discount. Perfect for serious students who want the complete system.',
+    features: [
+      'Boxing from First Principles ($247 value)',
+      'Boxing Roadmap ($147 value)',
+      'Recordings Vault ($97 value)',
+      'Save over $90 compared to buying separately',
+    ],
+  },
+  'recordings-vault': {
+    headline: 'Learn from real coaching sessions',
+    description: 'Access our complete archive of coaching call recordings. Watch real students get feedback and corrections you can apply to your own training.',
+    features: [
+      '220+ hours of coaching call recordings',
+      'New sessions added monthly',
+      'See real technique corrections in action',
+      'Lifetime access to the growing library',
+    ],
+  },
+  'lifetime-bffp': {
+    headline: 'Keep learning forever',
+    description: 'Secure lifetime access to Boxing from First Principles, even after your challenge ends. Continue your education at your own pace.',
+    features: [
+      'Permanent access to all 26 lessons',
+      'All future course updates included',
+      'Review any concept whenever you need',
+      'No subscription required',
+    ],
+  },
+  'vault-2025': {
+    headline: '2025 Call Recording Vault',
+    description: 'The complete archive of Oracle Boxing coaching sessions from 2025. Access 200+ group calls and 420+ one-to-one sessions covering every aspect of boxing technique, tactics, and mental preparation.',
+    features: [],
+    images: [
+      'https://sb.oracleboxing.com/Website/2025_call_recording.webp',
+    ],
+    modules: [
+      {
+        name: 'Footwork & Mobility',
+        subtitle: '100+ Sessions',
+        description: 'Master the foundation of all boxing movement. Footwork generates power, creates angles, and keeps you safe.',
+        bullets: [
+          'Weight distribution and balance drills',
+          'Directional footwork sequences',
+          'Boxing in the shell and circling',
+          'Stability and reactive positioning',
+        ],
+        image: 'PLACEHOLDER_FOOTWORK',
+      },
+      {
+        name: 'Kinetic Chain & Power',
+        subtitle: '80+ Sessions',
+        description: 'Learn how your body really generates punching power through the kinetic chain—legs, hips, trunk, and arms working as one.',
+        bullets: [
+          'Rotation and weight transfer mechanics',
+          'Kinetic linkage drills',
+          'Hip and trunk engagement',
+          'Power without forcing strength',
+        ],
+        image: 'PLACEHOLDER_KINETIC',
+      },
+      {
+        name: 'Defence & Counters',
+        subtitle: '90+ Sessions',
+        description: 'Develop reflexive defence and sharp counter-punching. Learn to make opponents pay for every punch they throw.',
+        bullets: [
+          'Slip-bag drills and head movement',
+          'Parrying and catch-and-shoot',
+          'Counter-punching timing',
+          'Layered defence systems',
+        ],
+        image: 'PLACEHOLDER_DEFENCE',
+      },
+      {
+        name: 'Flow & Combinations',
+        subtitle: '120+ Sessions',
+        description: 'Build fluid combinations that flow naturally. Connect punches without losing balance or rhythm.',
+        bullets: [
+          'Combo buildup progressions',
+          'Tempo and rhythm training',
+          'Smooth transitions between punches',
+          'Relaxation under pressure',
+        ],
+        image: 'PLACEHOLDER_FLOW',
+      },
+      {
+        name: 'Sparring & Mental Skills',
+        subtitle: '80+ Sessions',
+        description: 'Prepare for real boxing with sparring analysis, fight preparation, and mental conditioning.',
+        bullets: [
+          'Sparring footage breakdowns',
+          'Ring craft and strategy',
+          'Flow state and visualisation',
+          'Bad habit identification and fixes',
+        ],
+        image: 'PLACEHOLDER_SPARRING',
+      },
+    ],
+  },
 }
 
 function OrderBumpsContent() {
@@ -31,11 +225,11 @@ function OrderBumpsContent() {
   const [name, setName] = useState('')
   const [funnelType, setFunnelType] = useState<'6wc' | 'course' | '21dc'>('6wc')
   const [orderBumps, setOrderBumps] = useState<Product[]>([])
-  // Don't pre-select any order bumps (start with empty array)
   const [selectedBumps, setSelectedBumps] = useState<string[]>([])
-  const [expandedBump, setExpandedBump] = useState<string | null>(null)
+  const [expandedProduct, setExpandedProduct] = useState<string | null>(null)
+  const [modalImageIndex, setModalImageIndex] = useState(0)
+  const [moduleIndex, setModuleIndex] = useState(0)
   const [currentIndex, setCurrentIndex] = useState(0)
-  const [showAll, setShowAll] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [trackingParams, setTrackingParams] = useState<{
     referrer: string
@@ -56,13 +250,11 @@ function OrderBumpsContent() {
   })
 
   useEffect(() => {
-    // Get customer info from URL params
     const emailParam = searchParams.get('email')
     const nameParam = searchParams.get('name')
     const funnelParam = searchParams.get('funnel') as '6wc' | 'course' | '21dc' || '6wc'
 
     if (!emailParam || !nameParam) {
-      // Redirect back to checkout if no customer info
       router.push('/checkout')
       return
     }
@@ -71,19 +263,16 @@ function OrderBumpsContent() {
     setName(nameParam)
     setFunnelType(funnelParam)
 
-    // Get tracking params from cookies (already captured by UTMTracker)
     const cookieTracking = getTrackingParams()
 
     setTrackingParams({
       referrer: cookieTracking.first_referrer || 'direct',
-      // First Touch Attribution
       first_utm_source: cookieTracking.first_utm_source,
       first_utm_medium: cookieTracking.first_utm_medium,
       first_utm_campaign: cookieTracking.first_utm_campaign,
       first_utm_term: cookieTracking.first_utm_term,
       first_utm_content: cookieTracking.first_utm_content,
       first_referrer_time: getCookie('ob_track')?.first_referrer_time,
-      // Last Touch Attribution
       last_utm_source: cookieTracking.last_utm_source,
       last_utm_medium: cookieTracking.last_utm_medium,
       last_utm_campaign: cookieTracking.last_utm_campaign,
@@ -92,17 +281,11 @@ function OrderBumpsContent() {
       last_referrer_time: getCookie('ob_track')?.last_referrer_time,
     })
 
-    console.log('📊 Order bumps - Tracking params from cookies:', cookieTracking)
-
-    // Load appropriate add-ons based on funnel type
     if (funnelParam === 'course') {
-      // Course funnel: Show Oracle Boxing Bundle upgrade
       setOrderBumps(getCourseOrderBump())
     } else if (funnelParam === '21dc') {
-      // 21-Day Challenge funnel: Show BFFP + Tracksuit
       setOrderBumps(get21DCOrderBumps())
     } else {
-      // 6WC funnel: Show Recordings Vault + Lifetime Masterclass
       setOrderBumps(get6WCAddOns())
     }
   }, [searchParams, router])
@@ -112,46 +295,46 @@ function OrderBumpsContent() {
       if (prev.includes(productId)) {
         return prev.filter(id => id !== productId)
       } else {
-        // When adding an item, automatically move to next if not showing all
-        if (!showAll && currentIndex < orderBumps.length - 1) {
-          setTimeout(() => {
-            setCurrentIndex(currentIndex + 1)
-            setExpandedBump(null)
-          }, 300)
-        }
         return [...prev, productId]
       }
     })
   }
 
+  // Mobile toggle with auto-scroll to next bump
+  const handleMobileToggleBump = (productId: string) => {
+    const wasSelected = selectedBumps.includes(productId)
+    handleToggleBump(productId)
+
+    // If adding (not removing) and there's a next item, scroll to it after a short delay
+    if (!wasSelected && currentIndex < orderBumps.length - 1) {
+      setTimeout(() => {
+        setCurrentIndex(prev => prev + 1)
+      }, 400)
+    }
+  }
+
   const handleNext = () => {
     if (currentIndex < orderBumps.length - 1) {
       setCurrentIndex(prev => prev + 1)
-      setExpandedBump(null)
+      setExpandedProduct(null)
     }
   }
 
   const handlePrevious = () => {
     if (currentIndex > 0) {
       setCurrentIndex(prev => prev - 1)
-      setExpandedBump(null)
+      setExpandedProduct(null)
     }
   }
 
   const handleContinue = async () => {
-    // Prevent double submissions
     if (isLoading) return
     setIsLoading(true)
 
-    // Build the items array for checkout
     const items = []
-
-    // Check if user upgraded to bundle
     const upgradedToBundle = funnelType === 'course' && selectedBumps.includes('bundle')
 
-    // Add the base product based on funnel type and upgrade status
     if (funnelType === '6wc') {
-      // 6WC funnel: Add 6-Week Challenge product
       const sixWeekChallenge = getProductById('6wc')!
       items.push({
         product: sixWeekChallenge,
@@ -159,7 +342,6 @@ function OrderBumpsContent() {
         price_id: sixWeekChallenge.stripe_price_id,
       })
     } else if (funnelType === '21dc') {
-      // 21-Day Challenge funnel: Add the selected 21DC product
       const productParam = searchParams.get('product')
       if (productParam) {
         const product = getProductById(productParam)
@@ -172,7 +354,6 @@ function OrderBumpsContent() {
         }
       }
     } else if (upgradedToBundle) {
-      // Course funnel + upgraded: Add ONLY the bundle (replace the course)
       const bundle = getProductById('bundle')!
       items.push({
         product: bundle,
@@ -180,7 +361,6 @@ function OrderBumpsContent() {
         price_id: bundle.stripe_price_id,
       })
     } else {
-      // Course funnel + no upgrade: Add the original course
       const courseParam = searchParams.get('course')
       if (courseParam) {
         const course = getProductById(courseParam)
@@ -194,11 +374,8 @@ function OrderBumpsContent() {
       }
     }
 
-    // Add selected order bumps (EXCLUDING the bundle if already added above)
     selectedBumps.forEach(productId => {
-      // Skip bundle if we already added it as the main product
       if (upgradedToBundle && productId === 'bundle') return
-
       const product = orderBumps.find(p => p.id === productId)
       if (product) {
         items.push({
@@ -209,24 +386,17 @@ function OrderBumpsContent() {
       }
     })
 
-    // Calculate total value in user's currency for accurate tracking
     let totalValue = 0
     const productIds: string[] = []
 
     items.forEach(item => {
       const price = getProductPrice(item.product.id, currency) || item.product.price
-      console.log(`📦 Product: ${item.product.id} = ${price} ${currency}`)
       totalValue += price * item.quantity
       productIds.push(item.product.id)
     })
 
-    console.log(`💵 Total Value: ${totalValue} ${currency}`)
-
-    // Track initiate checkout event with all products
     const currentPage = typeof window !== 'undefined' ? window.location.pathname : '/checkout/order-bumps'
     const initialReferrer = trackingParams.referrer || 'direct'
-
-    // Get URL parameters for tracking with intelligent fallbacks
     const funnelParam = searchParams.get('funnel') || funnelType
     const courseParam = searchParams.get('course')
     const currencyParam = searchParams.get('currency') || currency
@@ -247,17 +417,13 @@ function OrderBumpsContent() {
       }
     )
 
-    // Track enriched InitiateCheckout in Vercel Analytics
-    // Separate base products from order bumps for rich analytics
     const baseProductIds: string[] = []
     const baseProductNames: string[] = []
     const orderBumpIds: string[] = []
     const orderBumpNames: string[] = []
 
     items.forEach(item => {
-      // Check if this is an order bump (was in the orderBumps array and was selected)
       const isOrderBump = selectedBumps.includes(item.product.id) && orderBumps.some(ob => ob.id === item.product.id)
-
       if (isOrderBump) {
         orderBumpIds.push(item.product.id)
         orderBumpNames.push(item.product.title)
@@ -280,15 +446,11 @@ function OrderBumpsContent() {
     })
 
     try {
-      // Get full cookie data
       const cookieData = getCookie('ob_track')
 
-      // Use the checkout API to create a session with all items
       const response = await fetch('/api/checkout/session', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           items: items,
           customerInfo: {
@@ -322,7 +484,6 @@ function OrderBumpsContent() {
         throw new Error('No checkout URL returned')
       }
 
-      // Redirect to Stripe checkout
       window.location.href = data.url
     } catch (error: any) {
       console.error('Checkout error:', error)
@@ -331,391 +492,558 @@ function OrderBumpsContent() {
     }
   }
 
-  const currentProduct = orderBumps[currentIndex]
-  const visibleBumps = showAll ? orderBumps : [currentProduct]
-
   if (!email || !name) {
     return null
   }
 
+  // Calculate total
+  const calculateTotal = () => {
+    let total = 0
+    if (funnelType === '21dc') {
+      const productParam = searchParams.get('product')
+      const baseProduct = productParam ? getProductById(productParam) : null
+      if (baseProduct) {
+        total += getProductPrice(baseProduct.metadata, currency) || baseProduct.price
+      }
+    }
+    selectedBumps.forEach(bumpId => {
+      const bump = orderBumps.find(b => b.id === bumpId)
+      if (bump) {
+        total += getProductPrice(bump.metadata, currency) || bump.price
+      }
+    })
+    return total
+  }
+
   return (
     <>
-      <style jsx>{`
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-            transform: translateY(10px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-      `}</style>
-      <div className="min-h-screen bg-[#FFFCF5] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-        <div className="w-full max-w-2xl">
-        {/* Logo */}
-        <div className="flex justify-center mb-2">
-          <img
-            src="https://sb.oracleboxing.com/logo/long_dark.webp"
-            alt="Oracle Boxing"
-            className="h-4"
-          />
-        </div>
+      {/* Expanded Product Modal */}
+      {expandedProduct && (() => {
+        const product = orderBumps.find(p => p.id === expandedProduct)
+        const details = PRODUCT_DETAILS[expandedProduct]
+        if (!product || !details) return null
+        const isSelected = selectedBumps.includes(expandedProduct)
+        const images = details.images && details.images.length > 0 ? details.images : [product.image]
+        const hasMultipleImages = images.length > 1
 
-        {/* Subheadline */}
-        <h2 className="text-center text-[#37322F] text-sm font-medium font-sans mb-6">
-          Add to your challenge?
-        </h2>
-
-        {/* Mobile Navigation - Only shown on mobile when multiple items */}
-        {orderBumps.length > 1 && (
-          <div className="md:hidden flex items-center justify-center gap-2 mb-6">
-            <button
-              onClick={handlePrevious}
-              disabled={currentIndex === 0}
-              className={`flex items-center justify-center w-10 h-10 rounded-full transition-all ${
-                currentIndex === 0
-                  ? 'bg-[#FFFCF5] text-[#847971] cursor-not-allowed'
-                  : 'bg-white border border-[rgba(55,50,47,0.12)] hover:bg-[rgba(55,50,47,0.05)] text-[#49423D] hover:text-[#37322F]'
-              }`}
-              aria-label="Previous product"
+        return (
+          <div
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={() => setExpandedProduct(null)}
+          >
+            <div
+              className="bg-white rounded-3xl max-w-lg w-full max-h-[90vh] overflow-y-auto shadow-2xl"
+              onClick={e => e.stopPropagation()}
             >
-              <ArrowLeft className="w-5 h-5" />
-            </button>
-            <span className="text-sm text-[#605A57] min-w-[60px] text-center font-sans">
-              {currentIndex + 1} / {orderBumps.length}
-            </span>
-            <button
-              onClick={handleNext}
-              disabled={currentIndex === orderBumps.length - 1}
-              className={`flex items-center justify-center w-10 h-10 rounded-full transition-all ${
-                currentIndex === orderBumps.length - 1
-                  ? 'bg-[#FFFCF5] text-[#847971] cursor-not-allowed'
-                  : 'bg-white border border-[rgba(55,50,47,0.12)] hover:bg-[rgba(55,50,47,0.05)] text-[#49423D] hover:text-[#37322F]'
-              }`}
-              aria-label="Next product"
-            >
-              <ArrowRight className="w-5 h-5" />
-            </button>
-          </div>
-        )}
-
-        {/* Order Bumps - Grid on desktop, Carousel on mobile */}
-        <div className="mb-6">
-          {/* Mobile: Carousel (single item) */}
-          <div className="md:hidden">
-            {orderBumps[currentIndex] && (() => {
-              const product = orderBumps[currentIndex]
-              const isSelected = selectedBumps.includes(product.id)
-
-              // Parse benefits from description or use a default set
-              const benefits = product.description
-                ? product.description.split('\n').filter(line => line.trim().startsWith('-') || line.trim().startsWith('•')).map(line => line.replace(/^[-•]\s*/, '').trim())
-                : [
-                    `Access to all ${product.title} content`,
-                    'Lifetime updates and new additions',
-                    'Watch anytime on any device',
-                    '30-day money-back guarantee'
-                  ]
-
-              return (
-                <div
-                  key={product.id}
-                  className={`bg-white rounded-2xl overflow-hidden cursor-pointer transition-all duration-300 border ${
-                    isSelected ? 'border-[#37322F] shadow-lg' : 'border-[rgba(55,50,47,0.12)] hover:shadow-md'
-                  }`}
-                  style={{
-                    animation: 'fadeIn 0.3s ease-in-out'
-                  }}
+              {/* Modal Header */}
+              <div className="sticky top-0 bg-white border-b border-[rgba(55,50,47,0.08)] px-6 py-4 flex items-center justify-between z-10">
+                <h3 className="text-lg font-semibold text-[#37322F]">{product.title}</h3>
+                <button
+                  onClick={() => setExpandedProduct(null)}
+                  className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[rgba(55,50,47,0.05)] transition-colors"
                 >
-                  <div className="grid gap-0">
-                    {/* Product image - full width */}
-                    <div className="w-full">
-                      <img
-                        src={product.image}
-                        alt={product.title}
-                        className="w-full h-auto object-cover"
-                        onError={(e) => {
-                          e.currentTarget.src = 'https://via.placeholder.com/400'
-                        }}
-                      />
-                    </div>
+                  <X className="w-5 h-5 text-[#605A57]" />
+                </button>
+              </div>
 
-                    {/* Product info, benefits, and CTA */}
-                    <div className="p-6 flex flex-col justify-center">
-                      <div className="mb-5">
-                        <h3 className="text-xl font-semibold text-[#37322F] mb-2 font-sans">{product.title}</h3>
-                      </div>
-                      <div className="space-y-2 mb-6">
-                        {benefits.map((benefit: string, i: number) => (
-                          <div key={i} className="flex items-center gap-2">
-                            <Check className="w-4 h-4 text-[#37322F] flex-shrink-0" strokeWidth={2.5} />
-                            <span className="text-xs text-[#49423D] font-sans">{benefit}</span>
-                          </div>
+              {/* Modal Content */}
+              <div className="p-6">
+                {/* Product Image Gallery - Only show if product has custom images (not modules-only products like BFFP) */}
+                {details.images && details.images.length > 0 && (
+                  <div className="relative rounded-2xl overflow-hidden mb-6 bg-[#F5F3F0]">
+                    <img
+                      src={images[modalImageIndex]}
+                      alt={`${product.title} - Image ${modalImageIndex + 1}`}
+                      className="w-full h-auto"
+                    />
+
+                    {/* Navigation Arrows */}
+                    {hasMultipleImages && (
+                      <>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            setModalImageIndex(prev => prev === 0 ? images.length - 1 : prev - 1)
+                          }}
+                          className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-lg transition-all"
+                        >
+                          <ArrowLeft className="w-5 h-5 text-[#37322F]" />
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            setModalImageIndex(prev => prev === images.length - 1 ? 0 : prev + 1)
+                          }}
+                          className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-lg transition-all"
+                        >
+                          <ArrowRight className="w-5 h-5 text-[#37322F]" />
+                        </button>
+                      </>
+                    )}
+
+                    {/* Image Dots */}
+                    {hasMultipleImages && (
+                      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
+                        {images.map((_, i) => (
+                          <button
+                            key={i}
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              setModalImageIndex(i)
+                            }}
+                            className={`w-2 h-2 rounded-full transition-all ${
+                              i === modalImageIndex ? 'bg-white w-6' : 'bg-white/60 hover:bg-white/80'
+                            }`}
+                          />
                         ))}
                       </div>
-                      <div className="flex items-center justify-between">
-                        <div>
-                          {funnelType === 'course' && product.id === 'bundle' ? (
-                            // Show total value crossed out + additional cost
-                            (() => {
-                              const courseParam = searchParams.get('course')
-                              const bffpPrice = getProductPrice('bffp', currency) || 297
-                              const brdmpPrice = getProductPrice('brdmp', currency) || 147
-                              const rcvPrice = getProductPrice('rcv', currency) || 67
-                              const totalValue = bffpPrice + brdmpPrice + rcvPrice
-                              const bundlePrice = getProductPrice(product.metadata, currency) || product.price
-
-                              let additionalCost = bundlePrice
-                              if (courseParam) {
-                                const course = getProductById(courseParam)
-                                if (course) {
-                                  const coursePrice = getProductPrice(course.metadata, currency) || course.price
-                                  additionalCost = bundlePrice - coursePrice
-                                }
-                              }
-
-                              return (
-                                <div className="flex items-center gap-3">
-                                  <p className="text-lg font-bold text-[#847971] line-through font-sans">
-                                    {formatPrice(totalValue, currency)}
-                                  </p>
-                                  <p className="text-2xl font-bold text-[#37322F] font-sans">
-                                    {formatPrice(additionalCost, currency)}
-                                  </p>
-                                </div>
-                              )
-                            })()
-                          ) : (
-                            <p className="text-2xl font-bold text-[#37322F] font-sans">
-                              {formatPrice(getProductPrice(product.metadata, currency) || product.price, currency)}
-                            </p>
-                          )}
-                        </div>
-                        <button
-                          onClick={() => handleToggleBump(product.id)}
-                          className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all font-sans border ${
-                            isSelected
-                              ? 'bg-[#37322F] text-white border-[#37322F]'
-                              : 'bg-[#FFFCF5] text-[#37322F] border-[#37322F] hover:bg-[#37322F] hover:text-white'
-                          }`}
-                        >
-                          {isSelected ? (product.id === 'bundle' ? '✓ Upgraded' : '✓ Added') : (product.id === 'bundle' ? 'Upgrade' : 'Add to order')}
-                        </button>
-                      </div>
-                    </div>
+                    )}
                   </div>
-                </div>
-              )
-            })()}
-          </div>
+                )}
 
-          {/* Desktop: Grid (all items) */}
-          <div className={`hidden md:grid gap-4 ${
-            orderBumps.length === 1 ? 'md:grid-cols-1 max-w-md mx-auto' :
-            orderBumps.length === 2 ? 'md:grid-cols-2' :
-            'md:grid-cols-3'
-          }`}>
-            {orderBumps.map((product) => {
-              const isSelected = selectedBumps.includes(product.id)
+                {/* Description */}
+                <p className="text-[#605A57] text-sm leading-relaxed mb-6">{details.description}</p>
 
-              // Parse benefits from description or use a default set
-              const benefits = product.description
-                ? product.description.split('\n').filter(line => line.trim().startsWith('-') || line.trim().startsWith('•')).map(line => line.replace(/^[-•]\s*/, '').trim())
-                : [
-                    `Access to all ${product.title} content`,
-                    'Lifetime updates and new additions',
-                    'Watch anytime on any device',
-                    '30-day money-back guarantee'
-                  ]
-
-              return (
-                <div
-                  key={product.id}
-                  className={`bg-white rounded-2xl overflow-hidden cursor-pointer transition-all duration-300 border ${
-                    isSelected ? 'border-[#37322F] shadow-lg' : 'border-[rgba(55,50,47,0.12)] hover:shadow-md'
-                  }`}
-                >
-                  <div className="flex flex-col h-full">
-                    {/* Product image - full width */}
-                    <div className="w-full">
-                      <img
-                        src={product.image}
-                        alt={product.title}
-                        className="w-full h-auto object-cover"
-                        onError={(e) => {
-                          e.currentTarget.src = 'https://via.placeholder.com/400'
+                {/* Module Carousel for BFFP */}
+                {details.modules && details.modules.length > 0 && (
+                  <div className="mb-6">
+                    <h5 className="text-sm font-semibold text-[#37322F] mb-3">5 Modules Included:</h5>
+                    <div className="relative px-5">
+                      {/* Navigation Arrows - Outside the box */}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          setModuleIndex(prev => prev === 0 ? details.modules!.length - 1 : prev - 1)
                         }}
-                      />
-                    </div>
+                        className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-8 h-8 bg-white hover:bg-[#F5F3F0] border border-[rgba(55,50,47,0.15)] rounded-full flex items-center justify-center shadow-sm transition-all"
+                      >
+                        <ArrowLeft className="w-4 h-4 text-[#37322F]" />
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          setModuleIndex(prev => prev === details.modules!.length - 1 ? 0 : prev + 1)
+                        }}
+                        className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-8 h-8 bg-white hover:bg-[#F5F3F0] border border-[rgba(55,50,47,0.15)] rounded-full flex items-center justify-center shadow-sm transition-all"
+                      >
+                        <ArrowRight className="w-4 h-4 text-[#37322F]" />
+                      </button>
 
-                    {/* Product info, benefits, and CTA */}
-                    <div className="p-6 flex flex-col justify-between flex-1">
-                      <div>
-                        <div className="mb-4">
-                          <h3 className="text-lg font-semibold text-[#37322F] mb-2 font-sans">{product.title}</h3>
-                        </div>
-                        <div className="space-y-2 mb-6">
-                          {benefits.map((benefit: string, i: number) => (
-                            <div key={i} className="flex items-start gap-2">
-                              <Check className="w-4 h-4 text-[#37322F] flex-shrink-0 mt-0.5" strokeWidth={2.5} />
-                              <span className="text-xs text-[#49423D] font-sans">{benefit}</span>
+                      {/* Module Card */}
+                      <div className="bg-[#F5F3F0] rounded-xl overflow-hidden">
+                        <div className="p-4">
+                          {/* Module Image */}
+                          {details.modules[moduleIndex].image && !details.modules[moduleIndex].image.startsWith('PLACEHOLDER') && (
+                            <div className="relative w-full aspect-video rounded-lg overflow-hidden mb-3">
+                              <img
+                                src={details.modules[moduleIndex].image}
+                                alt={details.modules[moduleIndex].name}
+                                className="w-full h-full object-cover"
+                              />
                             </div>
+                          )}
+
+                          {/* Module Header */}
+                          <div className="flex items-center gap-2 mb-2">
+                            <span className="text-base font-bold text-[#37322F]">
+                              {details.modules[moduleIndex].name}
+                            </span>
+                            <span className="text-xs font-medium text-[#847971] uppercase tracking-wide">
+                              — {details.modules[moduleIndex].subtitle}
+                            </span>
+                          </div>
+
+                          {/* Module Description */}
+                          <p className="text-sm text-[#605A57] mb-3">
+                            {details.modules[moduleIndex].description}
+                          </p>
+
+                          {/* Module Bullets */}
+                          <div className="space-y-1.5">
+                            {details.modules[moduleIndex].bullets.map((bullet, i) => (
+                              <div key={i} className="flex items-start gap-2">
+                                <div className="w-1.5 h-1.5 rounded-full bg-[#FF8000] flex-shrink-0 mt-1.5" />
+                                <span className="text-xs text-[#49423D]">{bullet}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Module Dots */}
+                        <div className="flex justify-center gap-1.5 pb-3">
+                          {details.modules.map((_, i) => (
+                            <button
+                              key={i}
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                setModuleIndex(i)
+                              }}
+                              className={`h-1.5 rounded-full transition-all ${
+                                i === moduleIndex ? 'bg-[#37322F] w-4' : 'bg-[#37322F]/30 hover:bg-[#37322F]/50 w-1.5'
+                              }`}
+                            />
                           ))}
                         </div>
                       </div>
-                      <div>
-                        <div className="mb-3">
-                          {funnelType === 'course' && product.id === 'bundle' ? (
-                            // Show total value crossed out + additional cost
-                            (() => {
-                              const courseParam = searchParams.get('course')
-                              const bffpPrice = getProductPrice('bffp', currency) || 297
-                              const brdmpPrice = getProductPrice('brdmp', currency) || 147
-                              const rcvPrice = getProductPrice('rcv', currency) || 67
-                              const totalValue = bffpPrice + brdmpPrice + rcvPrice
-                              const bundlePrice = getProductPrice(product.metadata, currency) || product.price
+                    </div>
+                  </div>
+                )}
 
-                              let additionalCost = bundlePrice
-                              if (courseParam) {
-                                const course = getProductById(courseParam)
-                                if (course) {
-                                  const coursePrice = getProductPrice(course.metadata, currency) || course.price
-                                  additionalCost = bundlePrice - coursePrice
-                                }
-                              }
-
-                              return (
-                                <div className="flex items-center gap-2">
-                                  <p className="text-base font-bold text-[#847971] line-through font-sans">
-                                    {formatPrice(totalValue, currency)}
-                                  </p>
-                                  <p className="text-xl font-bold text-[#37322F] font-sans">
-                                    {formatPrice(additionalCost, currency)}
-                                  </p>
-                                </div>
-                              )
-                            })()
-                          ) : (
-                            <p className="text-xl font-bold text-[#37322F] font-sans">
-                              {formatPrice(getProductPrice(product.metadata, currency) || product.price, currency)}
-                            </p>
-                          )}
+                {/* Features - only show if there are features */}
+                {details.features.length > 0 && (
+                  <div className="space-y-3 mb-8">
+                    {details.features.map((feature, i) => (
+                      <div key={i} className="flex items-start gap-3">
+                        <div className="w-5 h-5 rounded-full bg-[#37322F] flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <Check className="w-3 h-3 text-white" strokeWidth={3} />
                         </div>
-                        <button
-                          onClick={() => handleToggleBump(product.id)}
-                          className={`w-full px-5 py-2.5 rounded-full text-sm font-medium transition-all font-sans border ${
-                            isSelected
-                              ? 'bg-[#37322F] text-white border-[#37322F]'
-                              : 'bg-[#FFFCF5] text-[#37322F] border-[#37322F] hover:bg-[#37322F] hover:text-white'
-                          }`}
-                        >
-                          {isSelected ? (product.id === 'bundle' ? '✓ Upgraded' : '✓ Added') : (product.id === 'bundle' ? 'Upgrade' : 'Add to order')}
-                        </button>
+                        <span className="text-sm text-[#49423D]">{feature}</span>
                       </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Price & CTA */}
+                <div className="flex items-center justify-between pt-4 border-t border-[rgba(55,50,47,0.08)]">
+                  <div>
+                    <p className="text-2xl font-bold text-[#37322F]">
+                      {formatPrice(getProductPrice(product.metadata, currency) || product.price, currency)}
+                    </p>
+                    <p className="text-xs text-[#847971]">One-time payment</p>
+                  </div>
+                  <button
+                    onClick={() => {
+                      handleToggleBump(expandedProduct)
+                      setExpandedProduct(null)
+                    }}
+                    className={`px-6 py-3 rounded-full text-sm font-semibold transition-all ${
+                      isSelected
+                        ? 'bg-[#37322F] text-white'
+                        : 'bg-[#37322F] text-white hover:bg-[#49423D]'
+                    }`}
+                  >
+                    {isSelected ? 'Remove from order' : 'Add to order'}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )
+      })()}
+
+      <div className="min-h-screen bg-[#FFFCF5] py-8 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-2xl md:max-w-5xl mx-auto">
+          {/* Header */}
+          <div className="text-center mb-8">
+            <img
+              src="https://sb.oracleboxing.com/logo/long_dark.webp"
+              alt="Oracle Boxing"
+              className="h-4 mx-auto mb-6"
+            />
+            <h1 className="text-2xl font-semibold text-[#37322F]">
+              Enhance your challenge
+            </h1>
+          </div>
+
+          {/* Mobile Navigation */}
+          {orderBumps.length > 1 && (
+            <div className="md:hidden flex items-center justify-center gap-3 mb-6">
+              <button
+                onClick={handlePrevious}
+                disabled={currentIndex === 0}
+                className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${
+                  currentIndex === 0
+                    ? 'text-[#C4BFBB] cursor-not-allowed'
+                    : 'text-[#49423D] hover:bg-[rgba(55,50,47,0.05)]'
+                }`}
+              >
+                <ArrowLeft className="w-5 h-5" />
+              </button>
+              <div className="flex gap-1.5">
+                {orderBumps.map((_, i) => (
+                  <div
+                    key={i}
+                    className={`w-2 h-2 rounded-full transition-all ${
+                      i === currentIndex ? 'bg-[#37322F] w-6' : 'bg-[#D9D5D0]'
+                    }`}
+                  />
+                ))}
+              </div>
+              <button
+                onClick={handleNext}
+                disabled={currentIndex === orderBumps.length - 1}
+                className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${
+                  currentIndex === orderBumps.length - 1
+                    ? 'text-[#C4BFBB] cursor-not-allowed'
+                    : 'text-[#49423D] hover:bg-[rgba(55,50,47,0.05)]'
+                }`}
+              >
+                <ArrowRight className="w-5 h-5" />
+              </button>
+            </div>
+          )}
+
+          {/* Product Cards */}
+          <div className="mb-8">
+            {/* Mobile: Single card carousel */}
+            <div className="md:hidden">
+              {orderBumps[currentIndex] && (
+                <ProductCard
+                  product={orderBumps[currentIndex]}
+                  isSelected={selectedBumps.includes(orderBumps[currentIndex].id)}
+                  onToggle={() => handleMobileToggleBump(orderBumps[currentIndex].id)}
+                  onLearnMore={() => {
+                    setModalImageIndex(0)
+                    setModuleIndex(0)
+                    setExpandedProduct(orderBumps[currentIndex].id)
+                  }}
+                  currency={currency}
+                />
+              )}
+            </div>
+
+            {/* Desktop: Grid - 3 columns */}
+            <div className={`hidden md:grid gap-6 ${
+              orderBumps.length === 1 ? 'grid-cols-1 max-w-md mx-auto' :
+              orderBumps.length === 2 ? 'grid-cols-2' : 'grid-cols-3'
+            }`}>
+              {orderBumps.map((product) => (
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  isSelected={selectedBumps.includes(product.id)}
+                  onToggle={() => handleToggleBump(product.id)}
+                  onLearnMore={() => {
+                    setModalImageIndex(0)
+                    setModuleIndex(0)
+                    setExpandedProduct(product.id)
+                  }}
+                  currency={currency}
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* Order Summary & Continue Button - Constrained Width */}
+          <div className="max-w-lg mx-auto">
+            {/* Order Summary */}
+            <div className="bg-gradient-to-b from-white to-[#FAFAF8] rounded-2xl border border-[rgba(55,50,47,0.1)] p-6 mb-6 shadow-sm">
+              {/* Header */}
+              <div className="flex items-center justify-between mb-5">
+                <h3 className="text-sm font-semibold text-[#37322F] uppercase tracking-wide">Your Order</h3>
+                <span className="text-xs text-[#847971]">{(funnelType === '21dc' ? 1 : 0) + selectedBumps.length} item{((funnelType === '21dc' ? 1 : 0) + selectedBumps.length) !== 1 ? 's' : ''}</span>
+              </div>
+
+              {/* Items */}
+              <div className="space-y-4 mb-5">
+                {/* Base Product */}
+                {funnelType === '21dc' && (() => {
+                  const productParam = searchParams.get('product')
+                  const baseProduct = productParam ? getProductById(productParam) : null
+                  if (baseProduct) {
+                    return (
+                      <div className="flex items-center gap-4">
+                        <div className="w-20 h-12 rounded-lg overflow-hidden bg-[#F5F3F0] flex-shrink-0">
+                          <img
+                            src={baseProduct.image}
+                            alt={baseProduct.title}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-[#37322F] truncate">{baseProduct.title}</p>
+                          <p className="text-xs text-[#847971]">Challenge Entry</p>
+                        </div>
+                        <span className="text-sm font-semibold text-[#37322F]">
+                          {formatPrice(getProductPrice(baseProduct.metadata, currency) || baseProduct.price, currency)}
+                        </span>
+                      </div>
+                    )
+                  }
+                  return null
+                })()}
+
+                {/* Selected Add-ons */}
+                {selectedBumps.map(bumpId => {
+                  const bump = orderBumps.find(b => b.id === bumpId)
+                  if (!bump) return null
+                  return (
+                    <div key={bumpId} className="flex items-center gap-4">
+                      <div className="w-20 h-12 rounded-lg overflow-hidden bg-[#F5F3F0] flex-shrink-0">
+                        <img
+                          src={bump.image}
+                          alt={bump.title}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-[#37322F] truncate">{bump.title}</p>
+                        <p className="text-xs text-[#847971]">Add-on</p>
+                      </div>
+                      <span className="text-sm font-semibold text-[#37322F]">
+                        {formatPrice(getProductPrice(bump.metadata, currency) || bump.price, currency)}
+                      </span>
+                    </div>
+                  )
+                })}
+
+                {/* Empty state */}
+                {selectedBumps.length === 0 && funnelType !== '21dc' && (
+                  <div className="text-center py-4">
+                    <p className="text-sm text-[#847971]">Select an add-on above</p>
+                  </div>
+                )}
+              </div>
+
+              {/* Total */}
+              {(selectedBumps.length > 0 || funnelType === '21dc') && (
+                <div className="border-t border-[rgba(55,50,47,0.1)] pt-4">
+                  <div className="flex justify-between items-baseline">
+                    <span className="text-sm text-[#605A57]">Total due today</span>
+                    <div className="text-right">
+                      <span className="text-2xl font-bold text-[#37322F]">
+                        {formatPrice(calculateTotal(), currency)}
+                      </span>
+                      <p className="text-xs text-[#847971] mt-0.5">One-time payment</p>
                     </div>
                   </div>
                 </div>
-              )
-            })}
-          </div>
-        </div>
-
-        {/* Order Summary */}
-        <div className="bg-white rounded-2xl border border-[rgba(55,50,47,0.12)] p-4 mb-4">
-          <h3 className="text-sm font-medium text-[#37322F] mb-3 font-sans">Order Summary</h3>
-          <div className="space-y-2">
-            {/* Base Product */}
-            {funnelType === '21dc' && (() => {
-              const productParam = searchParams.get('product')
-              const baseProduct = productParam ? getProductById(productParam) : null
-              if (baseProduct) {
-                return (
-                  <div className="flex justify-between items-center text-sm">
-                    <span className="text-[#605A57] font-sans">{baseProduct.title}</span>
-                    <span className="text-[#37322F] font-medium font-sans">
-                      {formatPrice(getProductPrice(baseProduct.metadata, currency) || baseProduct.price, currency)}
-                    </span>
-                  </div>
-                )
-              }
-              return null
-            })()}
-
-            {/* Selected Add-ons */}
-            {selectedBumps.map(bumpId => {
-              const bump = orderBumps.find(b => b.id === bumpId)
-              if (!bump) return null
-              return (
-                <div key={bumpId} className="flex justify-between items-center text-sm">
-                  <span className="text-[#605A57] font-sans">{bump.title}</span>
-                  <span className="text-[#37322F] font-medium font-sans">
-                    {formatPrice(getProductPrice(bump.metadata, currency) || bump.price, currency)}
-                  </span>
-                </div>
-              )
-            })}
-
-            {/* Divider */}
-            <div className="border-t border-[rgba(55,50,47,0.12)] my-2"></div>
-
-            {/* Total */}
-            <div className="flex justify-between items-center">
-              <span className="text-[#37322F] font-medium font-sans">Total</span>
-              <span className="text-lg font-bold text-[#37322F] font-sans">
-                {(() => {
-                  let total = 0
-                  // Add base product price
-                  if (funnelType === '21dc') {
-                    const productParam = searchParams.get('product')
-                    const baseProduct = productParam ? getProductById(productParam) : null
-                    if (baseProduct) {
-                      total += getProductPrice(baseProduct.metadata, currency) || baseProduct.price
-                    }
-                  }
-                  // Add selected bumps
-                  selectedBumps.forEach(bumpId => {
-                    const bump = orderBumps.find(b => b.id === bumpId)
-                    if (bump) {
-                      total += getProductPrice(bump.metadata, currency) || bump.price
-                    }
-                  })
-                  return formatPrice(total, currency)
-                })()}
-              </span>
+              )}
             </div>
-          </div>
-        </div>
 
-        {/* Continue Button */}
-        <button
-          onClick={handleContinue}
-          disabled={isLoading}
-          className={`w-full py-3 px-6 font-bold text-base rounded-full shadow-[0px_2px_4px_rgba(55,50,47,0.12)] transition-all duration-200 flex items-center justify-center gap-2 font-sans ${
-            isLoading
-              ? 'bg-[#847971] cursor-not-allowed'
-              : 'bg-[#37322F] hover:bg-[#49423D] cursor-pointer'
-          } text-[#FBFAF9]`}
-        >
-          {isLoading ? (
-            <>
-              <Loader2 className="w-5 h-5 animate-spin" />
-              Processing...
-            </>
-          ) : (
-            'Continue to Payment'
-          )}
-        </button>
+            {/* Continue Button */}
+            <button
+              onClick={handleContinue}
+              disabled={isLoading}
+              className={`w-full py-4 px-6 font-semibold text-base rounded-full transition-all duration-200 flex items-center justify-center gap-2 ${
+                isLoading
+                  ? 'bg-[#847971] cursor-not-allowed'
+                  : 'bg-[#37322F] hover:bg-[#49423D] cursor-pointer'
+              } text-white shadow-lg shadow-[rgba(55,50,47,0.15)]`}
+            >
+              {isLoading ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  Processing...
+                </>
+              ) : (
+                <>
+                  Continue to Payment
+                  <ArrowRight className="w-4 h-4" />
+                </>
+              )}
+            </button>
+          </div>
         </div>
       </div>
     </>
   )
 }
 
+// Product Card Component
+function ProductCard({
+  product,
+  isSelected,
+  onToggle,
+  onLearnMore,
+  currency,
+}: {
+  product: Product
+  isSelected: boolean
+  onToggle: () => void
+  onLearnMore: () => void
+  currency: Currency
+}) {
+  const details = PRODUCT_DETAILS[product.id]
+
+  // Get short benefits list
+  const shortBenefits = details?.features.slice(0, 3) || [
+    `Access to ${product.title}`,
+    'Lifetime access included',
+    'Start immediately',
+  ]
+
+  return (
+    <div
+      className={`bg-white rounded-2xl overflow-hidden transition-all duration-300 border-2 ${
+        isSelected
+          ? 'border-[#37322F] shadow-lg'
+          : 'border-transparent shadow-md hover:shadow-lg'
+      }`}
+    >
+      {/* Product Image */}
+      <div className="relative aspect-[4/3] bg-[#F5F3F0] overflow-hidden">
+        <img
+          src={product.image}
+          alt={product.title}
+          className="w-full h-full object-cover"
+          onError={(e) => {
+            e.currentTarget.src = 'https://via.placeholder.com/400x300'
+          }}
+        />
+        {isSelected && (
+          <div className="absolute top-3 right-3 w-8 h-8 bg-[#37322F] rounded-full flex items-center justify-center shadow-lg">
+            <Check className="w-5 h-5 text-white" strokeWidth={3} />
+          </div>
+        )}
+      </div>
+
+      {/* Content */}
+      <div className="p-5">
+        {/* Title & Price */}
+        <div className="flex items-start justify-between mb-4">
+          <div>
+            <h3 className="text-lg font-semibold text-[#37322F] mb-1">{product.title}</h3>
+            <p className="text-xs text-[#847971]">{product.shortDescription || 'One-time purchase'}</p>
+          </div>
+          <div className="text-right">
+            <p className="text-xl font-bold text-[#37322F]">
+              {formatPrice(getProductPrice(product.metadata, currency) || product.price, currency)}
+            </p>
+          </div>
+        </div>
+
+        {/* Quick Benefits */}
+        <div className="space-y-2 mb-5">
+          {shortBenefits.map((benefit, i) => (
+            <div key={i} className="flex items-start gap-2">
+              <Check className="w-4 h-4 text-[#37322F] flex-shrink-0 mt-0.5" strokeWidth={2.5} />
+              <span className="text-xs text-[#605A57]">{benefit}</span>
+            </div>
+          ))}
+        </div>
+
+        {/* Actions */}
+        <div className="flex gap-2">
+          <button
+            onClick={onToggle}
+            className={`flex-1 py-2.5 px-4 rounded-full text-sm font-semibold transition-all ${
+              isSelected
+                ? 'bg-[#37322F] text-white'
+                : 'bg-[#F5F3F0] text-[#37322F] hover:bg-[#E8E4DF]'
+            }`}
+          >
+            {isSelected ? 'Added' : 'Add'}
+          </button>
+          <button
+            onClick={onLearnMore}
+            className="py-2.5 px-4 rounded-full text-sm font-medium text-[#605A57] hover:text-[#37322F] hover:bg-[#F5F3F0] transition-all"
+          >
+            Learn more
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default function OrderBumpsPage() {
   return (
-    <Suspense fallback={<div className="flex items-center justify-center min-h-screen bg-[#FFFCF5] text-[#605A57] font-sans">Loading...</div>}>
+    <Suspense fallback={
+      <div className="flex items-center justify-center min-h-screen bg-[#FFFCF5]">
+        <Loader2 className="w-8 h-8 animate-spin text-[#847971]" />
+      </div>
+    }>
       <OrderBumpsContent />
     </Suspense>
   )

@@ -1,5 +1,4 @@
 import { HeroSection } from "@/components/hero-section"
-import FeaturesSection from "@/components/features-section"
 import MinimalTestimonials from "@/components/MinimalTestimonials"
 import TransformationsSection from "@/components/transformations-section"
 import ChallengeDetailsSection from "@/components/ChallengeDetailsSection"
@@ -16,7 +15,6 @@ export default function Home() {
       <div className="hidden sm:block sm:w-4 md:w-8 lg:w-12 flex-shrink-0 border-r border-[rgba(55,50,47,0.12)]"></div>
       <main className="flex-1 min-w-0">
         <HeroSection />
-        <FeaturesSection />
         <MinimalTestimonials />
         <TransformationsSection />
         <ChallengeDetailsSection />

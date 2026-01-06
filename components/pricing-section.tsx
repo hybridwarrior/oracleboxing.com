@@ -114,67 +114,106 @@ export default function PricingSection() {
           </p>
         </div>
 
-        {/* Pricing Card */}
-        <div className="w-full px-4 sm:px-6 flex justify-center">
-          <div className="w-full max-w-[440px] bg-[#37322F] rounded-2xl overflow-hidden shadow-xl">
+        {/* Pricing Card - Full Width */}
+        <div className="w-full px-4 sm:px-6 lg:px-8 flex justify-center">
+          <div className="w-full max-w-[800px] bg-[#37322F] rounded-2xl overflow-hidden shadow-xl">
             {/* Card Content */}
-            <div className="px-5 sm:px-8 py-8 sm:py-10 flex flex-col gap-6 sm:gap-8">
-            {/* Header */}
-            <div className="flex flex-col gap-2">
-              <div className="text-[#FBFAF9] text-xl sm:text-2xl md:text-3xl font-semibold font-sans">
-                21-Day Challenge
+            <div className="px-5 sm:px-8 lg:px-12 py-8 sm:py-10 lg:py-12 flex flex-col gap-6 sm:gap-8">
+              {/* Thumbnail */}
+              <div className="flex justify-center">
+                <img
+                  src="https://sb.oracleboxing.com/Website/skool_art2.webp"
+                  alt="21-Day Challenge"
+                  className="w-full max-w-[320px] sm:max-w-[400px] rounded-xl shadow-lg"
+                />
               </div>
-            </div>
 
-            {/* Price */}
-            <div className="flex flex-col gap-1">
-              <div className="flex items-baseline gap-2">
-                <span className="text-[#F0EFEE] text-4xl sm:text-5xl md:text-6xl font-medium font-serif">
-                  {isLoading ? '...' : formatPrice(getProductPrice('21dc_entry', currency) || 147, currency)}
-                </span>
+              {/* Header */}
+              <div className="flex flex-col gap-2 text-center">
+                <div className="text-[#FBFAF9] text-2xl sm:text-3xl md:text-4xl font-semibold font-sans">
+                  21-Day Challenge
+                </div>
               </div>
-              <div className="text-[#847971] text-sm font-medium font-sans">
-                one-time payment
-              </div>
-            </div>
 
-            {/* CTA Button */}
-            <Link
-              href="/checkout?product=21dc-entry"
-              onClick={() => handleCheckoutClick('21dc-entry', '21-Day Challenge - Entry', 'pricing-card')}
-              className="w-full px-6 py-4 bg-[#FBFAF9] hover:bg-white transition-colors rounded-full flex justify-center items-center shadow-[0px_2px_4px_rgba(55,50,47,0.12)]"
-            >
-              <span className="text-[#37322F] text-base font-semibold font-sans">
-                Join the Challenge
-              </span>
-            </Link>
-
-            {/* Features */}
-            <div className="flex flex-col gap-4 pt-4 border-t border-[rgba(255,255,255,0.1)]">
-              {[
-                "11 Live Classes Per Week",
-                "Private Community Access",
-                "Boxing Roadmap Course",
-                "1-on-1 Graduation Call",
-                "Win Your Money Back Guarantee",
-              ].map((feature, index) => (
-                <div key={index} className="flex items-center gap-3">
-                  <svg width="16" height="16" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" className="flex-shrink-0">
-                    <path
-                      d="M10 3L4.5 8.5L2 6"
-                      stroke="#FF8000"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                  <span className="text-[#F0EFEE] text-base font-medium font-sans">
-                    {feature}
+              {/* Price */}
+              <div className="flex flex-col gap-1 text-center">
+                <div className="flex items-baseline justify-center gap-2">
+                  <span className="text-[#F0EFEE] text-5xl sm:text-6xl md:text-7xl font-medium font-serif">
+                    {isLoading ? '...' : formatPrice(getProductPrice('21dc_entry', currency) || 147, currency)}
                   </span>
                 </div>
-              ))}
+                <div className="text-[#847971] text-sm font-medium font-sans">
+                  one-time payment
+                </div>
+              </div>
+
+              {/* CTA Button */}
+              <div className="flex justify-center">
+                <Link
+                  href="/checkout?product=21dc-entry"
+                  onClick={() => handleCheckoutClick('21dc-entry', '21-Day Challenge - Entry', 'pricing-card')}
+                  className="w-full max-w-[400px] px-8 py-4 sm:py-5 bg-[#FBFAF9] hover:bg-white transition-colors rounded-full flex justify-center items-center shadow-[0px_2px_4px_rgba(55,50,47,0.12)]"
+                >
+                  <span className="text-[#37322F] text-base sm:text-lg font-semibold font-sans">
+                    Join the Challenge
+                  </span>
+                </Link>
+              </div>
+
+              {/* Payment Icons */}
+              <div className="flex justify-center items-center gap-3 sm:gap-4">
+                <img
+                  loading="lazy"
+                  alt="Visa & Mastercard"
+                  src="https://sb.oracleboxing.com/Website/payment1.svg"
+                  className="h-6 sm:h-7"
+                />
+                <img
+                  loading="lazy"
+                  alt="Apple Pay & Google Pay"
+                  src="https://sb.oracleboxing.com/Website/payment2.svg"
+                  className="h-6 sm:h-7"
+                />
+                <img
+                  loading="lazy"
+                  alt="PayPal"
+                  src="https://sb.oracleboxing.com/Website/paypal2.svg"
+                  className="h-5 sm:h-6"
+                />
+                <img
+                  loading="lazy"
+                  src="https://sb.oracleboxing.com/Website/klarna.svg"
+                  alt="Klarna"
+                  className="h-5 sm:h-6"
+                />
+              </div>
+
+              {/* Features - Two columns on larger screens */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-6 border-t border-[rgba(255,255,255,0.1)]">
+                {[
+                  "11 Live Classes Per Week",
+                  "Private Community Access",
+                  "Boxing Roadmap Course",
+                  "1-on-1 Graduation Call",
+                  "Win Your Money Back Guarantee",
+                ].map((feature, index) => (
+                  <div key={index} className="flex items-center gap-3">
+                    <svg width="16" height="16" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" className="flex-shrink-0">
+                      <path
+                        d="M10 3L4.5 8.5L2 6"
+                        stroke="#FF8000"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                    <span className="text-[#F0EFEE] text-base font-medium font-sans">
+                      {feature}
+                    </span>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
           </div>
         </div>
       </div>

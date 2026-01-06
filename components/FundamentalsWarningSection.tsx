@@ -22,7 +22,8 @@ export default function FundamentalsWarningSection() {
         <div className="flex-1 min-w-0 sm:border-l sm:border-r border-[rgba(55,50,47,0.12)] bg-[#FFFCF5] p-4 sm:p-6 md:p-8 lg:p-12 flex flex-col gap-6 sm:gap-8">
           {/* Title */}
           <h3 className="text-[#49423D] text-xl sm:text-2xl md:text-3xl font-normal leading-tight font-serif tracking-tight text-center md:text-left">
-            Not Having Solid Fundamentals Is Costing You Progress Every Single Day
+            <span className="hidden sm:inline">Not Having Solid Fundamentals Is Costing You Progress Every Single Day</span>
+            <span className="sm:hidden">Bad Fundamentals Cost You Progress Every Day</span>
           </h3>
 
           {/* Two Column Content */}
@@ -50,6 +51,20 @@ export default function FundamentalsWarningSection() {
                 className="object-cover rounded-lg"
               />
             </div>
+          </div>
+
+          {/* CTA Button */}
+          <div className="flex justify-center pt-2">
+            <button
+              onClick={() => {
+                document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })
+              }}
+              className="px-8 py-4 bg-[#37322F] hover:bg-[#49423D] transition-colors rounded-full flex justify-center items-center shadow-[0px_2px_4px_rgba(55,50,47,0.12)] cursor-pointer"
+            >
+              <span className="text-[#FBFAF9] text-base sm:text-lg font-semibold font-sans">
+                Choose Your Package
+              </span>
+            </button>
           </div>
         </div>
 
