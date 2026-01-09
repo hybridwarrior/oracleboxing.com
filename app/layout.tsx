@@ -2,6 +2,7 @@ import type React from "react"
 import type { Metadata } from "next"
 import "./globals.css"
 import { Toaster } from "sonner"
+import { Analytics } from "@vercel/analytics/react"
 import { CurrencyProvider } from "@/contexts/CurrencyContext"
 import PageViewTracker from "@/components/PageViewTracker"
 import EngagementTracker from "@/components/EngagementTracker"
@@ -13,6 +14,28 @@ export const metadata: Metadata = {
   title: "Oracle Boxing",
   description:
     "Learn the fundamental pillars of boxing so that your technique just looks right. 21 days to master what matters.",
+  openGraph: {
+    title: "Oracle Boxing",
+    description: "Learn the fundamental pillars of boxing so that your technique just looks right. 21 days to master what matters.",
+    url: "https://oracleboxing.com",
+    siteName: "Oracle Boxing",
+    locale: "en_US",
+    type: "website",
+    images: [
+      {
+        url: "https://sb.oracleboxing.com/Website/skool_art2.webp",
+        width: 1200,
+        height: 630,
+        alt: "Oracle Boxing",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Oracle Boxing",
+    description: "Learn the fundamental pillars of boxing so that your technique just looks right. 21 days to master what matters.",
+    images: ["https://sb.oracleboxing.com/Website/skool_art2.webp"],
+  },
   icons: {
     icon: [
       { url: `${FAVICON_BASE}/favicon.ico?${FAVICON_VERSION}`, sizes: "any" },
@@ -57,6 +80,7 @@ export default function RootLayout({
       </head>
       <body className="font-sans antialiased">
         <CurrencyProvider>
+          <Analytics />
           <PageViewTracker />
           <EngagementTracker />
           {children}
