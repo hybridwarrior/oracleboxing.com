@@ -1,0 +1,201 @@
+'use client'
+
+import { useState, useEffect, useRef, useCallback } from 'react'
+import { useCurrency } from '@/contexts/CurrencyContext'
+import { getTrackingParams, getCookie } from '@/lib/tracking-cookies'
+import { CheckoutForm } from '@/components/checkout-v2/CheckoutForm'
+import { StripeCheckout } from '@/components/checkout-v2/StripeCheckout'
+
+export const dynamic = 'force-dynamic'
+
+interface CustomerInfo {
+  firstName: string
+  lastName: string
+  email: string
+}
+
+interface TrackingParams {
+  referrer: string
+  first_utm_source?: string
+  first_utm_medium?: string
+  first_utm_campaign?: string
+  first_utm_term?: string
+  first_utm_content?: string
+  first_referrer_time?: string
+  last_utm_source?: string
+  last_utm_medium?: string
+  last_utm_campaign?: string
+  last_utm_term?: string
+  last_utm_content?: string
+  last_referrer_time?: string
+  fbclid?: string
+  session_id?: string
+  event_id?: string
+}
+
+export default function CheckoutV2Page() {
+  const { currency, isLoading: currencyLoading } = useCurrency()
+  const [step, setStep] = useState<'info' | 'payment'>('info')
+  const [customerInfo, setCustomerInfo] = useState<CustomerInfo | null>(null)
+  const [selectedAddOns, setSelectedAddOns] = useState<string[]>([])
+  const [clientSecret, setClientSecret] = useState<string | null>(null)
+  const [paymentIntentId, setPaymentIntentId] = useState<string | null>(null)
+  const [isCreatingSession, setIsCreatingSession] = useState(false)
+  const [isUpdatingAmount, setIsUpdatingAmount] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [trackingParams, setTrackingParams] = useState<TrackingParams>({
+    referrer: ''
+  })
+
+  // Debounce timer ref for add-on changes
+  const addOnDebounceRef = useRef<NodeJS.Timeout | null>(null)
+
+  // Capture tracking params on mount
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const cookieTracking = getTrackingParams()
+      const cookie = getCookie('ob_track')
+
+      setTrackingParams({
+        referrer: cookieTracking.first_referrer || 'direct',
+        first_utm_source: cookieTracking.first_utm_source,
+        first_utm_medium: cookieTracking.first_utm_medium,
+        first_utm_campaign: cookieTracking.first_utm_campaign,
+        first_utm_term: cookieTracking.first_utm_term,
+        first_utm_content: cookieTracking.first_utm_content,
+        first_referrer_time: cookie?.first_referrer_time,
+        last_utm_source: cookieTracking.last_utm_source,
+        last_utm_medium: cookieTracking.last_utm_medium,
+        last_utm_campaign: cookieTracking.last_utm_campaign,
+        last_utm_term: cookieTracking.last_utm_term,
+        last_utm_content: cookieTracking.last_utm_content,
+        last_referrer_time: cookie?.last_referrer_time,
+        session_id: cookie?.session_id,
+        event_id: cookie?.event_id,
+        fbclid: cookie?._fbc,
+      })
+    }
+  }, [])
+
+  // Create initial session
+  const createSession = useCallback(async (info: CustomerInfo) => {
+    const cookieData = getCookie('ob_track')
+
+    const response = await fetch('/api/checkout-v2/session', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        customerInfo: info,
+        currency,
+        trackingParams,
+        cookieData,
+        addOns: [], // Always start with no add-ons
+      }),
+    })
+
+    const data = await response.json()
+
+    if (!response.ok) {
+      throw new Error(data.error || 'Failed to create checkout session')
+    }
+
+    if (!data.clientSecret || !data.paymentIntentId) {
+      throw new Error('No client secret returned')
+    }
+
+    return { clientSecret: data.clientSecret, paymentIntentId: data.paymentIntentId }
+  }, [currency, trackingParams])
+
+  // Handle Step 1 submission - create initial Stripe session (no add-ons)
+  const handleInfoSubmit = async (info: CustomerInfo) => {
+    setCustomerInfo(info)
+    setIsCreatingSession(true)
+    setError(null)
+
+    try {
+      const { clientSecret: secret, paymentIntentId: piId } = await createSession(info)
+      setClientSecret(secret)
+      setPaymentIntentId(piId)
+      setStep('payment')
+    } catch (err: any) {
+      console.error('Session creation error:', err)
+      setError(err.message || 'Something went wrong. Please try again.')
+    } finally {
+      setIsCreatingSession(false)
+    }
+  }
+
+  // Handle add-on changes on Step 2 - update PaymentIntent amount (no new session)
+  const handleAddOnsChange = useCallback((newAddOns: string[]) => {
+    setSelectedAddOns(newAddOns)
+
+    // Debounce the amount update
+    if (addOnDebounceRef.current) {
+      clearTimeout(addOnDebounceRef.current)
+    }
+
+    addOnDebounceRef.current = setTimeout(async () => {
+      if (!paymentIntentId) return
+
+      setIsUpdatingAmount(true)
+      try {
+        const response = await fetch('/api/checkout-v2/update', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            paymentIntentId,
+            currency,
+            addOns: newAddOns,
+          }),
+        })
+
+        const data = await response.json()
+        if (!response.ok) {
+          console.error('Failed to update amount:', data.error)
+        }
+      } catch (err: any) {
+        console.error('Amount update error:', err)
+      } finally {
+        setIsUpdatingAmount(false)
+      }
+    }, 300) // 300ms debounce
+  }, [paymentIntentId, currency])
+
+  // Show loading while currency is being detected
+  if (currencyLoading) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="animate-pulse text-[#37322F]">Loading...</div>
+      </div>
+    )
+  }
+
+  return (
+    <>
+      {step === 'info' && (
+        <CheckoutForm
+          onSubmit={handleInfoSubmit}
+          isLoading={isCreatingSession}
+          error={error}
+          currency={currency}
+        />
+      )}
+
+      {step === 'payment' && clientSecret && customerInfo && (
+        <StripeCheckout
+          clientSecret={clientSecret}
+          customerInfo={customerInfo}
+          currency={currency}
+          selectedAddOns={selectedAddOns}
+          onAddOnsChange={handleAddOnsChange}
+          isUpdatingAmount={isUpdatingAmount}
+          onBack={() => setStep('info')}
+        />
+      )}
+    </>
+  )
+}
