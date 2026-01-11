@@ -65,6 +65,22 @@ export interface InitiateCheckoutData {
   cookieData?: any;
 }
 
+export interface WaitlistData {
+  eventType: string;
+  eventId: string;
+  sessionId: string;
+  date: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  country: string | null;
+  referrer: string | null;
+  utmSource: string | null;
+  utmMedium: string | null;
+  utmCampaign: string | null;
+  utmContent: string | null;
+}
+
 /**
  * Generate a unique event ID for deduplication
  */
@@ -694,5 +710,145 @@ export async function trackInitiateCheckout(
     }
   } catch (error) {
     console.error('Error tracking initiate checkout:', error);
+  }
+}
+
+/**
+ * Track waitlist signup
+ * Stores signup data in Supabase waitlist table
+ */
+export async function trackWaitlistSignup(
+  firstName: string,
+  lastName: string,
+  email: string
+): Promise<void> {
+  try {
+    const cookieData = getTrackingCookie();
+    const utm = getUTMParameters();
+
+    // Get country with error handling
+    let country: string | null = null;
+    try {
+      country = await getUserCountry();
+    } catch (error) {
+      console.warn('Failed to get country for waitlist signup:', error);
+    }
+
+    const eventId = cookieData.event_id || generateEventId();
+    const sessionId = cookieData.session_id || getOrCreateSessionId();
+
+    const data: WaitlistData = {
+      eventType: 'waitlist_signup',
+      eventId,
+      sessionId,
+      date: new Date().toISOString(),
+      firstName,
+      lastName,
+      email,
+      country,
+      referrer: cookieData.initial_referrer || document?.referrer || null,
+      utmSource: cookieData.first_utm_source || utm.utmSource,
+      utmMedium: cookieData.first_utm_medium || utm.utmMedium,
+      utmCampaign: cookieData.first_utm_campaign || utm.utmCampaign,
+      utmContent: cookieData.first_utm_content || utm.utmContent,
+    };
+
+    console.log('📝 Waitlist signup data:', data);
+
+    // Send to Supabase
+    const insertData = {
+      date: data.date,
+      session_id: data.sessionId,
+      event_id: data.eventId,
+      first_name: data.firstName,
+      last_name: data.lastName,
+      email: data.email,
+      country: data.country,
+      referrer: data.referrer,
+      utm_source: data.utmSource,
+      utm_medium: data.utmMedium,
+      utm_campaign: data.utmCampaign,
+      utm_content: data.utmContent,
+    };
+
+    supabase
+      .from('waitlist')
+      .insert(insertData)
+      .then(({ error }) => {
+        if (error) {
+          console.error('❌ Failed to save waitlist signup to Supabase:', error);
+        } else {
+          console.log('✅ Waitlist signup saved to Supabase');
+        }
+      });
+
+    // Send Lead event to Facebook Pixel (browser-side)
+    if (typeof window !== 'undefined' && (window as any).fbq) {
+      (window as any).fbq('track', 'Lead', {
+        content_name: 'Waitlist Signup',
+        content_category: '21-Day Challenge Waitlist',
+      }, {
+        eventID: eventId
+      });
+      console.log('📱 Facebook Pixel Lead event sent for waitlist signup');
+    }
+
+    // Send Lead event to Facebook Conversions API (server-side)
+    try {
+      const eventTime = Date.now();
+      const fbclid = getFbclid();
+      const hashedEmail = await hashSHA256(email);
+
+      const eventData = {
+        event_name: 'Lead',
+        event_time: Math.floor(eventTime / 1000),
+        event_id: eventId,
+        event_source_url: 'https://oracleboxing.com/closed',
+        action_source: 'website',
+        user_data: {
+          em: [hashedEmail],
+          fn: [await hashSHA256(firstName)],
+          ln: [await hashSHA256(lastName)],
+          client_user_agent: getClientUserAgent(),
+          ...(fbclid && { fbc: `fb.1.${eventTime}.${fbclid}` }),
+        },
+        custom_data: {
+          content_name: 'Waitlist Signup',
+          content_category: '21-Day Challenge Waitlist',
+        },
+      };
+
+      const payload = {
+        data: [eventData],
+        access_token: FB_ACCESS_TOKEN,
+      };
+
+      fetch(FB_CONVERSIONS_API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+        keepalive: true,
+      }).then(response => {
+        if (!response.ok) {
+          response.json().then(errorData => {
+            console.error('❌ Facebook Conversions API Lead error:', errorData);
+          });
+        } else {
+          response.json().then(result => {
+            console.log('✅ Facebook Conversions API Lead success:', result);
+          });
+        }
+      }).catch((error) => {
+        console.error('❌ Failed to send Lead to Facebook Conversions API:', error);
+      });
+    } catch (error) {
+      console.error('Error sending Lead to Facebook Conversions API:', error);
+    }
+
+    console.log('Waitlist signup tracked:', data);
+  } catch (error) {
+    console.error('Error tracking waitlist signup:', error);
   }
 }

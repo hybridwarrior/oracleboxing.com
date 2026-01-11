@@ -3,6 +3,8 @@
 import { useState } from 'react'
 import { toast } from 'sonner'
 import { Loader2 } from 'lucide-react'
+import { trackWaitlistSignup } from '@/lib/webhook-tracking'
+import { useAnalytics } from '@/hooks/useAnalytics'
 
 export default function ClosedPage() {
   const [isLoading, setIsLoading] = useState(false)
@@ -12,6 +14,7 @@ export default function ClosedPage() {
     lastName: '',
     email: '',
   })
+  const { trackWaitlistSignup: trackVercelWaitlist } = useAnalytics()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -34,6 +37,7 @@ export default function ClosedPage() {
     setIsLoading(true)
 
     try {
+      // Send to Make.com webhook
       const response = await fetch('https://hook.eu2.make.com/6yxyxeuqeowhk7st10oqqmofcezmu928', {
         method: 'POST',
         headers: {
@@ -50,6 +54,17 @@ export default function ClosedPage() {
       if (!response.ok) {
         throw new Error('Failed to submit')
       }
+
+      // Track in Supabase and Facebook (non-blocking)
+      trackWaitlistSignup(firstName, lastName, email)
+
+      // Track in Vercel Analytics (non-blocking)
+      trackVercelWaitlist({
+        email,
+        first_name: firstName,
+        last_name: lastName,
+        source: 'closed_page',
+      })
 
       setIsSubmitted(true)
       toast.success('You\'re on the list!')

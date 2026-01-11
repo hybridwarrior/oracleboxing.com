@@ -85,6 +85,13 @@ interface FAQEventData {
   page?: string
 }
 
+interface WaitlistSignupData {
+  email: string
+  first_name: string
+  last_name: string
+  source?: string
+}
+
 export const useAnalytics = () => {
   // NEW: Track AddToCart - fires when user clicks to go to checkout page
   const trackAddToCart = (data: AddToCartEventData) => {
@@ -224,6 +231,22 @@ export const useAnalytics = () => {
     track('page_view', { page })
   }
 
+  const trackWaitlistSignup = (data: WaitlistSignupData) => {
+    console.log('Vercel Analytics: Waitlist signup event', data);
+
+    try {
+      track('waitlist_signup', {
+        email: data.email,
+        first_name: data.first_name,
+        last_name: data.last_name,
+        source: data.source || 'closed_page',
+      });
+      console.log('Vercel Analytics waitlist_signup event sent');
+    } catch (error) {
+      console.error('Failed to send Vercel Analytics waitlist_signup event:', error);
+    }
+  }
+
   return {
     trackAddToCart,
     trackInitiateCheckout,
@@ -235,5 +258,6 @@ export const useAnalytics = () => {
     trackStoryClick,
     trackFAQExpand,
     trackPageView,
+    trackWaitlistSignup,
   }
 }

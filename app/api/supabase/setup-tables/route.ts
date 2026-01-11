@@ -86,11 +86,37 @@ export async function GET() {
       `
     })
 
+    // Create waitlist table
+    const { error: waitlistError } = await supabase.rpc('exec_sql', {
+      sql: `
+        CREATE TABLE IF NOT EXISTS waitlist (
+          id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+          date TIMESTAMPTZ NOT NULL,
+          session_id TEXT,
+          event_id TEXT,
+          first_name TEXT,
+          last_name TEXT,
+          email TEXT,
+          country TEXT,
+          referrer TEXT,
+          utm_source TEXT,
+          utm_medium TEXT,
+          utm_campaign TEXT,
+          utm_content TEXT,
+          created_at TIMESTAMPTZ DEFAULT NOW()
+        );
+
+        CREATE INDEX IF NOT EXISTS idx_waitlist_date ON waitlist(date);
+        CREATE INDEX IF NOT EXISTS idx_waitlist_email ON waitlist(email);
+      `
+    })
+
     // Check for errors
     const errors = []
     if (pageViewsError) errors.push({ table: 'page_views', error: pageViewsError.message })
     if (checkoutsError) errors.push({ table: 'initiate_checkouts', error: checkoutsError.message })
     if (purchasesError) errors.push({ table: 'purchases', error: purchasesError.message })
+    if (waitlistError) errors.push({ table: 'waitlist', error: waitlistError.message })
 
     if (errors.length > 0) {
       return NextResponse.json({
@@ -104,7 +130,7 @@ export async function GET() {
     return NextResponse.json({
       success: true,
       message: 'All tables created successfully',
-      tables: ['page_views', 'initiate_checkouts', 'purchases']
+      tables: ['page_views', 'initiate_checkouts', 'purchases', 'waitlist']
     })
 
   } catch (error: any) {
@@ -186,14 +212,37 @@ CREATE TABLE IF NOT EXISTS purchases (
 CREATE INDEX IF NOT EXISTS idx_purchases_date ON purchases(date);
 CREATE INDEX IF NOT EXISTS idx_purchases_email ON purchases(email);
 
+-- Waitlist Table
+CREATE TABLE IF NOT EXISTS waitlist (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  date TIMESTAMPTZ NOT NULL,
+  session_id TEXT,
+  event_id TEXT,
+  first_name TEXT,
+  last_name TEXT,
+  email TEXT,
+  country TEXT,
+  referrer TEXT,
+  utm_source TEXT,
+  utm_medium TEXT,
+  utm_campaign TEXT,
+  utm_content TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_waitlist_date ON waitlist(date);
+CREATE INDEX IF NOT EXISTS idx_waitlist_email ON waitlist(email);
+
 -- Enable Row Level Security (optional but recommended)
 ALTER TABLE page_views ENABLE ROW LEVEL SECURITY;
 ALTER TABLE initiate_checkouts ENABLE ROW LEVEL SECURITY;
 ALTER TABLE purchases ENABLE ROW LEVEL SECURITY;
+ALTER TABLE waitlist ENABLE ROW LEVEL SECURITY;
 
 -- Create policies for service role (allows server-side inserts)
 CREATE POLICY "Allow service role full access to page_views" ON page_views FOR ALL USING (true);
 CREATE POLICY "Allow service role full access to initiate_checkouts" ON initiate_checkouts FOR ALL USING (true);
 CREATE POLICY "Allow service role full access to purchases" ON purchases FOR ALL USING (true);
+CREATE POLICY "Allow service role full access to waitlist" ON waitlist FOR ALL USING (true);
   `.trim()
 }
