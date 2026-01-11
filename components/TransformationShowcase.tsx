@@ -247,123 +247,128 @@ export function TransformationShowcase() {
       <style jsx>{`
         .ribbon {
           position: absolute;
-          width: 150px;
-          height: 150px;
-          background: radial-gradient(circle,
-            rgba(255,252,245,0.4) 0%,
-            rgba(255,252,245,0.2) 40%,
-            transparent 70%
+          width: 400%;
+          height: 100px;
+          background: linear-gradient(90deg,
+            transparent 0%,
+            rgba(255,252,245,0.25) 20%,
+            rgba(255,252,245,0.5) 50%,
+            rgba(255,252,245,0.25) 80%,
+            transparent 100%
           );
           border-radius: 50%;
-          filter: blur(30px);
+          filter: blur(25px);
+          box-shadow:
+            0 0 80px 40px rgba(255, 252, 245, 0.4),
+            0 0 120px 60px rgba(255, 252, 245, 0.25),
+            0 0 160px 80px rgba(255, 252, 245, 0.15);
         }
         .ribbon-1 {
-          top: 5%;
-          left: 5%;
-          width: 200px;
-          height: 200px;
-          animation: float1 8s ease-in-out infinite;
+          top: 0%;
+          left: -150%;
+          transform: rotate(-8deg);
+          animation: drift1 12s ease-in-out infinite;
         }
         .ribbon-2 {
           top: 20%;
-          left: 25%;
-          width: 120px;
+          left: -120%;
           height: 120px;
-          animation: float2 10s ease-in-out infinite;
-          animation-delay: -2s;
-        }
-        .ribbon-3 {
-          top: 60%;
-          left: 10%;
-          width: 180px;
-          height: 180px;
-          animation: float3 9s ease-in-out infinite;
-          animation-delay: -4s;
-        }
-        .ribbon-4 {
-          top: 80%;
-          left: 30%;
-          width: 100px;
-          height: 100px;
-          animation: float1 7s ease-in-out infinite;
-          animation-delay: -1s;
-        }
-        .ribbon-5 {
-          top: 10%;
-          right: 20%;
-          width: 160px;
-          height: 160px;
-          animation: float2 11s ease-in-out infinite;
+          transform: rotate(5deg);
+          animation: drift2 15s ease-in-out infinite;
           animation-delay: -3s;
         }
-        .ribbon-6 {
+        .ribbon-3 {
           top: 40%;
-          right: 5%;
-          width: 140px;
-          height: 140px;
-          animation: float3 8s ease-in-out infinite;
+          left: -140%;
+          height: 90px;
+          transform: rotate(-5deg);
+          animation: drift3 11s ease-in-out infinite;
           animation-delay: -5s;
         }
+        .ribbon-4 {
+          top: 60%;
+          left: -160%;
+          height: 110px;
+          transform: rotate(8deg);
+          animation: drift1 14s ease-in-out infinite;
+          animation-delay: -8s;
+        }
+        .ribbon-5 {
+          top: 80%;
+          left: -130%;
+          height: 80px;
+          transform: rotate(-10deg);
+          animation: drift2 10s ease-in-out infinite;
+          animation-delay: -4s;
+        }
+        .ribbon-6 {
+          top: 10%;
+          left: -100%;
+          height: 130px;
+          transform: rotate(3deg);
+          animation: drift3 16s ease-in-out infinite;
+          animation-delay: -10s;
+        }
         .ribbon-7 {
-          top: 70%;
-          right: 25%;
-          width: 180px;
-          height: 180px;
-          animation: float1 10s ease-in-out infinite;
+          top: 35%;
+          left: -110%;
+          height: 100px;
+          transform: rotate(-6deg);
+          animation: drift1 13s ease-in-out infinite;
           animation-delay: -6s;
         }
         .ribbon-8 {
-          top: 30%;
-          left: 50%;
-          width: 130px;
-          height: 130px;
-          animation: float2 9s ease-in-out infinite;
+          top: 55%;
+          left: -90%;
+          height: 85px;
+          transform: rotate(4deg);
+          animation: drift2 9s ease-in-out infinite;
           animation-delay: -7s;
         }
         .ribbon-9 {
-          top: 85%;
-          right: 10%;
-          width: 110px;
-          height: 110px;
-          animation: float3 7s ease-in-out infinite;
+          top: 75%;
+          left: -170%;
+          height: 95px;
+          transform: rotate(-3deg);
+          animation: drift3 11s ease-in-out infinite;
           animation-delay: -2s;
         }
         .ribbon-10 {
-          top: 50%;
-          left: 35%;
-          width: 90px;
-          height: 90px;
-          animation: float1 6s ease-in-out infinite;
+          top: 90%;
+          left: -80%;
+          height: 70px;
+          transform: rotate(6deg);
+          animation: drift1 8s ease-in-out infinite;
           animation-delay: -4s;
         }
-        @keyframes float1 {
+        @keyframes drift1 {
           0%, 100% {
-            transform: translate(0, 0) scale(1);
-            opacity: 0.6;
-          }
-          50% {
-            transform: translate(30px, -20px) scale(1.1);
+            transform: translateX(0) translateY(0) rotate(-8deg);
             opacity: 0.9;
           }
-        }
-        @keyframes float2 {
-          0%, 100% {
-            transform: translate(0, 0) scale(1);
-            opacity: 0.5;
-          }
           50% {
-            transform: translate(-25px, 25px) scale(1.15);
+            transform: translateX(90%) translateY(15px) rotate(-3deg);
+            opacity: 1;
+          }
+        }
+        @keyframes drift2 {
+          0%, 100% {
+            transform: translateX(0) translateY(0) rotate(5deg);
             opacity: 0.85;
           }
+          50% {
+            transform: translateX(85%) translateY(-20px) rotate(10deg);
+            opacity: 1;
+          }
         }
-        @keyframes float3 {
+        @keyframes drift3 {
           0%, 100% {
-            transform: translate(0, 0) scale(1);
-            opacity: 0.55;
+            transform: translateX(0) translateY(0) rotate(-5deg);
+            opacity: 0.8;
           }
           50% {
-            transform: translate(20px, 15px) scale(1.05);
-            opacity: 0.8;
+            transform: translateX(80%) translateY(10px) rotate(0deg);
+            opacity: 1;
           }
         }
       `}</style>

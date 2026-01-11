@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import Image from "next/image"
+import { ENROLLMENT_CLOSED, getCheckoutUrl } from "@/lib/enrollment"
 
 const navLinks = [
   { label: "How it Works", href: "#how-it-works" },
@@ -50,10 +51,10 @@ export default function HomepageHeader() {
 
         {/* Join Now Button - Right */}
         <Link
-          href="/checkout-v2"
+          href={getCheckoutUrl()}
           className="h-10 px-6 bg-[#37322f] hover:bg-[#37322f]/90 text-white rounded-lg font-medium text-sm inline-flex items-center justify-center transition-all"
         >
-          Join Now
+          {ENROLLMENT_CLOSED ? 'Join Waitlist' : 'Join Now'}
         </Link>
       </div>
     </header>

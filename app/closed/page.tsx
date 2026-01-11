@@ -1,0 +1,364 @@
+'use client'
+
+import { useState } from 'react'
+import { toast } from 'sonner'
+import { Loader2 } from 'lucide-react'
+
+export default function ClosedPage() {
+  const [isLoading, setIsLoading] = useState(false)
+  const [isSubmitted, setIsSubmitted] = useState(false)
+  const [customerInfo, setCustomerInfo] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+  })
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+
+    const firstName = customerInfo.firstName.trim()
+    const lastName = customerInfo.lastName.trim()
+    const email = customerInfo.email.trim()
+
+    if (!firstName || !lastName || !email) {
+      toast.error('Please fill in all required fields')
+      return
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(email)) {
+      toast.error('Please enter a valid email address')
+      return
+    }
+
+    setIsLoading(true)
+
+    try {
+      const response = await fetch('https://hook.eu2.make.com/6yxyxeuqeowhk7st10oqqmofcezmu928', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          type: 'waitlist',
+          firstName,
+          lastName,
+          email,
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to submit')
+      }
+
+      setIsSubmitted(true)
+      toast.success('You\'re on the list!')
+    } catch (error) {
+      toast.error('Something went wrong. Please try again.')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  return (
+    <div className="min-h-screen bg-[#37322F] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+      {/* Animated flowing ribbons background */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="ribbon ribbon-1" />
+        <div className="ribbon ribbon-2" />
+        <div className="ribbon ribbon-3" />
+        <div className="ribbon ribbon-4" />
+        <div className="ribbon ribbon-5" />
+        <div className="ribbon ribbon-6" />
+      </div>
+
+      {/* Back link */}
+      <a href="/" className="absolute top-4 left-4 text-white/70 text-sm font-medium hover:text-white transition-colors z-10">
+        &larr; Back
+      </a>
+
+      {/* Card */}
+      <div className="w-full max-w-md lg:max-w-3xl bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl p-8 lg:p-12 relative z-10">
+        {isSubmitted ? (
+          <div className="max-w-xl mx-auto text-center">
+            {/* Logo */}
+            <div className="flex justify-center mb-8">
+              <img
+                src="https://sb.oracleboxing.com/logo/icon_dark.webp"
+                alt="Oracle Boxing"
+                className="w-10 h-auto"
+              />
+            </div>
+
+            {/* Success Message */}
+            <h1 className="text-3xl md:text-4xl font-normal leading-tight mb-6" style={{ fontFamily: 'ClashDisplay, sans-serif' }}>
+              <span className="text-[#9CABA8]">You're on the list!</span>
+            </h1>
+
+            <p className="text-[#605A57] text-sm md:text-base font-normal leading-relaxed mb-8">
+              We'll send you an email as soon as spots re-open. Keep an eye on your inbox.
+            </p>
+
+            <a
+              href="/"
+              className="inline-flex items-center justify-center h-12 px-6 rounded-lg font-medium text-base bg-[#37322F] hover:bg-[#37322f]/90 text-white transition-all"
+            >
+              Back to Home
+            </a>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit} className="max-w-xl mx-auto">
+            {/* Logo */}
+            <div className="flex justify-start mb-8">
+              <img
+                src="https://sb.oracleboxing.com/logo/icon_dark.webp"
+                alt="Oracle Boxing"
+                className="w-10 h-auto"
+              />
+            </div>
+
+            {/* Heading */}
+            <h1 className="text-left text-3xl md:text-4xl font-normal leading-tight mb-6" style={{ fontFamily: 'ClashDisplay, sans-serif' }}>
+              <span className="text-[#37322F]">Enrolment</span><br />
+              <span className="text-[#9CABA8]">Currently Closed</span>
+            </h1>
+
+            {/* Description */}
+            <p className="text-left text-[#605A57] text-sm md:text-base font-normal leading-relaxed mb-8">
+              Please enter your name and email address so we can notify you when spots re-open again. Should be in a couple of weeks or so.
+            </p>
+
+            {/* Name Inputs - Side by Side */}
+            <div className="grid grid-cols-2 gap-4 mb-4">
+              <div>
+                <label htmlFor="firstName" className="block text-sm font-medium text-[#49423D] mb-2">
+                  First Name *
+                </label>
+                <input
+                  type="text"
+                  id="firstName"
+                  value={customerInfo.firstName}
+                  onChange={(e) => setCustomerInfo({ ...customerInfo, firstName: e.target.value })}
+                  className="w-full px-5 py-3 bg-white border border-[rgba(55,50,47,0.20)] rounded-lg focus:ring-2 focus:ring-[#37322F] focus:border-transparent transition-all"
+                  placeholder="John"
+                  required
+                  disabled={isLoading}
+                  style={{ cursor: 'text' }}
+                />
+              </div>
+              <div>
+                <label htmlFor="lastName" className="block text-sm font-medium text-[#49423D] mb-2">
+                  Last Name *
+                </label>
+                <input
+                  type="text"
+                  id="lastName"
+                  value={customerInfo.lastName}
+                  onChange={(e) => setCustomerInfo({ ...customerInfo, lastName: e.target.value })}
+                  className="w-full px-5 py-3 bg-white border border-[rgba(55,50,47,0.20)] rounded-lg focus:ring-2 focus:ring-[#37322F] focus:border-transparent transition-all"
+                  placeholder="Doe"
+                  required
+                  disabled={isLoading}
+                  style={{ cursor: 'text' }}
+                />
+              </div>
+            </div>
+
+            {/* Email Input */}
+            <div className="mb-8">
+              <label htmlFor="email" className="block text-sm font-medium text-[#49423D] mb-2">
+                Email *
+              </label>
+              <input
+                type="email"
+                id="email"
+                value={customerInfo.email}
+                onChange={(e) => setCustomerInfo({ ...customerInfo, email: e.target.value })}
+                className="w-full px-5 py-3 bg-white border border-[rgba(55,50,47,0.20)] rounded-lg focus:ring-2 focus:ring-[#37322F] focus:border-transparent transition-all"
+                placeholder="your@email.com"
+                required
+                disabled={isLoading}
+                style={{ cursor: 'text' }}
+              />
+            </div>
+
+            {/* Submit Button */}
+            <button
+              type="submit"
+              disabled={isLoading}
+              className={`w-full h-12 px-6 rounded-lg font-medium text-base shadow-[0px_0px_0px_2.5px_rgba(255,255,255,0.08)_inset] transition-all duration-200 flex items-center justify-center ${
+                isLoading
+                  ? 'bg-[#847971] cursor-not-allowed'
+                  : 'bg-[#37322F] hover:bg-[#37322f]/90 cursor-pointer'
+              } text-white`}
+            >
+              {isLoading ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin mr-2" />
+                  Processing...
+                </>
+              ) : (
+                <>
+                  <span className="font-medium">Notify Me</span>
+                  <span className="text-white/40 mx-3">|</span>
+                  <span className="w-5 h-5 overflow-hidden relative">
+                    <span className="arrow-container flex items-center">
+                      <svg
+                        width="20"
+                        height="20"
+                        viewBox="0 0 20 20"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="flex-shrink-0"
+                      >
+                        <path
+                          d="M4 10H16M16 10L11 5M16 10L11 15"
+                          stroke="white"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                      <svg
+                        width="20"
+                        height="20"
+                        viewBox="0 0 20 20"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="flex-shrink-0 ml-1"
+                      >
+                        <path
+                          d="M4 10H16M16 10L11 5M16 10L11 15"
+                          stroke="white"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    </span>
+                  </span>
+                </>
+              )}
+            </button>
+
+            {/* Email consent */}
+            <p className="text-left text-[#847971] text-xs mt-4">
+              We'll only email you when enrolment re-opens.
+            </p>
+          </form>
+        )}
+      </div>
+
+      <style jsx>{`
+        .ribbon {
+          position: absolute;
+          width: 200%;
+          height: 150px;
+          background: linear-gradient(90deg,
+            transparent 0%,
+            rgba(255,252,245,0.15) 20%,
+            rgba(255,252,245,0.3) 50%,
+            rgba(255,252,245,0.15) 80%,
+            transparent 100%
+          );
+          border-radius: 50%;
+          filter: blur(40px);
+          box-shadow:
+            0 0 80px 40px rgba(255, 252, 245, 0.25),
+            0 0 120px 60px rgba(255, 252, 245, 0.15),
+            0 0 180px 90px rgba(255, 252, 245, 0.08);
+        }
+        .ribbon-1 {
+          top: 5%;
+          left: -50%;
+          transform: rotate(-15deg);
+          animation: drift1 12s ease-in-out infinite;
+        }
+        .ribbon-2 {
+          top: 25%;
+          left: -30%;
+          height: 200px;
+          transform: rotate(10deg);
+          animation: drift2 15s ease-in-out infinite;
+          animation-delay: -3s;
+        }
+        .ribbon-3 {
+          top: 50%;
+          left: -40%;
+          height: 180px;
+          transform: rotate(-8deg);
+          animation: drift3 11s ease-in-out infinite;
+          animation-delay: -5s;
+        }
+        .ribbon-4 {
+          top: 70%;
+          left: -60%;
+          height: 160px;
+          transform: rotate(20deg);
+          animation: drift1 14s ease-in-out infinite;
+          animation-delay: -8s;
+        }
+        .ribbon-5 {
+          top: 85%;
+          left: -20%;
+          height: 140px;
+          transform: rotate(-12deg);
+          animation: drift2 12s ease-in-out infinite;
+          animation-delay: -4s;
+        }
+        .ribbon-6 {
+          top: 40%;
+          left: -50%;
+          height: 220px;
+          transform: rotate(5deg);
+          animation: drift3 16s ease-in-out infinite;
+          animation-delay: -10s;
+        }
+        @keyframes drift1 {
+          0%, 100% {
+            transform: translateX(0) translateY(0) rotate(-15deg);
+            opacity: 0.8;
+          }
+          50% {
+            transform: translateX(60vw) translateY(30px) rotate(-10deg);
+            opacity: 1;
+          }
+        }
+        @keyframes drift2 {
+          0%, 100% {
+            transform: translateX(0) translateY(0) rotate(10deg);
+            opacity: 0.75;
+          }
+          50% {
+            transform: translateX(50vw) translateY(-40px) rotate(15deg);
+            opacity: 1;
+          }
+        }
+        @keyframes drift3 {
+          0%, 100% {
+            transform: translateX(0) translateY(0) rotate(-8deg);
+            opacity: 0.7;
+          }
+          50% {
+            transform: translateX(55vw) translateY(20px) rotate(-5deg);
+            opacity: 0.95;
+          }
+        }
+        .arrow-container {
+          transition: transform 0.3s ease;
+        }
+        button:hover .arrow-container {
+          animation: scrollArrow 0.3s ease forwards;
+        }
+        @keyframes scrollArrow {
+          0% {
+            transform: translateX(-24px);
+          }
+          100% {
+            transform: translateX(0);
+          }
+        }
+      `}</style>
+    </div>
+  )
+}

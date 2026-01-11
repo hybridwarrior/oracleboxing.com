@@ -106,7 +106,7 @@ export default function PricingSection() {
       </div>
 
       {/* Content with solid background */}
-      <div className="mx-0 sm:mx-4 md:mx-8 lg:mx-12 my-0 self-stretch relative bg-[#FFFCF5] sm:border border-[rgba(55,50,47,0.12)] py-12 sm:py-16 md:py-24 flex flex-col justify-center items-center gap-8 sm:gap-10 md:gap-12 z-10">
+      <div className="mx-0 sm:mx-4 md:mx-8 lg:mx-12 my-0 self-stretch relative bg-white sm:border border-[rgba(55,50,47,0.12)] py-12 sm:py-16 md:py-24 flex flex-col justify-center items-center gap-8 sm:gap-10 md:gap-12 z-10">
         {/* Header */}
         <div className="w-full max-w-[500px] text-center px-4 flex flex-col gap-2">
           <p className="text-[#37322F] text-xl sm:text-2xl md:text-3xl font-normal font-serif">
@@ -153,7 +153,7 @@ export default function PricingSection() {
               {/* CTA Button */}
               <div className="flex flex-col items-center gap-3">
                 {ENROLLMENT_CLOSED ? (
-                  <div className="w-full max-w-[400px] px-8 py-4 sm:py-5 bg-[#6B6560] rounded-full flex flex-col justify-center items-center cursor-not-allowed opacity-60">
+                  <div className="w-full max-w-[400px] px-8 py-4 sm:py-5 bg-[#6B6560] rounded-lg flex flex-col justify-center items-center cursor-not-allowed opacity-60">
                     <span className="text-[#A39E9A] text-base sm:text-lg font-semibold font-sans">
                       Join the Challenge
                     </span>
@@ -163,9 +163,9 @@ export default function PricingSection() {
                   </div>
                 ) : (
                   <Link
-                    href="/checkout?product=21dc-entry"
+                    href="/checkout-v2"
                     onClick={() => handleCheckoutClick('21dc-entry', '21-Day Challenge - Entry', 'pricing-card')}
-                    className="w-full max-w-[400px] px-8 py-4 sm:py-5 bg-[#FBFAF9] hover:bg-white transition-colors rounded-full flex justify-center items-center shadow-[0px_2px_4px_rgba(55,50,47,0.12)]"
+                    className="w-full max-w-[400px] px-8 py-4 sm:py-5 bg-[#FBFAF9] hover:bg-white transition-colors rounded-lg flex justify-center items-center shadow-[0px_2px_4px_rgba(55,50,47,0.12)]"
                   >
                     <span className="text-[#37322F] text-base sm:text-lg font-semibold font-sans">
                       Join the Challenge

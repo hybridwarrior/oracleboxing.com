@@ -132,7 +132,7 @@ export default function ChallengeFAQSection() {
   )
 
   return (
-    <div className="w-full border-b border-[rgba(55,50,47,0.12)] flex flex-col justify-center items-center bg-[#FFFCF5]">
+    <div id="faq" className="w-full border-b border-[rgba(55,50,47,0.12)] flex flex-col justify-center items-center bg-white scroll-mt-16">
       {/* FAQ Content */}
       <div className="self-stretch flex justify-center items-start">
         {/* Left decorative pattern */}
@@ -147,10 +147,10 @@ export default function ChallengeFAQSection() {
           </div>
         </div>
 
-        <div className="flex-1 min-w-0 sm:border-l sm:border-r border-[rgba(55,50,47,0.12)] bg-[#FFFCF5]">
+        <div className="flex-1 min-w-0 sm:border-l sm:border-r border-[rgba(55,50,47,0.12)] bg-white">
           <div className="max-w-2xl mx-auto px-4 sm:px-6 md:px-8 py-8 sm:py-12 md:py-16">
             {/* Title */}
-            <h2 className="text-center text-[#49423D] text-xl sm:text-2xl md:text-3xl lg:text-4xl font-normal leading-tight font-serif tracking-tight mb-8 sm:mb-10">
+            <h2 className="text-center text-[#49423D] text-xl sm:text-2xl md:text-3xl lg:text-4xl font-normal leading-tight tracking-tight mb-8 sm:mb-10" style={{ fontFamily: 'ClashDisplay, sans-serif' }}>
               Frequently Asked Questions
             </h2>
             {/* FAQ 1 - Live Classes */}
@@ -236,11 +236,27 @@ export default function ChallengeFAQSection() {
               </div>
             </FAQItem>
 
-            {/* FAQ 3 - 1-on-1 Coaching */}
+            {/* FAQ 3 - Membership Cost */}
             <FAQItem
-              question="Can I get 1-on-1 coaching?"
+              question="How much does the full membership cost after I finish?"
               isOpen={openIndex === 2}
               onToggle={() => setOpenIndex(openIndex === 2 ? null : 2)}
+            >
+              <div className="space-y-3">
+                <p>
+                  The price of a membership is less than half of what you paid for the challenge, and we offer monthly or annual options.
+                </p>
+                <p>
+                  <span className="text-[#37322F] font-medium">But it's invite-only.</span> You'll need to complete the challenge and be accepted before you can join.
+                </p>
+              </div>
+            </FAQItem>
+
+            {/* FAQ 4 - 1-on-1 Coaching */}
+            <FAQItem
+              question="Can I get 1-on-1 coaching?"
+              isOpen={openIndex === 3}
+              onToggle={() => setOpenIndex(openIndex === 3 ? null : 3)}
             >
               <div className="space-y-3">
                 <p>

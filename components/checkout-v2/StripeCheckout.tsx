@@ -404,9 +404,10 @@ export function StripeCheckout({
               <div className={`absolute inset-0 overflow-hidden pointer-events-none transition-opacity duration-300 ${
                 isSelected ? 'opacity-100' : 'opacity-0'
               }`}>
-                <div className="ribbon ribbon-1" />
-                <div className="ribbon ribbon-2" />
-                <div className="ribbon ribbon-3" />
+                <div className="addon-ribbon addon-ribbon-1" />
+                <div className="addon-ribbon addon-ribbon-2" />
+                <div className="addon-ribbon addon-ribbon-3" />
+                <div className="addon-ribbon addon-ribbon-4" />
               </div>
 
               {/* Top row: Title + Price/Checkbox */}
@@ -993,6 +994,95 @@ export function StripeCheckout({
           }
           50% {
             transform: translateX(75%) translateY(8px) rotate(-5deg);
+            opacity: 0.95;
+          }
+        }
+        /* Add-on specific ribbons - more concentrated and visible in smaller containers */
+        .addon-ribbon {
+          position: absolute;
+          width: 120%;
+          height: 50px;
+          background: linear-gradient(90deg,
+            transparent 0%,
+            rgba(255,252,245,0.2) 15%,
+            rgba(255,252,245,0.5) 50%,
+            rgba(255,252,245,0.2) 85%,
+            transparent 100%
+          );
+          border-radius: 50%;
+          filter: blur(12px);
+          box-shadow:
+            0 0 30px 15px rgba(255, 252, 245, 0.3),
+            0 0 50px 25px rgba(255, 252, 245, 0.15);
+        }
+        .addon-ribbon-1 {
+          top: -20%;
+          left: -10%;
+          transform: rotate(-8deg);
+          animation: addonDrift1 6s ease-in-out infinite;
+        }
+        .addon-ribbon-2 {
+          top: 30%;
+          left: 0%;
+          height: 60px;
+          transform: rotate(5deg);
+          animation: addonDrift2 8s ease-in-out infinite;
+          animation-delay: -1.5s;
+        }
+        .addon-ribbon-3 {
+          top: 70%;
+          left: -5%;
+          height: 45px;
+          transform: rotate(-5deg);
+          animation: addonDrift3 7s ease-in-out infinite;
+          animation-delay: -3s;
+        }
+        .addon-ribbon-4 {
+          top: 50%;
+          left: 20%;
+          height: 40px;
+          width: 100%;
+          transform: rotate(10deg);
+          animation: addonDrift4 9s ease-in-out infinite;
+          animation-delay: -4s;
+        }
+        @keyframes addonDrift1 {
+          0%, 100% {
+            transform: translateX(0) translateY(0) rotate(-8deg);
+            opacity: 0.9;
+          }
+          50% {
+            transform: translateX(60%) translateY(5px) rotate(-3deg);
+            opacity: 1;
+          }
+        }
+        @keyframes addonDrift2 {
+          0%, 100% {
+            transform: translateX(0) translateY(0) rotate(5deg);
+            opacity: 0.85;
+          }
+          50% {
+            transform: translateX(50%) translateY(-8px) rotate(10deg);
+            opacity: 1;
+          }
+        }
+        @keyframes addonDrift3 {
+          0%, 100% {
+            transform: translateX(0) translateY(0) rotate(-5deg);
+            opacity: 0.8;
+          }
+          50% {
+            transform: translateX(55%) translateY(5px) rotate(0deg);
+            opacity: 1;
+          }
+        }
+        @keyframes addonDrift4 {
+          0%, 100% {
+            transform: translateX(0) translateY(0) rotate(10deg);
+            opacity: 0.75;
+          }
+          50% {
+            transform: translateX(40%) translateY(-5px) rotate(15deg);
             opacity: 0.95;
           }
         }

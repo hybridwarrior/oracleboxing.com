@@ -4,6 +4,8 @@ import { useState, useEffect } from "react"
 import { ArrowButton } from "@/components/ui/arrow-button"
 import { CoursesIllustration, CoachingIllustration, CommunityIllustration } from "./feature-illustrations"
 import { TransformationShowcase } from "./TransformationShowcase"
+import { MemberQuotes } from "./MemberQuotes"
+import { ENROLLMENT_CLOSED, getCheckoutUrl } from "@/lib/enrollment"
 
 export function HeroSection() {
   const [activeCard, setActiveCard] = useState(0)
@@ -13,14 +15,17 @@ export function HeroSection() {
   const cards = [
     {
       title: "Courses",
+      description: "Learn the fundamentals",
       illustration: <CoursesIllustration />,
     },
     {
       title: "Coaching",
+      description: "Refine your technique",
       illustration: <CoachingIllustration />,
     },
     {
       title: "Community",
+      description: "Stay accountable",
       illustration: <CommunityIllustration />,
     },
   ]
@@ -63,7 +68,7 @@ export function HeroSection() {
 
           {/* CTA Button */}
           <div className="flex justify-center">
-            <ArrowButton href="/checkout-v2">Start Now</ArrowButton>
+            <ArrowButton href={getCheckoutUrl()}>{ENROLLMENT_CLOSED ? 'Join the Waitlist' : 'Start Now'}</ArrowButton>
           </div>
         </div>
       </div>
@@ -71,51 +76,52 @@ export function HeroSection() {
       {/* Transformation Showcase - Full Width */}
       <TransformationShowcase />
 
-      {/* Text Content - Constrained (Courses/Coaching/Community section) */}
-      <div className="max-w-[1060px] mx-auto px-4">
-        <div className="flex flex-col items-center gap-8">
-          {/* Section Title */}
-          <div className="flex flex-col items-center gap-3 mt-4">
-            <h2 className="text-center text-[#37322f] text-2xl sm:text-3xl md:text-4xl font-normal" style={{ fontFamily: 'ClashDisplay, sans-serif' }}>
-              How it Works
-            </h2>
-            <p className="text-center text-[#37322f]/70 text-base md:text-lg max-w-[600px]">
-              Courses to learn the fundamentals. Live coaching to refine your technique. A community to keep you accountable.
-            </p>
-          </div>
+      {/* Member Quotes - Graffiti Style */}
+      <MemberQuotes />
 
-          {/* Tabs Row */}
-          <div className="w-full flex justify-center items-center gap-2 md:gap-4">
-            {cards.map((card, index) => {
-              const isActive = index === activeCard
+      {/* Tabs Row - Stacked on mobile, horizontal on desktop */}
+      <div className="max-w-[900px] mx-auto px-4">
+        <div className="flex flex-col md:flex-row w-full">
+          {cards.map((card, index) => {
+            const isActive = index === activeCard
 
-              return (
-                <div
-                  key={index}
-                  onClick={() => handleCardClick(index)}
-                  className={`flex-1 max-w-[180px] overflow-hidden flex flex-col justify-start items-start transition-all duration-300 cursor-pointer rounded-lg ${
-                    isActive
-                      ? "bg-white shadow-[0px_0px_0px_0.75px_#E0DEDB_inset]"
-                      : "border border-[rgba(2,6,23,0.08)] hover:border-[rgba(2,6,23,0.15)]"
-                  }`}
-                >
+            return (
+              <div
+                key={index}
+                onClick={() => handleCardClick(index)}
+                className="flex-1 overflow-hidden flex flex-col cursor-pointer transition-all duration-300 bg-transparent"
+              >
+                {/* Individual progress bar for each tab */}
+                <div className="w-full h-[3px] bg-[#37322F]/20 relative overflow-hidden">
                   <div
-                    className={`w-full h-0.5 bg-[rgba(50,45,43,0.08)] overflow-hidden ${isActive && !isPaused ? "opacity-100" : "opacity-0"}`}
-                  >
-                    <div
-                      key={animationKey}
-                      className="h-0.5 bg-[#322D2B] animate-[progressBar_5s_linear_forwards] will-change-transform"
-                    />
+                    key={`${animationKey}-${index}`}
+                    className="absolute inset-0 bg-[#37322F] will-change-transform origin-left"
+                    style={{
+                      transform: index === activeCard
+                        ? (isPaused ? 'scaleX(1)' : undefined)
+                        : 'scaleX(0)',
+                      animation: index === activeCard && !isPaused
+                        ? 'progressBarScale 5s linear forwards'
+                        : 'none',
+                    }}
+                  />
+                </div>
+                {/* Content */}
+                <div className="px-3 py-4 md:px-6 md:py-5 w-full">
+                  <div className={`text-center text-sm md:text-base font-semibold leading-tight font-sans transition-colors duration-300 ${
+                    isActive ? 'text-[#37322F]' : 'text-[#49423D]/60'
+                  }`}>
+                    {card.title}
                   </div>
-                  <div className="px-4 py-3 w-full">
-                    <div className="text-center text-[#49423D] text-sm md:text-base font-semibold leading-6 font-sans">
-                      {card.title}
-                    </div>
+                  <div className={`text-center text-xs md:text-sm mt-1 leading-tight transition-colors duration-300 ${
+                    isActive ? 'text-[#49423D]/80' : 'text-[#49423D]/40'
+                  }`}>
+                    {card.description}
                   </div>
                 </div>
-              )
-            })}
-          </div>
+              </div>
+            )
+          })}
         </div>
       </div>
 
@@ -138,12 +144,12 @@ export function HeroSection() {
       </div>
 
       <style jsx>{`
-        @keyframes progressBar {
+        @keyframes progressBarScale {
           0% {
-            transform: translateX(-100%);
+            transform: scaleX(0);
           }
           100% {
-            transform: translateX(0%);
+            transform: scaleX(1);
           }
         }
         @keyframes popIn {

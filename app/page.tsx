@@ -7,6 +7,9 @@ import TeamSection from "@/components/TeamSection"
 import HomepageHeader from "@/components/HomepageHeader"
 import TransformationDetailsCarousel from "@/components/TransformationDetailsCarousel"
 import { TestimonialsSection } from "@/components/TestimonialPair"
+import { ScrollQuote } from "@/components/ScrollQuote"
+import PricingSection from "@/components/PricingSection"
+import { FadeInOnScroll } from "@/components/FadeInOnScroll"
 
 const testimonialData = {
   krisSaville: {
@@ -79,23 +82,40 @@ export default function Home() {
         <div className="hidden sm:block sm:w-4 md:w-8 lg:w-12 flex-shrink-0 border-r border-[rgba(55,50,47,0.12)]"></div>
         <main className="flex-1 min-w-0">
         <HeroSection />
-        <TransformationDetailsCarousel />
-        <ChallengeDetailsSection />
-        <WhoIsForSection />
-        <TeamSection />
-        <TestimonialsSection testimonials={[
-          testimonialData.krisSaville,
-          testimonialData.krisQually,
-          testimonialData.brunoMartins,
-          testimonialData.antonPolyakov,
-          testimonialData.meiyanC,
-          testimonialData.mikeForouzanfar,
-          testimonialData.leoCarrillo,
-          testimonialData.thomasHaeusle,
-          testimonialData.rodKeher,
-          testimonialData.pascalPerau,
-        ]} />
-        <ChallengeFAQSection />
+        <FadeInOnScroll>
+          <TransformationDetailsCarousel />
+        </FadeInOnScroll>
+        <FadeInOnScroll>
+          <ChallengeDetailsSection />
+        </FadeInOnScroll>
+        <ScrollQuote quote={`Boxing is allowing me to
+reclaim what I lost.`} />
+        <FadeInOnScroll>
+          <WhoIsForSection />
+        </FadeInOnScroll>
+        <FadeInOnScroll>
+          <TeamSection />
+        </FadeInOnScroll>
+        <FadeInOnScroll>
+          <TestimonialsSection testimonials={[
+            testimonialData.krisSaville,
+            testimonialData.krisQually,
+            testimonialData.brunoMartins,
+            testimonialData.antonPolyakov,
+            testimonialData.meiyanC,
+            testimonialData.mikeForouzanfar,
+            testimonialData.leoCarrillo,
+            testimonialData.thomasHaeusle,
+            testimonialData.rodKeher,
+            testimonialData.pascalPerau,
+          ]} />
+        </FadeInOnScroll>
+        <FadeInOnScroll>
+          <PricingSection />
+        </FadeInOnScroll>
+        <FadeInOnScroll>
+          <ChallengeFAQSection />
+        </FadeInOnScroll>
         <FooterSection />
         </main>
         <div className="hidden sm:block sm:w-4 md:w-8 lg:w-12 flex-shrink-0 border-l border-[rgba(55,50,47,0.12)]"></div>
