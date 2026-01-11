@@ -7,7 +7,7 @@ import { useAnalytics } from "@/hooks/useAnalytics"
 import { generateEventId } from "@/lib/tracking-cookies"
 
 // Temporary flag to disable enrollment
-const ENROLLMENT_CLOSED = false
+const ENROLLMENT_CLOSED = true
 
 export default function PricingSection() {
   const { currency, isLoading } = useCurrency()
