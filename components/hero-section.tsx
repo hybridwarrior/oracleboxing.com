@@ -50,10 +50,10 @@ export function HeroSection() {
           {/* Hero Content */}
           <div className="max-w-[937px] flex flex-col items-center gap-3">
             <div className="flex flex-col items-center gap-6">
-              <h1 className="max-w-[900px] text-center text-[#37322f] text-4xl md:text-[64px] font-normal leading-tight md:leading-[1.15] font-serif">
+              <h1 className="max-w-[900px] text-center text-[#37322f] text-4xl md:text-[64px] font-normal leading-tight md:leading-[1.15]" style={{ fontFamily: 'ClashDisplay, sans-serif' }}>
                 Learn
                 <br />
-                Better Boxing
+                Boxing Properly
               </h1>
               <p className="max-w-[700px] text-center text-[#37322f]/80 text-lg md:text-xl font-medium leading-7">
                 Oracle Boxing is the virtual school for beginners in the sweet science.
@@ -74,8 +74,18 @@ export function HeroSection() {
       {/* Text Content - Constrained (Courses/Coaching/Community section) */}
       <div className="max-w-[1060px] mx-auto px-4">
         <div className="flex flex-col items-center gap-8">
+          {/* Section Title */}
+          <div className="flex flex-col items-center gap-3 mt-4">
+            <h2 className="text-center text-[#37322f] text-2xl sm:text-3xl md:text-4xl font-normal" style={{ fontFamily: 'ClashDisplay, sans-serif' }}>
+              How it Works
+            </h2>
+            <p className="text-center text-[#37322f]/70 text-base md:text-lg max-w-[600px]">
+              Courses to learn the fundamentals. Live coaching to refine your technique. A community to keep you accountable.
+            </p>
+          </div>
+
           {/* Tabs Row */}
-          <div className="w-full flex justify-center items-center gap-2 md:gap-4 mt-4">
+          <div className="w-full flex justify-center items-center gap-2 md:gap-4">
             {cards.map((card, index) => {
               const isActive = index === activeCard
 

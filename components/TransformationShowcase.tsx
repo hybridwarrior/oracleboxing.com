@@ -2,20 +2,31 @@
 
 export function TransformationShowcase() {
   const benefits = [
-    "Build real boxing fundamentals from day one",
-    "Move with confidence and proper technique",
-    "Avoid bad habits that hold most beginners back",
-    "Train smarter with structured progression",
-    "See visible improvement in weeks, not years",
+    {
+      title: "Self-Mastery",
+      description: "Watch yourself improve every day and build real confidence."
+    },
+    {
+      title: "Self-Defence",
+      description: "Know you can protect yourself if you ever need to."
+    },
+    {
+      title: "Get In Shape",
+      description: "Burn fat, build muscle, and feel stronger than ever."
+    },
+    {
+      title: "Mental Toughness",
+      description: "Push past your comfort zone and grow resilience."
+    },
   ]
 
   return (
-    <section className="w-full py-12 md:py-16 px-4 md:px-0">
+    <section className="w-full py-12 md:py-16 px-2 md:px-0">
       {/* Outer container with thick border pattern */}
       <div className="w-full max-w-[1800px] mx-auto">
         <div
           className="relative overflow-hidden rounded-2xl"
-          style={{ padding: '20px' }}
+          style={{ padding: '8px' }}
         >
           {/* Pattern border background */}
           <div className="absolute inset-0 bg-[#37322F] overflow-hidden rounded-2xl">
@@ -33,36 +44,32 @@ export function TransformationShowcase() {
           </div>
 
           {/* Inner white card */}
-          <div className="relative bg-white p-4 md:p-6 lg:p-8 rounded-xl">
+          <div className="relative bg-white p-3 md:p-4 lg:p-5 rounded-xl">
             {/* Desktop layout */}
-            <div className="hidden lg:grid lg:grid-cols-10 gap-4 lg:gap-6 items-center">
+            <div className="hidden lg:grid lg:grid-cols-10 gap-4 lg:gap-6 items-stretch">
               {/* Left column - Benefits (spans 2 cols) */}
-              <div className="flex flex-col gap-4 lg:col-span-2 lg:pl-6 lg:pr-4">
-                <h3 className="text-[#37322F] text-xl md:text-2xl font-medium mb-2" style={{ fontFamily: 'ClashDisplay, sans-serif' }}>
-                  Why Learn Boxing Properly?
-                </h3>
-                <ul className="flex flex-col gap-3">
-                  {benefits.map((benefit, index) => (
-                    <li key={index} className="flex items-start gap-3">
-                      <div className="flex-shrink-0 w-5 h-5 rounded-full bg-[#37322F] flex items-center justify-center mt-0.5">
-                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M2.5 6L5 8.5L9.5 4" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                        </svg>
-                      </div>
-                      <span className="text-[#49423D] text-sm md:text-base leading-relaxed">
-                        {benefit}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
+              <div className="flex flex-col lg:col-span-2 lg:pl-4 lg:pr-4">
+                {benefits.map((benefit, index) => (
+                  <div key={index} className={`py-4 ${index !== benefits.length - 1 ? 'border-b border-[#37322F]/15' : ''}`}>
+                    <h4
+                      className="text-[#37322F] text-xl font-semibold mb-1"
+                      style={{ fontFamily: 'ClashDisplay, sans-serif' }}
+                    >
+                      {benefit.title}
+                    </h4>
+                    <p className="text-[#49423D]/80 text-sm leading-relaxed">
+                      {benefit.description}
+                    </p>
+                  </div>
+                ))}
               </div>
 
-              {/* Kris transformation - Middle columns (spans 4 cols) */}
+              {/* Shalyn transformation - Middle columns (spans 4 cols) */}
               <div className="grid grid-cols-2 gap-0 lg:col-span-4">
                 {/* Before Video */}
                 <div className="relative overflow-hidden aspect-[9/16] bg-[#37322F] rounded-l-lg">
                   <video
-                    src="https://sb.oracleboxing.com/kris_before.mp4"
+                    src="https://sb.oracleboxing.com/transfo-v2/shalyn_before.webm"
                     autoPlay
                     muted
                     loop
@@ -80,7 +87,7 @@ export function TransformationShowcase() {
                 {/* After Video */}
                 <div className="relative overflow-hidden aspect-[9/16] bg-[#37322F] rounded-r-lg">
                   <video
-                    src="https://sb.oracleboxing.com/kris_after.mp4"
+                    src="https://sb.oracleboxing.com/transfo-v2/shalyn_after.webm"
                     autoPlay
                     muted
                     loop
@@ -96,12 +103,12 @@ export function TransformationShowcase() {
                 </div>
               </div>
 
-              {/* Shalyn transformation - Right columns (spans 4 cols) */}
+              {/* Keli transformation - Right columns (spans 4 cols) */}
               <div className="grid grid-cols-2 gap-0 lg:col-span-4">
                 {/* Before Video */}
                 <div className="relative overflow-hidden aspect-[9/16] bg-[#37322F] rounded-l-lg">
                   <video
-                    src="https://sb.oracleboxing.com/transfo-v2/sha-lyn2.mp4"
+                    src="https://sb.oracleboxing.com/transfo-v2/keli_before.webm"
                     autoPlay
                     muted
                     loop
@@ -119,7 +126,7 @@ export function TransformationShowcase() {
                 {/* After Video */}
                 <div className="relative overflow-hidden aspect-[9/16] bg-[#37322F] rounded-r-lg">
                   <video
-                    src="https://sb.oracleboxing.com/transfo-v2/sha-lyn1.mp4"
+                    src="https://sb.oracleboxing.com/transfo-v2/keli_after.webm"
                     autoPlay
                     muted
                     loop
@@ -136,108 +143,101 @@ export function TransformationShowcase() {
               </div>
             </div>
 
-            {/* Mobile layout - Videos first, then text */}
-            <div className="lg:hidden flex flex-col gap-6">
-              {/* Videos row */}
-              <div className="grid grid-cols-2 gap-4">
-                {/* Kris transformation */}
-                <div className="grid grid-cols-2 gap-0">
-                  {/* Before Video */}
-                  <div className="relative overflow-hidden aspect-[9/16] bg-[#37322F] rounded-l-lg">
-                    <video
-                      src="https://sb.oracleboxing.com/kris_before.mp4"
-                      autoPlay
-                      muted
-                      loop
-                      playsInline
-                      className="absolute inset-0 w-[120%] h-full object-cover left-1/2 -translate-x-1/2"
-                    />
-                    {/* BEFORE label - top left */}
-                    <div className="absolute top-2 left-2 bg-[#37322F]/80 backdrop-blur-sm px-2 py-1 rounded-md">
-                      <span className="text-white text-[10px] font-semibold tracking-wide">
-                        BEFORE
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* After Video */}
-                  <div className="relative overflow-hidden aspect-[9/16] bg-[#37322F] rounded-r-lg">
-                    <video
-                      src="https://sb.oracleboxing.com/kris_after.mp4"
-                      autoPlay
-                      muted
-                      loop
-                      playsInline
-                      className="absolute inset-0 w-[120%] h-full object-cover left-1/2 -translate-x-1/2"
-                    />
-                    {/* AFTER label - top right */}
-                    <div className="absolute top-2 right-2 bg-[#37322F]/80 backdrop-blur-sm px-2 py-1 rounded-md">
-                      <span className="text-white text-[10px] font-semibold tracking-wide">
-                        AFTER
-                      </span>
-                    </div>
+            {/* Mobile layout - Videos stacked, then text */}
+            <div className="lg:hidden flex flex-col gap-4">
+              {/* Shalyn transformation - on top */}
+              <div className="grid grid-cols-2 gap-0">
+                {/* Before Video */}
+                <div className="relative overflow-hidden aspect-[9/16] bg-[#37322F] rounded-l-lg">
+                  <video
+                    src="https://sb.oracleboxing.com/transfo-v2/shalyn_before.webm"
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    className="absolute inset-0 w-[120%] h-full object-cover left-1/2 -translate-x-1/2"
+                  />
+                  {/* BEFORE label - top left */}
+                  <div className="absolute top-2 left-2 bg-[#37322F]/80 backdrop-blur-sm px-2 py-1 rounded-md">
+                    <span className="text-white text-[10px] font-semibold tracking-wide">
+                      BEFORE
+                    </span>
                   </div>
                 </div>
 
-                {/* Shalyn transformation */}
-                <div className="grid grid-cols-2 gap-0">
-                  {/* Before Video */}
-                  <div className="relative overflow-hidden aspect-[9/16] bg-[#37322F] rounded-l-lg">
-                    <video
-                      src="https://sb.oracleboxing.com/transfo-v2/sha-lyn2.mp4"
-                      autoPlay
-                      muted
-                      loop
-                      playsInline
-                      className="absolute inset-0 w-[120%] h-full object-cover left-1/2 -translate-x-1/2"
-                    />
-                    {/* BEFORE label - top left */}
-                    <div className="absolute top-2 left-2 bg-[#37322F]/80 backdrop-blur-sm px-2 py-1 rounded-md">
-                      <span className="text-white text-[10px] font-semibold tracking-wide">
-                        BEFORE
-                      </span>
-                    </div>
+                {/* After Video */}
+                <div className="relative overflow-hidden aspect-[9/16] bg-[#37322F] rounded-r-lg">
+                  <video
+                    src="https://sb.oracleboxing.com/transfo-v2/shalyn_after.webm"
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    className="absolute inset-0 w-[120%] h-full object-cover left-1/2 -translate-x-1/2"
+                  />
+                  {/* AFTER label - top right */}
+                  <div className="absolute top-2 right-2 bg-[#37322F]/80 backdrop-blur-sm px-2 py-1 rounded-md">
+                    <span className="text-white text-[10px] font-semibold tracking-wide">
+                      AFTER
+                    </span>
                   </div>
+                </div>
+              </div>
 
-                  {/* After Video */}
-                  <div className="relative overflow-hidden aspect-[9/16] bg-[#37322F] rounded-r-lg">
-                    <video
-                      src="https://sb.oracleboxing.com/transfo-v2/sha-lyn1.mp4"
-                      autoPlay
-                      muted
-                      loop
-                      playsInline
-                      className="absolute inset-0 w-[120%] h-full object-cover left-1/2 -translate-x-1/2"
-                    />
-                    {/* AFTER label - top right */}
-                    <div className="absolute top-2 right-2 bg-[#37322F]/80 backdrop-blur-sm px-2 py-1 rounded-md">
-                      <span className="text-white text-[10px] font-semibold tracking-wide">
-                        AFTER
-                      </span>
-                    </div>
+              {/* Keli transformation - below */}
+              <div className="grid grid-cols-2 gap-0">
+                {/* Before Video */}
+                <div className="relative overflow-hidden aspect-[9/16] bg-[#37322F] rounded-l-lg">
+                  <video
+                    src="https://sb.oracleboxing.com/transfo-v2/keli_before.webm"
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    className="absolute inset-0 w-[120%] h-full object-cover left-1/2 -translate-x-1/2"
+                  />
+                  {/* BEFORE label - top left */}
+                  <div className="absolute top-2 left-2 bg-[#37322F]/80 backdrop-blur-sm px-2 py-1 rounded-md">
+                    <span className="text-white text-[10px] font-semibold tracking-wide">
+                      BEFORE
+                    </span>
+                  </div>
+                </div>
+
+                {/* After Video */}
+                <div className="relative overflow-hidden aspect-[9/16] bg-[#37322F] rounded-r-lg">
+                  <video
+                    src="https://sb.oracleboxing.com/transfo-v2/keli_after.webm"
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    className="absolute inset-0 w-[120%] h-full object-cover left-1/2 -translate-x-1/2"
+                  />
+                  {/* AFTER label - top right */}
+                  <div className="absolute top-2 right-2 bg-[#37322F]/80 backdrop-blur-sm px-2 py-1 rounded-md">
+                    <span className="text-white text-[10px] font-semibold tracking-wide">
+                      AFTER
+                    </span>
                   </div>
                 </div>
               </div>
 
               {/* Benefits text below videos on mobile */}
-              <div className="flex flex-col gap-4 px-2">
-                <h3 className="text-[#37322F] text-xl font-medium mb-2" style={{ fontFamily: 'ClashDisplay, sans-serif' }}>
-                  Why Learn Boxing Properly?
-                </h3>
-                <ul className="flex flex-col gap-3">
-                  {benefits.map((benefit, index) => (
-                    <li key={index} className="flex items-start gap-3">
-                      <div className="flex-shrink-0 w-5 h-5 rounded-full bg-[#37322F] flex items-center justify-center mt-0.5">
-                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M2.5 6L5 8.5L9.5 4" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                        </svg>
-                      </div>
-                      <span className="text-[#49423D] text-sm leading-relaxed">
-                        {benefit}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
+              <div className="flex flex-col px-2">
+                {benefits.map((benefit, index) => (
+                  <div key={index} className={`py-4 ${index !== benefits.length - 1 ? 'border-b border-[#37322F]/15' : ''}`}>
+                    <h4
+                      className="text-[#37322F] text-xl font-semibold mb-1"
+                      style={{ fontFamily: 'ClashDisplay, sans-serif' }}
+                    >
+                      {benefit.title}
+                    </h4>
+                    <p className="text-[#49423D]/80 text-sm leading-relaxed">
+                      {benefit.description}
+                    </p>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
