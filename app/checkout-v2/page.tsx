@@ -81,41 +81,58 @@ function CheckoutV2Content() {
     const returnedPaymentIntent = searchParams.get('payment_intent')
     const returnedClientSecret = searchParams.get('payment_intent_client_secret')
 
-    if (redirectStatus && returnedPaymentIntent) {
-      console.log('🔄 Payment redirect detected at page level:', { redirectStatus, returnedPaymentIntent })
+    console.log('🔍 Checking for redirect params:', { redirectStatus, returnedPaymentIntent, hasClientSecret: !!returnedClientSecret })
 
+    if (returnedPaymentIntent) {
+      // We have a payment_intent in URL - this is a redirect return
       if (redirectStatus === 'succeeded' || redirectStatus === 'processing') {
         // Payment succeeded - redirect to success page immediately
+        console.log('✅ Payment succeeded, redirecting to success page')
         window.location.href = `${window.location.origin}/success?payment_intent=${returnedPaymentIntent}`
-      } else if (redirectStatus === 'failed' && returnedClientSecret) {
-        // Payment failed - recover the PaymentIntent and show the payment form so user can retry
-        // We need to fetch the PaymentIntent details to recover customer info
-        recoverFailedPayment(returnedPaymentIntent, returnedClientSecret)
+      } else if (redirectStatus === 'failed' || !redirectStatus) {
+        // Payment failed OR cancelled (no status) - recover and show retry
+        console.log('❌ Payment failed or cancelled, recovering...')
+        recoverFailedPayment(returnedPaymentIntent, returnedClientSecret || null)
       }
     }
   }, [searchParams])
 
   // Recover a failed payment so user can retry
-  const recoverFailedPayment = async (piId: string, secret: string) => {
+  const recoverFailedPayment = async (piId: string, secret: string | null) => {
     try {
+      console.log('🔄 Attempting to recover payment:', { piId, hasSecret: !!secret })
+
       // Fetch PaymentIntent details from Stripe via our API
       const response = await fetch(`/api/checkout-v2/recover?payment_intent=${piId}`)
       const data = await response.json()
 
+      console.log('📋 Recover API response:', data)
+
       if (response.ok && data.customerInfo) {
+        // Use the client secret from URL if available, otherwise from API
+        const clientSecretToUse = secret || data.clientSecret
+
+        if (!clientSecretToUse) {
+          console.error('❌ No client secret available')
+          setError('Payment failed. Please enter your details to try again.')
+          return
+        }
+
         // Recover the session state
         setCustomerInfo(data.customerInfo)
         setPaymentIntentId(piId)
-        setClientSecret(secret)
+        setClientSecret(clientSecretToUse)
         setSelectedAddOns(data.addOns || [])
         setError('Payment failed. Please try again with a different payment method.')
         setStep('payment')
+        console.log('✅ Payment session recovered, showing payment form')
       } else {
         // If we can't recover, just show a general error
+        console.error('❌ Could not recover payment:', data.error)
         setError('Payment failed. Please enter your details to try again.')
       }
     } catch (err) {
-      console.error('Failed to recover payment:', err)
+      console.error('❌ Failed to recover payment:', err)
       setError('Payment failed. Please enter your details to try again.')
     }
   }

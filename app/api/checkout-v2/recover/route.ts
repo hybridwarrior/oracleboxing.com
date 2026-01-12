@@ -44,6 +44,7 @@ export async function GET(req: NextRequest) {
       status: paymentIntent.status,
       customerInfo,
       addOns,
+      hasClientSecret: !!paymentIntent.client_secret,
     })
 
     return NextResponse.json({
@@ -52,6 +53,7 @@ export async function GET(req: NextRequest) {
       status: paymentIntent.status,
       amount: paymentIntent.amount,
       currency: paymentIntent.currency,
+      clientSecret: paymentIntent.client_secret, // Include client secret for recovery
     })
   } catch (error: any) {
     console.error('Failed to recover PaymentIntent:', error)
