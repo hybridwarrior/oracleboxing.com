@@ -535,7 +535,8 @@ export async function trackInitiateCheckout(
     currency?: string | null;
     source?: string | null;
   },
-  phone?: string
+  phone?: string,
+  paymentIntentId?: string
 ): Promise<void> {
   try {
     // Get all cookie data (will be empty object if no consent)
@@ -612,6 +613,7 @@ export async function trackInitiateCheckout(
       utm_source: data.utmSource,
       utm_medium: data.utmMedium,
       utm_content: data.utmContent,
+      payment_intent_id: paymentIntentId || null,
     };
 
     console.log('📦 Supabase insert data:', insertData);

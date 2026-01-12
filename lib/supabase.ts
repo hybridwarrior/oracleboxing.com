@@ -47,6 +47,7 @@ export interface InitiateCheckoutRecord {
   utm_source: string | null
   utm_medium: string | null
   utm_content: string | null
+  payment_intent_id: string | null
 }
 
 export interface PurchaseRecord {

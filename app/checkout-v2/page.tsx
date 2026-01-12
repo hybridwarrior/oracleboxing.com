@@ -166,7 +166,13 @@ function CheckoutV2Content() {
     setError(null)
 
     try {
+      // Create Stripe session first to get paymentIntentId
+      const { clientSecret: secret, paymentIntentId: piId } = await createSession(info)
+      setClientSecret(secret)
+      setPaymentIntentId(piId)
+
       // Track InitiateCheckout to Supabase and Facebook (non-blocking)
+      // Now includes paymentIntentId for abandoned cart tracking
       const fullName = `${info.firstName} ${info.lastName}`.trim()
       const priceInUserCurrency = getProductPrice('21dc_entry', currency) || 147
 
@@ -182,12 +188,10 @@ function CheckoutV2Content() {
           currency: currency,
           source: 'checkout-v2',
         },
-        info.phone
+        info.phone,
+        piId // Pass paymentIntentId for abandoned cart cron job
       )
 
-      const { clientSecret: secret, paymentIntentId: piId } = await createSession(info)
-      setClientSecret(secret)
-      setPaymentIntentId(piId)
       setStep('payment')
     } catch (err: any) {
       console.error('Session creation error:', err)
@@ -255,9 +259,10 @@ function CheckoutV2Content() {
         />
       )}
 
-      {step === 'payment' && clientSecret && customerInfo && (
+      {step === 'payment' && clientSecret && paymentIntentId && customerInfo && (
         <StripeCheckout
           clientSecret={clientSecret}
+          paymentIntentId={paymentIntentId}
           customerInfo={customerInfo}
           currency={currency}
           selectedAddOns={selectedAddOns}
