@@ -56,12 +56,11 @@ export function HeroSection() {
           <div className="max-w-[937px] flex flex-col items-center gap-3">
             <div className="flex flex-col items-center gap-6">
               <h1 className="max-w-[900px] text-center text-[#37322f] text-4xl md:text-[64px] font-normal leading-tight md:leading-[1.15]" style={{ fontFamily: 'ClashDisplay, sans-serif' }}>
-                Learn
-                <br />
-                Boxing Properly
+                <span className="block tracking-tight">Become The Fighter</span>
+                <span className="block tracking-wide">You Were Born To Be</span>
               </h1>
-              <p className="max-w-[700px] text-center text-[#37322f]/80 text-lg md:text-xl font-medium leading-7">
-                Oracle Boxing is the virtual school for beginners in the sweet science.
+              <p className="max-w-[900px] text-center text-[#37322f]/80 text-xl md:text-2xl font-medium leading-8">
+                The online boxing school that transforms more than your technique.
               </p>
             </div>
           </div>
