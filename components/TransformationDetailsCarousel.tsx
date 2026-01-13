@@ -173,7 +173,7 @@ const transformations: TransformationItem[] = [
     name: 'Ilya',
     beforeVideo: 'ilya_before2.webm',
     afterVideo: 'ilya_after.webm',
-    duration: '6 MONTHS',
+    duration: '3 MONTHS',
     corrections: [
       { before: 'No kinetic linkage', after: 'Full body connection' },
       { before: 'Weight shifting forward', after: 'Centred, balanced weight' },
@@ -184,7 +184,7 @@ const transformations: TransformationItem[] = [
     name: 'Rod',
     beforeVideo: 'rod_before.webm',
     afterVideo: 'rod_after.webm',
-    duration: '6 MONTHS',
+    duration: '9 MONTHS',
     corrections: [
       { before: 'Not fully extending punches', after: 'Full punch extension' },
       { before: 'Unorthodox timing, no rhythm', after: 'Smooth, rhythmic flow' },
@@ -380,20 +380,26 @@ export function TransformationDetailsCarousel() {
                           {/* Row 1: Before/After Videos */}
                           <div className="grid grid-cols-2 gap-0 mb-6">
                             {/* Before Video */}
-                            <div className="relative overflow-hidden aspect-[9/16] bg-[#37322F] rounded-l-lg">
+                            <div className="relative overflow-hidden aspect-[9/16] rounded-l-lg">
+                              {/* Poster image as background - always visible */}
+                              <img
+                                src={getPosterUrl(item.beforeVideo)}
+                                alt=""
+                                className="absolute inset-0 w-full h-full object-cover"
+                              />
+                              {/* Video loads on top */}
                               <video
                                 ref={(el) => { desktopVideoRefs.current[cardIndex * 2] = el }}
                                 src={cardIndex === currentIndex ? `${BASE_URL}${item.beforeVideo}` : undefined}
-                                poster={getPosterUrl(item.beforeVideo)}
                                 autoPlay={cardIndex === currentIndex}
                                 muted
                                 loop
                                 playsInline
-                                preload={cardIndex === currentIndex ? "metadata" : "none"}
+                                preload={cardIndex === currentIndex ? "auto" : "none"}
                                 onTimeUpdate={(e) => handleTimeUpdate(e.currentTarget)}
                                 className="absolute inset-0 w-full h-full object-cover"
                               />
-                              <div className="absolute top-3 left-3 bg-[#37322F]/90 px-3 py-1.5 rounded-md">
+                              <div className="absolute top-3 left-3 bg-[#37322F]/90 px-3 py-1.5 rounded-md z-10">
                                 <span className="text-white text-sm font-semibold tracking-wide">
                                   BEFORE
                                 </span>
@@ -401,20 +407,26 @@ export function TransformationDetailsCarousel() {
                             </div>
 
                             {/* After Video */}
-                            <div className="relative overflow-hidden aspect-[9/16] bg-[#37322F] rounded-r-lg">
+                            <div className="relative overflow-hidden aspect-[9/16] rounded-r-lg">
+                              {/* Poster image as background - always visible */}
+                              <img
+                                src={getPosterUrl(item.afterVideo)}
+                                alt=""
+                                className="absolute inset-0 w-full h-full object-cover"
+                              />
+                              {/* Video loads on top */}
                               <video
                                 ref={(el) => { desktopVideoRefs.current[cardIndex * 2 + 1] = el }}
                                 src={cardIndex === currentIndex ? `${BASE_URL}${item.afterVideo}` : undefined}
-                                poster={getPosterUrl(item.afterVideo)}
                                 autoPlay={cardIndex === currentIndex}
                                 muted
                                 loop
                                 playsInline
-                                preload={cardIndex === currentIndex ? "metadata" : "none"}
+                                preload={cardIndex === currentIndex ? "auto" : "none"}
                                 onTimeUpdate={(e) => handleTimeUpdate(e.currentTarget)}
                                 className="absolute inset-0 w-full h-full object-cover"
                               />
-                              <div className="absolute top-3 right-3 bg-[#37322F]/90 px-3 py-1.5 rounded-md">
+                              <div className="absolute top-3 right-3 bg-[#37322F]/90 px-3 py-1.5 rounded-md z-10">
                                 <span className="text-white text-sm font-semibold tracking-wide">
                                   AFTER
                                 </span>
@@ -494,20 +506,26 @@ export function TransformationDetailsCarousel() {
                   {/* Row 1: Before/After Videos */}
                   <div className="grid grid-cols-2 gap-0 mb-4">
                     {/* Before Video */}
-                    <div className="relative overflow-hidden aspect-[9/16] bg-[#37322F] rounded-l-lg">
+                    <div className="relative overflow-hidden aspect-[9/16] rounded-l-lg">
+                      {/* Poster image as background - always visible */}
+                      <img
+                        src={getPosterUrl(item.beforeVideo)}
+                        alt=""
+                        className="absolute inset-0 w-full h-full object-cover"
+                      />
+                      {/* Video loads on top */}
                       <video
                         key={`mobile-before-${currentIndex}`}
                         src={`${BASE_URL}${item.beforeVideo}`}
-                        poster={getPosterUrl(item.beforeVideo)}
                         autoPlay
                         muted
                         loop
                         playsInline
-                        preload="metadata"
+                        preload="auto"
                         onTimeUpdate={(e) => handleTimeUpdate(e.currentTarget)}
                         className="absolute inset-0 w-full h-full object-cover"
                       />
-                      <div className="absolute top-2 left-2 bg-[#37322F]/90 px-2 py-1 rounded-md">
+                      <div className="absolute top-2 left-2 bg-[#37322F]/90 px-2 py-1 rounded-md z-10">
                         <span className="text-white text-xs font-semibold tracking-wide">
                           BEFORE
                         </span>
@@ -515,20 +533,26 @@ export function TransformationDetailsCarousel() {
                     </div>
 
                     {/* After Video */}
-                    <div className="relative overflow-hidden aspect-[9/16] bg-[#37322F] rounded-r-lg">
+                    <div className="relative overflow-hidden aspect-[9/16] rounded-r-lg">
+                      {/* Poster image as background - always visible */}
+                      <img
+                        src={getPosterUrl(item.afterVideo)}
+                        alt=""
+                        className="absolute inset-0 w-full h-full object-cover"
+                      />
+                      {/* Video loads on top */}
                       <video
                         key={`mobile-after-${currentIndex}`}
                         src={`${BASE_URL}${item.afterVideo}`}
-                        poster={getPosterUrl(item.afterVideo)}
                         autoPlay
                         muted
                         loop
                         playsInline
-                        preload="metadata"
+                        preload="auto"
                         onTimeUpdate={(e) => handleTimeUpdate(e.currentTarget)}
                         className="absolute inset-0 w-full h-full object-cover"
                       />
-                      <div className="absolute top-2 right-2 bg-[#37322F]/90 px-2 py-1 rounded-md">
+                      <div className="absolute top-2 right-2 bg-[#37322F]/90 px-2 py-1 rounded-md z-10">
                         <span className="text-white text-xs font-semibold tracking-wide">
                           AFTER
                         </span>
