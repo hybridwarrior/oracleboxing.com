@@ -151,7 +151,6 @@ export default function WhyOnlinePage() {
                   controls
                   playsInline
                   preload="metadata"
-                  poster="https://sb.oracleboxing.com/Website/vsl_poster.webp"
                 >
                   <source src="https://sb.oracleboxing.com/Website/vsl.webm" type="video/webm" />
                 </video>

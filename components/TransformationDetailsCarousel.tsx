@@ -371,13 +371,13 @@ export function TransformationDetailsCarousel() {
                             <div className="relative overflow-hidden aspect-[9/16] bg-[#37322F] rounded-l-lg">
                               <video
                                 ref={(el) => { desktopVideoRefs.current[cardIndex * 2] = el }}
-                                src={`${BASE_URL}${item.beforeVideo}`}
+                                src={cardIndex === currentIndex ? `${BASE_URL}${item.beforeVideo}` : undefined}
                                 poster={getPosterUrl(item.beforeVideo)}
                                 autoPlay={cardIndex === currentIndex}
                                 muted
                                 loop
                                 playsInline
-                                preload="auto"
+                                preload={cardIndex === currentIndex ? "metadata" : "none"}
                                 onTimeUpdate={(e) => handleTimeUpdate(e.currentTarget)}
                                 className="absolute inset-0 w-full h-full object-cover"
                               />
@@ -392,13 +392,13 @@ export function TransformationDetailsCarousel() {
                             <div className="relative overflow-hidden aspect-[9/16] bg-[#37322F] rounded-r-lg">
                               <video
                                 ref={(el) => { desktopVideoRefs.current[cardIndex * 2 + 1] = el }}
-                                src={`${BASE_URL}${item.afterVideo}`}
+                                src={cardIndex === currentIndex ? `${BASE_URL}${item.afterVideo}` : undefined}
                                 poster={getPosterUrl(item.afterVideo)}
                                 autoPlay={cardIndex === currentIndex}
                                 muted
                                 loop
                                 playsInline
-                                preload="auto"
+                                preload={cardIndex === currentIndex ? "metadata" : "none"}
                                 onTimeUpdate={(e) => handleTimeUpdate(e.currentTarget)}
                                 className="absolute inset-0 w-full h-full object-cover"
                               />
@@ -531,13 +531,13 @@ export function TransformationDetailsCarousel() {
                           <div className="relative overflow-hidden aspect-[9/16] bg-[#37322F] rounded-l-lg">
                             <video
                               ref={(el) => { mobileVideoRefs.current[cardIndex * 2] = el }}
-                              src={`${BASE_URL}${item.beforeVideo}`}
+                              src={cardIndex === currentIndex ? `${BASE_URL}${item.beforeVideo}` : undefined}
                               poster={getPosterUrl(item.beforeVideo)}
                               autoPlay={cardIndex === currentIndex}
                               muted
                               loop
                               playsInline
-                              preload="auto"
+                              preload={cardIndex === currentIndex ? "metadata" : "none"}
                               onTimeUpdate={(e) => handleTimeUpdate(e.currentTarget)}
                               className="absolute inset-0 w-full h-full object-cover"
                             />
@@ -552,13 +552,13 @@ export function TransformationDetailsCarousel() {
                           <div className="relative overflow-hidden aspect-[9/16] bg-[#37322F] rounded-r-lg">
                             <video
                               ref={(el) => { mobileVideoRefs.current[cardIndex * 2 + 1] = el }}
-                              src={`${BASE_URL}${item.afterVideo}`}
+                              src={cardIndex === currentIndex ? `${BASE_URL}${item.afterVideo}` : undefined}
                               poster={getPosterUrl(item.afterVideo)}
                               autoPlay={cardIndex === currentIndex}
                               muted
                               loop
                               playsInline
-                              preload="auto"
+                              preload={cardIndex === currentIndex ? "metadata" : "none"}
                               onTimeUpdate={(e) => handleTimeUpdate(e.currentTarget)}
                               className="absolute inset-0 w-full h-full object-cover"
                             />
