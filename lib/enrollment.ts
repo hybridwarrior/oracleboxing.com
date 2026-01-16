@@ -1,5 +1,6 @@
 // Enrollment status configuration
-// Set this to true when enrollment is closed
+// Set this to false when enrollment is open
+// When CAMPAIGN_ACTIVE is true in campaign.ts, this should be false
 export const ENROLLMENT_CLOSED = true
 
 // The URL to redirect to when enrollment is closed
