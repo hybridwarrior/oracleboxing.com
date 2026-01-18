@@ -141,64 +141,8 @@ export function TransformationShowcase() {
 
           {/* Inner white card */}
           <div className="relative bg-white p-3 md:p-4 lg:p-5 rounded-xl">
-            {/* Desktop layout */}
-            <div className="hidden xl:grid xl:grid-cols-10 gap-4 xl:gap-6 items-stretch">
-              {/* Left column - Benefits (spans 2 cols) */}
-              <div className="flex flex-col xl:col-span-2 xl:pl-4 xl:pr-4">
-                {benefits.map((benefit, index) => (
-                  <div key={index} className={`py-4 ${index !== benefits.length - 1 ? 'border-b border-[#37322F]/15' : ''}`}>
-                    <h4
-                      className="text-[#37322F] text-xl font-semibold mb-1"
-                      style={{ fontFamily: 'ClashDisplay, sans-serif' }}
-                    >
-                      {benefit.title}
-                    </h4>
-                    <p className="text-[#49423D]/80 text-sm leading-relaxed">
-                      {benefit.description}
-                    </p>
-                  </div>
-                ))}
-              </div>
-
-              {/* Shalyn transformation - Middle columns (spans 4 cols) */}
-              <div className="grid grid-cols-2 gap-0 xl:col-span-4">
-                <LazyVideo
-                  src="https://sb.oracleboxing.com/transfo-v2/shalyn_before.webm"
-                  poster="https://sb.oracleboxing.com/transfo-v2/shalyn_before_poster.webp"
-                  className="absolute inset-0 w-[120%] h-full object-cover left-1/2 -translate-x-1/2"
-                  label="BEFORE"
-                  labelPosition="left"
-                />
-                <LazyVideo
-                  src="https://sb.oracleboxing.com/transfo-v2/shalyn_after.webm"
-                  poster="https://sb.oracleboxing.com/transfo-v2/shalyn_after_poster.webp"
-                  className="absolute inset-0 w-[120%] h-full object-cover left-1/2 -translate-x-1/2"
-                  label="AFTER"
-                  labelPosition="right"
-                />
-              </div>
-
-              {/* Keli transformation - Right columns (spans 4 cols) */}
-              <div className="grid grid-cols-2 gap-0 xl:col-span-4">
-                <LazyVideo
-                  src="https://sb.oracleboxing.com/transfo-v2/keli_before.webm"
-                  poster="https://sb.oracleboxing.com/transfo-v2/keli_before_poster.webp"
-                  className="absolute inset-0 w-[120%] h-full object-cover left-1/2 -translate-x-1/2"
-                  label="BEFORE"
-                  labelPosition="left"
-                />
-                <LazyVideo
-                  src="https://sb.oracleboxing.com/transfo-v2/keli_after.webm"
-                  poster="https://sb.oracleboxing.com/transfo-v2/keli_after_poster.webp"
-                  className="absolute inset-0 w-[120%] h-full object-cover left-1/2 -translate-x-1/2"
-                  label="AFTER"
-                  labelPosition="right"
-                />
-              </div>
-            </div>
-
-            {/* Mobile/tablet layout - Videos stacked, then text */}
-            <div className="xl:hidden flex flex-col gap-4">
+            {/* Mobile layout - Videos stacked, benefits below */}
+            <div className="md:hidden flex flex-col gap-4">
               {/* Shalyn transformation - on top */}
               <div className="grid grid-cols-2 gap-0">
                 <LazyVideo
@@ -236,9 +180,68 @@ export function TransformationShowcase() {
               </div>
 
               {/* Benefits text below videos on mobile */}
-              <div className="flex flex-col px-2">
+              <div className="grid grid-cols-2 gap-4 mt-2 px-1">
                 {benefits.map((benefit, index) => (
-                  <div key={index} className={`py-4 ${index !== benefits.length - 1 ? 'border-b border-[#37322F]/15' : ''}`}>
+                  <div key={index} className="py-2">
+                    <h4
+                      className="text-[#37322F] text-base font-semibold mb-1"
+                      style={{ fontFamily: 'ClashDisplay, sans-serif' }}
+                    >
+                      {benefit.title}
+                    </h4>
+                    <p className="text-[#49423D]/80 text-xs leading-relaxed">
+                      {benefit.description}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Desktop/Tablet layout (md+) - Both video pairs side by side, benefits below */}
+            <div className="hidden md:block">
+              {/* Videos side by side */}
+              <div className="grid grid-cols-2 gap-4">
+                {/* Shalyn transformation */}
+                <div className="grid grid-cols-2 gap-0">
+                  <LazyVideo
+                    src="https://sb.oracleboxing.com/transfo-v2/shalyn_before.webm"
+                    poster="https://sb.oracleboxing.com/transfo-v2/shalyn_before_poster.webp"
+                    className="absolute inset-0 w-[120%] h-full object-cover left-1/2 -translate-x-1/2"
+                    label="BEFORE"
+                    labelPosition="left"
+                  />
+                  <LazyVideo
+                    src="https://sb.oracleboxing.com/transfo-v2/shalyn_after.webm"
+                    poster="https://sb.oracleboxing.com/transfo-v2/shalyn_after_poster.webp"
+                    className="absolute inset-0 w-[120%] h-full object-cover left-1/2 -translate-x-1/2"
+                    label="AFTER"
+                    labelPosition="right"
+                  />
+                </div>
+
+                {/* Keli transformation */}
+                <div className="grid grid-cols-2 gap-0">
+                  <LazyVideo
+                    src="https://sb.oracleboxing.com/transfo-v2/keli_before.webm"
+                    poster="https://sb.oracleboxing.com/transfo-v2/keli_before_poster.webp"
+                    className="absolute inset-0 w-[120%] h-full object-cover left-1/2 -translate-x-1/2"
+                    label="BEFORE"
+                    labelPosition="left"
+                  />
+                  <LazyVideo
+                    src="https://sb.oracleboxing.com/transfo-v2/keli_after.webm"
+                    poster="https://sb.oracleboxing.com/transfo-v2/keli_after_poster.webp"
+                    className="absolute inset-0 w-[120%] h-full object-cover left-1/2 -translate-x-1/2"
+                    label="AFTER"
+                    labelPosition="right"
+                  />
+                </div>
+              </div>
+
+              {/* Benefits text below videos on tablet */}
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-6 px-2">
+                {benefits.map((benefit, index) => (
+                  <div key={index} className="py-4">
                     <h4
                       className="text-[#37322F] text-xl font-semibold mb-1"
                       style={{ fontFamily: 'ClashDisplay, sans-serif' }}

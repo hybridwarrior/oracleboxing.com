@@ -30,8 +30,8 @@ export default function FundamentalsWarningSection() {
 
           {/* Two Column Content */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-            {/* Left - Text Content */}
-            <div className="flex flex-col justify-center items-start gap-4">
+            {/* Text Content - shows second on mobile, first on desktop */}
+            <div className="flex flex-col justify-center items-start gap-4 order-2 md:order-1">
               <p className="text-[#37322F] text-base md:text-lg font-semibold leading-relaxed font-sans">
                 Improper fundamentals = bad habits.
               </p>
@@ -44,8 +44,8 @@ export default function FundamentalsWarningSection() {
               </div>
             </div>
 
-            {/* Right - Illustration */}
-            <div className="flex flex-col justify-center items-center w-full h-[240px] sm:h-[280px] md:h-[300px] relative rounded-lg overflow-hidden">
+            {/* Illustration - shows first on mobile, second on desktop */}
+            <div className="flex flex-col justify-center items-center w-full h-[240px] sm:h-[280px] md:h-[300px] relative rounded-lg overflow-hidden order-1 md:order-2">
               <Image
                 src="https://sb.oracleboxing.com/Website/habits-new.webp"
                 alt="Bad habits vs good habits"

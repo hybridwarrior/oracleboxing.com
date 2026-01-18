@@ -35,7 +35,7 @@ export const CAMPAIGN_CONFIG = {
   // Display text for the banner
   bannerText: {
     title: '21-DAY CHALLENGE NOW OPEN',
-    deadline: 'ENROLLMENT CLOSES JAN 31ST',
+    deadline: 'ENROLLMENT CLOSES JAN 31ST MIDNIGHT',
   }
 }
 
