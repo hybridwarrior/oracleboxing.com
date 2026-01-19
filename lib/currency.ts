@@ -42,7 +42,7 @@ export const PRODUCT_PRICES: Record<string, Record<Currency, number>> = {
   rcv: { USD: 67, GBP: 53, EUR: 62, AUD: 100, CAD: 91, AED: 245 },
   ltbffp: { USD: 147, GBP: 117, EUR: 136, AUD: 220, CAD: 199, AED: 540 },
   ltbrdmp: { USD: 97, GBP: 77, EUR: 90, AUD: 145, CAD: 132, AED: 355 },
-  bffp: { USD: 247, GBP: 197, EUR: 229, AUD: 379, CAD: 335, AED: 909 },
+  bffp: { USD: 147, GBP: 118, EUR: 137, AUD: 225, CAD: 200, AED: 541 },
   brdmp: { USD: 147, GBP: 117, EUR: 136, AUD: 220, CAD: 199, AED: 540 },
   clnc: { USD: 97, GBP: 77, EUR: 90, AUD: 145, CAD: 132, AED: 355 },
   obm: { USD: 397, GBP: 317, EUR: 365, AUD: 595, CAD: 538, AED: 1465 },
@@ -64,7 +64,7 @@ export const PRODUCT_PRICES: Record<string, Record<Currency, number>> = {
   // 21-Day Challenge products
   '21dc_entry': { USD: 147, GBP: 119, EUR: 139, AUD: 229, CAD: 199, AED: 539 },
   // 2025 Vault
-  vault2025: { USD: 297, GBP: 237, EUR: 275, AUD: 455, CAD: 402, AED: 1090 },
+  vault2025: { USD: 97, GBP: 78, EUR: 90, AUD: 149, CAD: 132, AED: 357 },
 };
 
 // Membership products - now support multi-currency

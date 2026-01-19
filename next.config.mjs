@@ -48,6 +48,12 @@ const nextConfig = {
         destination: '/?utm_source=tiktok&utm_medium=bio',
         permanent: false,
       },
+      // Customer Portal - Stripe hosted login
+      {
+        source: '/customer-portal',
+        destination: 'https://checkout.oracleboxing.com/p/login/dR69Bm6Pg7Csavm288',
+        permanent: false,
+      },
     ];
   },
 };
