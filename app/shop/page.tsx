@@ -1,17 +1,14 @@
 'use client'
 
-import { useState } from 'react'
-import { Loader2, ShoppingBag } from 'lucide-react'
-import { toast } from 'sonner'
-import { useCurrency } from '@/contexts/CurrencyContext'
-import { getProductPrice, formatPrice as formatCurrency } from '@/lib/currency'
+import { ShoppingBag } from 'lucide-react'
 
 interface ShopProduct {
   id: string
   title: string
   description: string
-  priceKey: string
+  price: string
   image: string
+  paymentLink: string
   note?: string
 }
 
@@ -20,85 +17,30 @@ const SHOP_PRODUCTS: ShopProduct[] = [
     id: 'bffp',
     title: 'Boxing from First Principles',
     description: '26 lessons across 5 modules. Learn how boxing really works — from mental game to power generation to ring IQ.',
-    priceKey: 'bffp',
+    price: '$147',
     image: 'https://sb.oracleboxing.com/Website/bffp_tn_3.webp',
+    paymentLink: 'https://checkout.oracleboxing.com/b/5kQeVefokeAXfkD5ZrgQE2O',
   },
   {
     id: 'vault-2025',
     title: '2025 Call Recording Vault',
     description: '620+ coaching call recordings. 200+ group sessions and 420+ one-to-one calls covering footwork, defence, combinations, and more.',
-    priceKey: 'vault2025',
+    price: '$97',
     image: 'https://sb.oracleboxing.com/Website/2025_call_recording.webp',
+    paymentLink: 'https://checkout.oracleboxing.com/b/3cI7sMa40akH1tNbjLgQE2N',
   },
   {
     id: 'tracksuit',
     title: 'Oracle Boxing Tracksuit',
     description: 'Premium tracksuit. Made in Britain. 100% cotton. Colours: Steel, Hazel, Forest, Black, Grey.',
-    priceKey: 'tracksuit',
+    price: '$187',
     image: 'https://sb.oracleboxing.com/Website/ob_black_4.webp',
+    paymentLink: 'https://checkout.oracleboxing.com/b/bJe00k4JG0K78WfcnPgQE2P',
     note: "You'll be contacted to select size and add shipping.",
   },
 ]
 
 export default function ShopPage() {
-  const { currency, isLoading: currencyLoading } = useCurrency()
-  const [loadingProduct, setLoadingProduct] = useState<string | null>(null)
-
-  const handleBuy = async (product: ShopProduct) => {
-    setLoadingProduct(product.id)
-
-    try {
-      const price = getProductPrice(product.priceKey, currency) || 0
-
-      const response = await fetch('/api/checkout/session', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          items: [
-            {
-              product: {
-                id: product.id,
-                title: product.title,
-                price,
-                type: product.id === 'tracksuit' ? 'merch' : 'course',
-              },
-              quantity: 1,
-            },
-          ],
-          currency,
-        }),
-      })
-
-      const data = await response.json()
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Failed to create checkout')
-      }
-
-      if (data.url) {
-        window.location.href = data.url
-      }
-    } catch (error: any) {
-      console.error('Checkout error:', error)
-      toast.error(error.message || 'Something went wrong')
-      setLoadingProduct(null)
-    }
-  }
-
-  const displayPrice = (priceKey: string) => {
-    const price = getProductPrice(priceKey, currency)
-    if (!price) return '—'
-    return formatCurrency(price, currency)
-  }
-
-  if (currencyLoading) {
-    return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <div className="animate-pulse text-[#37322F]">Loading...</div>
-      </div>
-    )
-  }
-
   return (
     <div className="min-h-screen bg-white">
       {/* Header */}
@@ -144,22 +86,14 @@ export default function ShopPage() {
                 {/* Price and CTA */}
                 <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-100">
                   <span className="text-xl font-bold text-[#37322F]">
-                    {displayPrice(product.priceKey)}
+                    {product.price}
                   </span>
-                  <button
-                    onClick={() => handleBuy(product)}
-                    disabled={loadingProduct === product.id}
-                    className="h-10 px-6 bg-[#37322F] text-white rounded-lg font-medium text-sm hover:bg-[#49423D] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                  <a
+                    href={product.paymentLink}
+                    className="h-10 px-6 bg-[#37322F] text-white rounded-lg font-medium text-sm hover:bg-[#49423D] transition-colors flex items-center"
                   >
-                    {loadingProduct === product.id ? (
-                      <>
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                        Loading...
-                      </>
-                    ) : (
-                      'Buy Now'
-                    )}
-                  </button>
+                    Buy Now
+                  </a>
                 </div>
               </div>
             </div>
