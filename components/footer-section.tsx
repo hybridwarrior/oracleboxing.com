@@ -157,6 +157,12 @@ export default function FooterSection() {
               >
                 Contact
               </Link>
+              <Link
+                href="/customer-portal"
+                className="text-[#49423D] text-sm font-normal leading-5 font-sans cursor-pointer hover:text-[#37322F] transition-colors"
+              >
+                Customer Portal
+              </Link>
             </div>
           </div>
         </div>
