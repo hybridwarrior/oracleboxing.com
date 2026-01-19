@@ -83,11 +83,6 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link to="/guarantee" className="text-gray-400 hover:text-[#F5F5F5] transition-colors text-sm">
-                  Money-Back Guarantee
-                </Link>
-              </li>
-              <li>
                 <Link to="/customer-portal" className="text-gray-400 hover:text-[#F5F5F5] transition-colors text-sm">
                   Customer Portal
                 </Link>

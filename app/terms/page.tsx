@@ -17,7 +17,7 @@ export default function TermsPage() {
     <div style={{ fontFamily: 'Arial, sans-serif', backgroundColor: '#FFFFFF', color: '#000000', minHeight: '100vh' }}>
       <div style={{ maxWidth: '800px', margin: '0 auto', padding: '40px 20px' }}>
         <h1 style={{ fontSize: '32px', fontWeight: 'bold', marginBottom: '8px' }}>Terms of Service</h1>
-        <p style={{ fontSize: '14px', color: '#666666', marginBottom: '32px' }}>Last Updated: November 2025</p>
+        <p style={{ fontSize: '14px', color: '#666666', marginBottom: '32px' }}>Last Updated: January 2026</p>
 
         <h2 style={{ fontSize: '24px', fontWeight: 'bold', marginTop: '32px', marginBottom: '16px' }}>1. Acceptance of Terms</h2>
         <p style={{ lineHeight: '1.6', marginBottom: '16px' }}>
@@ -32,12 +32,11 @@ export default function TermsPage() {
           Oracle Boxing provides online boxing training services including:
         </p>
         <ul style={{ lineHeight: '1.6', marginBottom: '16px', marginLeft: '20px' }}>
-          <li>Boxing Masterclass - Comprehensive boxing course covering theory, technique, and tactics</li>
-          <li>Boxing Roadmap - 5-phase structured training system with workouts and progression</li>
-          <li>Oracle Boxing Bundle - Complete course package</li>
-          <li>Memberships (monthly, quarterly, 6-month, annual) - Recurring access to live coaching, community, and all courses</li>
-          <li>6-Week Challenge - Intensive 6-week program with coaching and course access</li>
+          <li>Boxing from First Principles - Comprehensive boxing course covering theory, technique, and tactics</li>
+          <li>21-Day Challenge - Intensive program with coaching and course access</li>
+          <li>Memberships (monthly or annual) - Recurring access to live coaching, community, and all courses</li>
           <li>1-on-1 Coaching - Personalized coaching services</li>
+          <li>Add-ons including Oracle Boxing Tracksuit, 2025 Call Recording Vault, and course materials</li>
           <li>Access to our private Skool community platform at https://skool.com/boxing</li>
           <li>Weekly live coaching calls with Oliver & Toni</li>
           <li>Personalized video feedback on your training</li>
@@ -85,7 +84,7 @@ export default function TermsPage() {
 
         <h2 style={{ fontSize: '24px', fontWeight: 'bold', marginTop: '32px', marginBottom: '16px' }}>6. Membership Terms</h2>
         <p style={{ lineHeight: '1.6', marginBottom: '16px' }}>
-          If you purchase a membership (monthly, quarterly, 6-month, or annual):
+          If you purchase a membership (monthly or annual):
         </p>
         <ul style={{ lineHeight: '1.6', marginBottom: '16px', marginLeft: '20px' }}>
           <li>Your membership will automatically renew at the end of each billing period unless you cancel.</li>
@@ -122,13 +121,14 @@ export default function TermsPage() {
           Our refund and guarantee policies vary by product type:
         </p>
         <ul style={{ lineHeight: '1.6', marginBottom: '16px', marginLeft: '20px' }}>
-          <li><strong>Digital Courses:</strong> 30-day money-back guarantee, no questions asked</li>
-          <li><strong>Memberships:</strong> No refunds under any circumstances (see our Refund Policy for details)</li>
+          <li><strong>Digital Courses & Add-ons:</strong> No refunds</li>
+          <li><strong>Memberships:</strong> No refunds</li>
           <li><strong>1-on-1 Coaching:</strong> No refunds</li>
-          <li><strong>6-Week Challenge:</strong> Discretionary guarantee based on completion (see our Guarantee page for details)</li>
+          <li><strong>Physical Products (Tracksuit):</strong> No returns</li>
+          <li><strong>21-Day Challenge:</strong> Prize eligibility based on completion requirements (see our Refund Policy for details)</li>
         </ul>
         <p style={{ lineHeight: '1.6', marginBottom: '16px' }}>
-          Please review our complete Refund Policy and Guarantee pages for detailed information.
+          Please review our complete Refund Policy for detailed information.
         </p>
 
         <h2 style={{ fontSize: '24px', fontWeight: 'bold', marginTop: '32px', marginBottom: '16px' }}>10. Account Termination</h2>
@@ -179,7 +179,7 @@ export default function TermsPage() {
 
         <h2 style={{ fontSize: '24px', fontWeight: 'bold', marginTop: '32px', marginBottom: '16px' }}>16. Entire Agreement</h2>
         <p style={{ lineHeight: '1.6', marginBottom: '16px' }}>
-          These Terms of Service, together with our Privacy Policy, Refund Policy, and Guarantee page, constitute the entire agreement between you and Oracle Boxing Ltd regarding your use of our services.
+          These Terms of Service, together with our Privacy Policy and Refund Policy, constitute the entire agreement between you and Oracle Boxing Ltd regarding your use of our services.
         </p>
 
         <h2 style={{ fontSize: '24px', fontWeight: 'bold', marginTop: '32px', marginBottom: '16px' }}>17. Contact Information</h2>

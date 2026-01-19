@@ -17,7 +17,7 @@ export default function PrivacyPolicy() {
     <div style={{ fontFamily: 'Arial, sans-serif', backgroundColor: '#FFFFFF', color: '#000000', minHeight: '100vh' }}>
       <div style={{ maxWidth: '800px', margin: '0 auto', padding: '40px 20px' }}>
         <h1 style={{ fontSize: '32px', fontWeight: 'bold', marginBottom: '8px' }}>Privacy Policy</h1>
-        <p style={{ fontSize: '14px', color: '#666666', marginBottom: '32px' }}>Last Updated: November 2025</p>
+        <p style={{ fontSize: '14px', color: '#666666', marginBottom: '32px' }}>Last Updated: January 2026</p>
 
         <h2 style={{ fontSize: '24px', fontWeight: 'bold', marginTop: '32px', marginBottom: '16px' }}>1. Introduction</h2>
         <p style={{ lineHeight: '1.6', marginBottom: '16px' }}>
@@ -106,7 +106,22 @@ export default function PrivacyPolicy() {
           We use Facebook Pixel and Facebook Conversions API to track user behavior and conversions for advertising purposes. This includes tracking page views, add-to-cart events, checkout initiation, and completed purchases. Facebook may use this data to serve you targeted advertisements. You can opt out of personalized advertising through your Facebook ad settings.
         </p>
 
-        <h3 style={{ fontSize: '18px', fontWeight: 'bold', marginTop: '24px', marginBottom: '12px' }}>4.4 Analytics</h3>
+        <h3 style={{ fontSize: '18px', fontWeight: 'bold', marginTop: '24px', marginBottom: '12px' }}>4.4 Customer Data Platform</h3>
+        <p style={{ lineHeight: '1.6', marginBottom: '16px' }}>
+          We use the following services to manage and process customer data:
+        </p>
+        <ul style={{ lineHeight: '1.6', marginBottom: '16px', marginLeft: '20px' }}>
+          <li><strong>Attio:</strong> Customer relationship management (CRM) to manage customer interactions and communications</li>
+          <li><strong>Snowflake:</strong> Data warehouse for secure storage and analysis of customer data</li>
+          <li><strong>Census:</strong> Data synchronization to keep customer information consistent across our systems</li>
+        </ul>
+
+        <h3 style={{ fontSize: '18px', fontWeight: 'bold', marginTop: '24px', marginBottom: '12px' }}>4.5 Customer Portal</h3>
+        <p style={{ lineHeight: '1.6', marginBottom: '16px' }}>
+          We provide a Stripe-hosted customer portal where you can manage your subscription, update payment methods, view invoices, and manage your billing information. When you access the customer portal, your data is processed by Stripe in accordance with their privacy policy.
+        </p>
+
+        <h3 style={{ fontSize: '18px', fontWeight: 'bold', marginTop: '24px', marginBottom: '12px' }}>4.6 Analytics</h3>
         <p style={{ lineHeight: '1.6', marginBottom: '16px' }}>
           We may use analytics services to understand how users interact with our website and improve user experience.
         </p>
