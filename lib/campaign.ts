@@ -3,7 +3,7 @@
 // Set CAMPAIGN_ACTIVE = true when a campaign is running
 // Update the dates and spot schedule for each campaign
 
-export const CAMPAIGN_ACTIVE = false
+export const CAMPAIGN_ACTIVE = true
 
 export const CAMPAIGN_CONFIG = {
   name: 'February 2026 21-Day Challenge',
@@ -137,8 +137,8 @@ export function getEnrollmentDeadlineText(): string {
   // Add ordinal suffix
   const suffix = day === 1 || day === 21 || day === 31 ? 'st'
     : day === 2 || day === 22 ? 'nd'
-    : day === 3 || day === 23 ? 'rd'
-    : 'th'
+      : day === 3 || day === 23 ? 'rd'
+        : 'th'
 
   return `${month} ${day}${suffix} at Midnight UK`
 }
