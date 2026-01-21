@@ -362,8 +362,8 @@ export async function trackPageView(page: string, referrer: string): Promise<voi
 
     // Check if this is the initial page load (event_id already generated in layout.tsx)
     const isInitialPageLoad = typeof window !== 'undefined' &&
-                               (window as any)._fbPageViewEventId &&
-                               !(window as any)._fbPageViewUsed;
+      (window as any)._fbPageViewEventId &&
+      !(window as any)._fbPageViewUsed;
 
     let pageViewEventId: string;
 
@@ -716,65 +716,32 @@ export async function trackInitiateCheckout(
       console.log('📱 Facebook Pixel InitiateCheckout event sent with event_id:', eventId);
     }
 
-    // Send to Facebook Conversions API (server-side tracking)
+    // Send to Facebook Conversions API via server-side API route
+    // This ensures the FB_ACCESS_TOKEN stays server-side and we get proper client IP
     try {
-      const eventTime = Date.now();
       const fbclid = getFbclid();
+      const fbp = getFbp();
+      const fbc = getFbc();
 
-      // Hash email for Facebook Conversions API
-      const hashedEmail = await hashSHA256(email);
+      console.log('📤 Sending InitiateCheckout to server API with event_id:', eventId);
 
-      // Parse cookie data into separate fields for custom_data
-      // Each field value must be ≤500 chars
-      const customData: Record<string, any> = {
-        value: value,
-        currency: urlParams?.currency || 'USD',
-        content_ids: products,
-        content_type: 'product',
-        num_items: products.length,
-      };
-
-      if (cookieData && typeof cookieData === 'object') {
-        // Add individual cookie fields, ensuring each is ≤500 chars
-        Object.keys(cookieData).forEach(key => {
-          // Skip user_agent - it's already sent in user_data section
-          if (key === 'user_agent') {
-            return;
-          }
-
-          const value = cookieData[key];
-          if (value !== null && value !== undefined) {
-            const stringValue = String(value);
-            customData[key] = stringValue.length > 500 ? stringValue.substring(0, 500) : stringValue;
-          }
-        });
-      }
-
-      const eventData = {
-        event_name: 'InitiateCheckout',
-        event_time: Math.floor(eventTime / 1000),
-        event_id: eventId,
-        event_source_url: `https://oracleboxing.com${page}`,
-        action_source: 'website',
-        user_data: {
-          em: [hashedEmail], // Hashed email with SHA256
-          client_user_agent: getClientUserAgent(),
-          ...(fbclid && { fbc: `fb.1.${eventTime}.${fbclid}` }),
-        },
-        custom_data: customData,
-      };
-
-      const payload = {
-        data: [eventData],
-        access_token: FB_ACCESS_TOKEN,
-      };
-
-      fetch(FB_CONVERSIONS_API_URL, {
+      fetch('/api/facebook-initiate-checkout', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(payload),
+        body: JSON.stringify({
+          event_id: eventId,
+          email: email,
+          value: value,
+          currency: urlParams?.currency || 'USD',
+          products: products,
+          page_url: `https://oracleboxing.com${page}`,
+          cookie_data: cookieData,
+          fbclid: fbclid,
+          fbp: fbp,
+          fbc: fbc,
+        }),
         keepalive: true,
       }).then(response => {
         if (!response.ok) {

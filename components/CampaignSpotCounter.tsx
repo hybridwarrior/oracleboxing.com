@@ -17,19 +17,29 @@ export default function CampaignSpotCounter({
   showPing = true,
   className = ''
 }: CampaignSpotCounterProps) {
-  const [spots, setSpots] = useState(getCurrentSpots())
+  // Initialize with null to avoid hydration mismatch (SSR vs client date differences)
+  const [spots, setSpots] = useState<number | null>(null)
+  const [mounted, setMounted] = useState(false)
+
+  // Only compute values after hydration to avoid mismatch
+  useEffect(() => {
+    setMounted(true)
+    setSpots(getCurrentSpots())
+  }, [])
 
   // Update spots periodically (every 30 seconds is enough since it changes daily)
   useEffect(() => {
+    if (!mounted) return
+
     const interval = setInterval(() => {
       setSpots(getCurrentSpots())
     }, 30000)
 
     return () => clearInterval(interval)
-  }, [])
+  }, [mounted])
 
-  // Don't render if campaign is not active
-  if (!CAMPAIGN_ACTIVE) return null
+  // Don't render if campaign is not active or not yet mounted (prevents hydration mismatch)
+  if (!CAMPAIGN_ACTIVE || !mounted || spots === null) return null
 
   const totalSpots = CAMPAIGN_CONFIG.totalSpots
   const isLowSpots = spots <= 5

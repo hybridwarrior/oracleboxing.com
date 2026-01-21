@@ -4,18 +4,29 @@ import { useEffect, useState } from 'react'
 import { CAMPAIGN_ACTIVE, CAMPAIGN_CONFIG, getCurrentSpots, getTimeUntilClose } from '@/lib/campaign'
 
 export default function CampaignBanner() {
-  const [spots, setSpots] = useState(getCurrentSpots())
-  const [timeLeft, setTimeLeft] = useState(getTimeUntilClose())
+  // Initialize with null to avoid hydration mismatch (SSR vs client date differences)
+  const [spots, setSpots] = useState<number | null>(null)
+  const [timeLeft, setTimeLeft] = useState<ReturnType<typeof getTimeUntilClose>>(null)
+  const [mounted, setMounted] = useState(false)
+
+  // Only compute values after hydration to avoid mismatch
+  useEffect(() => {
+    setMounted(true)
+    setSpots(getCurrentSpots())
+    setTimeLeft(getTimeUntilClose())
+  }, [])
 
   // Update spots and time every second
   useEffect(() => {
+    if (!mounted) return
+
     const interval = setInterval(() => {
       setSpots(getCurrentSpots())
       setTimeLeft(getTimeUntilClose())
     }, 1000)
 
     return () => clearInterval(interval)
-  }, [])
+  }, [mounted])
 
   // Don't render if campaign is not active or enrollment has ended
   if (!CAMPAIGN_ACTIVE || !timeLeft) return null
