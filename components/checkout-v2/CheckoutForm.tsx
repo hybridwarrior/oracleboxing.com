@@ -93,7 +93,7 @@ export function CheckoutForm({ onSubmit, isLoading, error, currency }: CheckoutF
       </div>
 
       {/* Back link */}
-      <a href="/" className="absolute top-4 left-4 text-white/70 text-sm font-medium hover:text-white transition-colors z-10">
+      <a href="/" className="absolute top-4 left-4 text-white/70 text-sm font-medium hover:text-white transition-colors z-20">
         &larr; Back
       </a>
 
@@ -220,11 +220,10 @@ export function CheckoutForm({ onSubmit, isLoading, error, currency }: CheckoutF
           <button
             type="submit"
             disabled={isLoading}
-            className={`w-full h-12 px-6 rounded-lg font-medium text-base shadow-[0px_0px_0px_2.5px_rgba(255,255,255,0.08)_inset] transition-all duration-200 flex items-center justify-center ${
-              isLoading
+            className={`w-full h-12 px-6 rounded-lg font-medium text-base shadow-[0px_0px_0px_2.5px_rgba(255,255,255,0.08)_inset] transition-all duration-200 flex items-center justify-center ${isLoading
                 ? 'bg-[#847971] cursor-not-allowed'
                 : 'bg-[#37322F] hover:bg-[#37322f]/90 cursor-pointer'
-            } text-white`}
+              } text-white`}
           >
             {isLoading ? (
               <>
