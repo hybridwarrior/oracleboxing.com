@@ -13,7 +13,7 @@ interface CheckoutTimerProps {
 }
 
 const STORAGE_KEY = 'checkout_timer_start'
-const DEFAULT_DURATION = 15 // minutes
+const DEFAULT_DURATION = 45 // minutes
 
 export default function CheckoutTimer({
   duration = DEFAULT_DURATION,

@@ -20,7 +20,7 @@ export const CAMPAIGN_CONFIG = {
   // Format: { date: 'YYYY-MM-DD', spots: number }
   // The spots value applies from midnight UTC on that date
   spotSchedule: [
-    { date: '2026-01-22', spots: 30 },
+    { date: '2026-01-22', spots: 28 },
     { date: '2026-01-23', spots: 27 },
     { date: '2026-01-24', spots: 24 },
     { date: '2026-01-25', spots: 21 },
