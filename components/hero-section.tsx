@@ -66,7 +66,7 @@ export function HeroSection() {
                 <span className="block tracking-tight">Master the 3 Pillars</span>
                 <span className="block tracking-wide">of Boxing in 21 Days</span>
               </h1>
-              <p className="max-w-[900px] text-center text-[#37322f]/80 text-lg sm:text-xl md:text-2xl font-medium leading-7 sm:leading-8">
+              <p className="max-w-[900px] text-center text-[#37322f]/80 text-sm sm:text-xl md:text-2xl font-medium leading-6 sm:leading-8">
                 Live coaching • Video feedback • Money-back guarantee
               </p>
               {/* Price and campaign info */}
@@ -90,7 +90,7 @@ export function HeroSection() {
               href={getCheckoutUrl()}
               onClick={() => !ENROLLMENT_CLOSED && trackAddToCart('21dc-entry', '21-Day Challenge', price, currency, 'hero')}
             >
-              {ENROLLMENT_CLOSED ? 'Join the Waitlist' : `Join Now – Only ${spots} Spots Left`}
+              {ENROLLMENT_CLOSED ? 'Join the Waitlist' : `Join Now - Only ${spots} Spots Left`}
             </ArrowButton>
             {/* Trust signal */}
             {!ENROLLMENT_CLOSED && (
@@ -98,7 +98,7 @@ export function HeroSection() {
                 <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
                 </svg>
-                30-day money-back guarantee
+                Win your money-back guarantee (by doing the bare minimum)
               </p>
             )}
           </div>

@@ -41,8 +41,8 @@ export default function PricingSection() {
           <div className="flex flex-col lg:flex-row lg:items-stretch lg:justify-between gap-8 lg:gap-8">
             {/* Left side - Product info */}
             <div className="lg:max-w-[420px]">
-                {/* Logo */}
-                <div className="flex justify-start mb-6">
+                {/* Logo - hidden on mobile */}
+                <div className="hidden md:flex justify-start mb-6">
                   <img
                     src="https://sb.oracleboxing.com/logo/icon_dark.webp"
                     alt="Oracle Boxing"
@@ -118,13 +118,13 @@ export default function PricingSection() {
                 {ENROLLMENT_CLOSED && <div className="flex-1" />}
 
                 {/* CTA Button - Bottom Right */}
-                <div className="flex flex-col items-center lg:items-end gap-3 mt-6 lg:mt-0">
+                <div className="flex flex-col items-center lg:items-end gap-4 mt-10 lg:mt-0 pt-6 lg:pt-0">
                   <ArrowButton
                     href={checkoutUrl}
                     onClick={() => !ENROLLMENT_CLOSED && trackAddToCart('21dc-entry', '21-Day Challenge', price, currency, 'pricing-section')}
                     className="w-full lg:w-auto lg:min-w-[280px]"
                   >
-                    {ENROLLMENT_CLOSED ? 'Join the Waitlist' : `Join Now – Only ${spots} Spots Left`}
+                    {ENROLLMENT_CLOSED ? 'Join the Waitlist' : `Join Now - Only ${spots} Spots Left`}
                   </ArrowButton>
                   {/* Trust signal */}
                   {!ENROLLMENT_CLOSED && (
@@ -132,7 +132,7 @@ export default function PricingSection() {
                       <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
                       </svg>
-                      30-day money-back guarantee
+                      Win your money-back guarantee (by doing the bare minimum)
                     </p>
                   )}
                 </div>
