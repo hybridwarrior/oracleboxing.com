@@ -53,7 +53,9 @@ export async function GET() {
           referrer TEXT,
           utm_source TEXT,
           utm_medium TEXT,
+          utm_campaign TEXT,
           utm_content TEXT,
+          payment_intent_id TEXT,
           created_at TIMESTAMPTZ DEFAULT NOW()
         );
 
@@ -80,6 +82,7 @@ export async function GET() {
           referrer TEXT,
           utm_source TEXT,
           utm_medium TEXT,
+          utm_campaign TEXT,
           utm_content TEXT,
           created_at TIMESTAMPTZ DEFAULT NOW()
         );
@@ -191,7 +194,9 @@ CREATE TABLE IF NOT EXISTS initiate_checkouts (
   referrer TEXT,
   utm_source TEXT,
   utm_medium TEXT,
+  utm_campaign TEXT,
   utm_content TEXT,
+  payment_intent_id TEXT,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
@@ -214,6 +219,7 @@ CREATE TABLE IF NOT EXISTS purchases (
   referrer TEXT,
   utm_source TEXT,
   utm_medium TEXT,
+  utm_campaign TEXT,
   utm_content TEXT,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
