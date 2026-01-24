@@ -6,6 +6,7 @@ import { ArrowButton } from '@/components/ui/arrow-button'
 import { ENROLLMENT_CLOSED, getCheckoutUrl } from '@/lib/enrollment'
 import { CAMPAIGN_ACTIVE, getEnrollmentDeadlineText } from '@/lib/campaign'
 import CampaignSpotCounter from '@/components/CampaignSpotCounter'
+import { trackAddToCart } from '@/lib/webhook-tracking'
 
 export default function PricingSection() {
   const { currency } = useCurrency()
@@ -116,7 +117,11 @@ export default function PricingSection() {
                 {ENROLLMENT_CLOSED && <div className="flex-1" />}
 
                 {/* CTA Button - Bottom Right */}
-                <ArrowButton href={checkoutUrl} className="w-full lg:w-auto lg:min-w-[280px] mt-6 lg:mt-0">
+                <ArrowButton
+                  href={checkoutUrl}
+                  onClick={() => !ENROLLMENT_CLOSED && trackAddToCart('21dc-entry', '21-Day Challenge', price, currency, 'pricing-section')}
+                  className="w-full lg:w-auto lg:min-w-[280px] mt-6 lg:mt-0"
+                >
                   {ENROLLMENT_CLOSED ? 'Join the Waitlist' : 'Start Your Transformation'}
                 </ArrowButton>
             </div>

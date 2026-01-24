@@ -6,6 +6,7 @@ import { CoursesIllustration, CoachingIllustration, CommunityIllustration } from
 import { TransformationShowcase } from "./TransformationShowcase"
 import { MemberQuotes } from "./MemberQuotes"
 import { ENROLLMENT_CLOSED, getCheckoutUrl } from "@/lib/enrollment"
+import { trackAddToCart } from "@/lib/webhook-tracking"
 
 export function HeroSection() {
   const [activeCard, setActiveCard] = useState(0)
@@ -67,7 +68,12 @@ export function HeroSection() {
 
           {/* CTA Button */}
           <div className="flex justify-center">
-            <ArrowButton href={getCheckoutUrl()}>{ENROLLMENT_CLOSED ? 'Join the Waitlist' : 'Start Now'}</ArrowButton>
+            <ArrowButton
+              href={getCheckoutUrl()}
+              onClick={() => !ENROLLMENT_CLOSED && trackAddToCart('21dc-entry', '21-Day Challenge', 147, 'USD', 'hero')}
+            >
+              {ENROLLMENT_CLOSED ? 'Join the Waitlist' : 'Start Now'}
+            </ArrowButton>
           </div>
         </div>
       </div>

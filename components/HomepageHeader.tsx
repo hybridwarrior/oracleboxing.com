@@ -5,6 +5,9 @@ import Image from "next/image"
 import { ENROLLMENT_CLOSED, getCheckoutUrl } from "@/lib/enrollment"
 import { CAMPAIGN_ACTIVE } from "@/lib/campaign"
 import CampaignSpotCounter from "./CampaignSpotCounter"
+import { trackAddToCart } from "@/lib/webhook-tracking"
+import { useCurrency } from "@/contexts/CurrencyContext"
+import { getProductPrice } from "@/lib/currency"
 
 const navLinks = [
   { label: "How it Works", href: "#how-it-works" },
@@ -13,6 +16,8 @@ const navLinks = [
 ]
 
 export default function HomepageHeader() {
+  const { currency } = useCurrency()
+
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     if (href.startsWith("#")) {
       e.preventDefault()
@@ -21,6 +26,13 @@ export default function HomepageHeader() {
         element.scrollIntoView({ behavior: "smooth" })
       }
     }
+  }
+
+  const handleJoinNowClick = () => {
+    if (ENROLLMENT_CLOSED) return // Don't track AddToCart for waitlist
+
+    const price = getProductPrice('21dc_entry', currency) || 147
+    trackAddToCart('21dc-entry', '21-Day Challenge', price, currency, 'header')
   }
 
   return (
@@ -63,6 +75,7 @@ export default function HomepageHeader() {
           {/* Join Now Button */}
           <Link
             href={getCheckoutUrl()}
+            onClick={handleJoinNowClick}
             className="h-10 px-6 bg-[#37322f] hover:bg-[#37322f]/90 text-white rounded-lg font-medium text-sm inline-flex items-center justify-center transition-all"
           >
             {ENROLLMENT_CLOSED ? 'Join Waitlist' : 'Join Now'}

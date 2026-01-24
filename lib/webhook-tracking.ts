@@ -916,3 +916,80 @@ export async function trackWaitlistSignup(
     console.error('Error tracking waitlist signup:', error);
   }
 }
+
+/**
+ * Track AddToCart event when user clicks to go to checkout
+ * Fires both Facebook Pixel (browser) and Conversions API (server)
+ */
+export function trackAddToCart(
+  productId: string,
+  productName: string,
+  price: number,
+  currency: string,
+  buttonLocation: string
+): void {
+  try {
+    const eventId = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+
+    // Track AddToCart in Facebook Pixel (browser-side)
+    if (typeof window !== 'undefined' && (window as any).fbq) {
+      (window as any).fbq('track', 'AddToCart', {
+        content_ids: [productId],
+        content_name: productName,
+        content_type: 'product',
+        value: price,
+        currency: currency,
+        button_location: buttonLocation,
+      }, {
+        eventID: eventId
+      });
+      console.log('📱 Facebook Pixel AddToCart event sent:', { productId, eventId, buttonLocation });
+    }
+
+    // Get cookie data for CAPI
+    let cookieData = {};
+    let fbclid = null;
+
+    if (typeof document !== 'undefined') {
+      const cookies = document.cookie.split(';').reduce((acc, cookie) => {
+        const [key, value] = cookie.trim().split('=');
+        acc[key] = value;
+        return acc;
+      }, {} as Record<string, string>);
+
+      const obTrackCookie = cookies['ob_track'];
+      if (obTrackCookie) {
+        try {
+          cookieData = JSON.parse(decodeURIComponent(obTrackCookie));
+        } catch (e) {
+          console.warn('Failed to parse tracking cookie:', e);
+        }
+      }
+      fbclid = cookies['fbclid'] || null;
+    }
+
+    // Send to Facebook Conversions API (server-side)
+    fetch('/api/facebook-addtocart', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        event_id: eventId,
+        content_ids: [productId],
+        content_name: productName,
+        value: price,
+        currency: currency,
+        button_location: buttonLocation,
+        page_url: typeof window !== 'undefined' ? window.location.href : '',
+        cookie_data: cookieData,
+        fbclid: fbclid,
+      }),
+      keepalive: true,
+    }).catch((error) => {
+      console.error('Failed to send AddToCart to Facebook CAPI:', error);
+    });
+
+    console.log('🛒 AddToCart tracked:', { productId, productName, price, currency, buttonLocation });
+  } catch (error) {
+    console.error('Error tracking AddToCart:', error);
+  }
+}

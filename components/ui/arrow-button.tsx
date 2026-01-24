@@ -67,7 +67,7 @@ export function ArrowButton({ children, href, onClick, className = "" }: ArrowBu
 
   if (href) {
     return (
-      <Link href={href} className={baseClasses}>
+      <Link href={href} onClick={onClick} className={baseClasses}>
         {buttonContent}
       </Link>
     )
