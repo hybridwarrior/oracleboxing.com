@@ -92,8 +92,8 @@ export function CheckoutForm({ onSubmit, isLoading, error, currency }: CheckoutF
         <div className="ribbon ribbon-6" />
       </div>
 
-      {/* Back link - positioned safely above the card on mobile with adequate tap target */}
-      <a href="/" className="absolute top-2 sm:top-4 left-2 sm:left-4 text-white/70 text-sm font-medium hover:text-white active:text-white transition-colors z-30 py-2 px-3 rounded-lg">
+      {/* Back link - positioned below campaign banner + header on mobile */}
+      <a href="/" className="absolute top-14 sm:top-4 left-2 sm:left-4 text-white/70 text-sm font-medium hover:text-white active:text-white transition-colors z-30 py-2 px-3 rounded-lg">
         &larr; Back
       </a>
 
