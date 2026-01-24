@@ -1,5 +1,6 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { ENROLLMENT_CLOSED, getCheckoutUrl } from "@/lib/enrollment"
@@ -17,6 +18,17 @@ const navLinks = [
 
 export default function HomepageHeader() {
   const { currency } = useCurrency()
+  const [isScrolled, setIsScrolled] = useState(false)
+
+  // Track scroll position to hide mobile header when sticky footer appears
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 500)
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     if (href.startsWith("#")) {
@@ -36,10 +48,21 @@ export default function HomepageHeader() {
   }
 
   return (
-    <header className={`w-full bg-white py-4 fixed left-0 right-0 z-50 shadow-[0_1px_3px_0_rgba(0,0,0,0.1),0_1px_2px_-1px_rgba(0,0,0,0.1)] ${CAMPAIGN_ACTIVE ? 'top-9 sm:top-10' : 'top-0'}`}>
-      <div className="w-full px-4 sm:px-6 lg:px-8 flex items-center justify-between">
-        {/* Logo - Left */}
-        <Link href="/" className="flex-shrink-0">
+    <header className={`w-full bg-white py-4 fixed left-0 right-0 z-50 shadow-[0_1px_3px_0_rgba(0,0,0,0.1),0_1px_2px_-1px_rgba(0,0,0,0.1)] transition-transform duration-300 ${CAMPAIGN_ACTIVE ? 'top-9 sm:top-10' : 'top-0'} ${isScrolled ? '-translate-y-full md:translate-y-0' : 'translate-y-0'}`}>
+      <div className="w-full px-4 sm:px-6 lg:px-8 flex items-center justify-center md:justify-between">
+        {/* Mobile: Centered horizontal logo */}
+        <Link href="/" className="md:hidden flex-shrink-0">
+          <Image
+            src="https://sb.oracleboxing.com/logo/long_dark.webp"
+            alt="Oracle Boxing"
+            width={160}
+            height={32}
+            className="h-8 w-auto"
+          />
+        </Link>
+
+        {/* Desktop: Icon logo on left */}
+        <Link href="/" className="hidden md:block flex-shrink-0">
           <Image
             src="https://sb.oracleboxing.com/logo/icon_dark.webp"
             alt="Oracle Boxing"
