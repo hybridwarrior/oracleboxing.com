@@ -633,7 +633,7 @@ export function StripeCheckout({
         {/* Campaign Timer - spot reservation countdown */}
         {CAMPAIGN_ACTIVE && (
           <div className="px-4 pb-4">
-            <CheckoutTimer duration={15} />
+            <CheckoutTimer duration={45} />
           </div>
         )}
       </header>
