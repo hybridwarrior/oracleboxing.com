@@ -63,13 +63,11 @@ export default function HomepageHeader() {
           ))}
         </nav>
 
-        {/* Right Side - Spot Counter + Join Now Button */}
-        <div className="flex items-center gap-3">
-          {/* Spot Counter (campaign only, hidden on small mobile) */}
+        {/* Right Side - Spot Counter + Join Now Button (hidden on mobile - sticky bar handles it) */}
+        <div className="hidden md:flex items-center gap-3">
+          {/* Spot Counter (campaign only) */}
           {CAMPAIGN_ACTIVE && (
-            <div className="hidden sm:block">
-              <CampaignSpotCounter size="sm" />
-            </div>
+            <CampaignSpotCounter size="sm" />
           )}
 
           {/* Join Now Button */}
