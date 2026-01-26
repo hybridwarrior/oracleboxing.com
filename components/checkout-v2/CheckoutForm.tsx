@@ -56,7 +56,7 @@ export function CheckoutForm({ onSubmit, isLoading, error, currency }: CheckoutF
     const email = customerInfo.email.trim()
     const phoneRaw = customerInfo.phone.trim()
 
-    if (!firstName || !lastName || !email || !phoneRaw) {
+    if (!firstName || !lastName || !email) {
       toast.error('Please fill in all required fields')
       return
     }
@@ -67,14 +67,12 @@ export function CheckoutForm({ onSubmit, isLoading, error, currency }: CheckoutF
       return
     }
 
-    // Get the full E.164 formatted phone number
-    const selectedCountry = COUNTRIES.find(c => c.code === phoneCountry)
-    const dialCode = selectedCountry?.dial || '+1'
-    const phone = getFullPhoneNumber(phoneRaw, dialCode)
-
-    if (!phone) {
-      toast.error('Please enter a valid phone number')
-      return
+    // Get the full E.164 formatted phone number (optional)
+    let phone = ''
+    if (phoneRaw) {
+      const selectedCountry = COUNTRIES.find(c => c.code === phoneCountry)
+      const dialCode = selectedCountry?.dial || '+1'
+      phone = getFullPhoneNumber(phoneRaw, dialCode) || ''
     }
 
     await onSubmit({ firstName, lastName, email, phone })
@@ -100,6 +98,19 @@ export function CheckoutForm({ onSubmit, isLoading, error, currency }: CheckoutF
       {/* Card */}
       <div className="w-full max-w-md lg:max-w-3xl bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl p-4 sm:p-8 lg:p-12 relative z-10">
         <form onSubmit={handleSubmit} className="max-w-xl mx-auto">
+          {/* Progress Indicator */}
+          <div className="flex items-center gap-2 mb-4 sm:mb-6">
+            <div className="flex items-center gap-1.5">
+              <div className="w-6 h-6 rounded-full bg-[#37322F] text-white text-xs font-medium flex items-center justify-center">1</div>
+              <span className="text-xs sm:text-sm font-medium text-[#37322F]">Your Details</span>
+            </div>
+            <div className="w-8 h-[2px] bg-[rgba(55,50,47,0.12)]" />
+            <div className="flex items-center gap-1.5">
+              <div className="w-6 h-6 rounded-full bg-[rgba(55,50,47,0.12)] text-[#847971] text-xs font-medium flex items-center justify-center">2</div>
+              <span className="text-xs sm:text-sm font-medium text-[#847971]">Payment</span>
+            </div>
+          </div>
+
           {/* Logo */}
           <div className="flex justify-start mb-3 sm:mb-8">
             <img
@@ -199,7 +210,7 @@ export function CheckoutForm({ onSubmit, isLoading, error, currency }: CheckoutF
           {/* Phone Input */}
           <div className="mb-4 sm:mb-8">
             <label htmlFor="phone" className="block text-xs sm:text-sm font-medium text-[#49423D] mb-1.5 sm:mb-2">
-              Phone Number *
+              Phone Number <span className="text-[#847971] font-normal">(optional)</span>
             </label>
             <PhoneInput
               id="phone"
@@ -209,10 +220,9 @@ export function CheckoutForm({ onSubmit, isLoading, error, currency }: CheckoutF
               defaultCountryCode={detectedCountry}
               disabled={isLoading}
               placeholder="7912345678"
-              required
             />
             <p className="text-[#847971] text-xs mt-1.5">
-              We'll text you your login details and class reminders.
+              For class reminders via SMS. You can add this later.
             </p>
           </div>
 

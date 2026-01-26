@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useCurrency } from '@/contexts/CurrencyContext'
 import { formatPrice, getProductPrice } from '@/lib/currency'
-import { CAMPAIGN_ACTIVE, getCurrentSpots, CAMPAIGN_CONFIG } from '@/lib/campaign'
+import { CAMPAIGN_ACTIVE, getCurrentSpots, CAMPAIGN_CONFIG, getEnrollmentDeadlineText } from '@/lib/campaign'
 import { ENROLLMENT_CLOSED, getCheckoutUrl } from '@/lib/enrollment'
 import { trackAddToCart } from '@/lib/webhook-tracking'
 
@@ -39,13 +39,13 @@ export default function StickyMobileCTA() {
       {/* CTA Bar */}
       <div className="bg-white border-t border-[rgba(55,50,47,0.12)] px-4 py-3 shadow-[0_-4px_20px_rgba(0,0,0,0.1)]">
         <div className="flex items-center justify-between gap-3">
-          {/* Price and spots info */}
+          {/* Spots and deadline info */}
           <div className="flex flex-col">
             <span className="text-lg font-semibold text-[#37322F]" style={{ fontFamily: 'ClashDisplay, sans-serif' }}>
-              {formatPrice(price, currency)}
+              {spots} spots left
             </span>
             <span className="text-xs text-[#49423D]/70">
-              {spots}/{CAMPAIGN_CONFIG.totalSpots} spots left
+              Closes {getEnrollmentDeadlineText()}
             </span>
           </div>
 

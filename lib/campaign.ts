@@ -131,14 +131,23 @@ export function getTimeUntilClose(): {
  */
 export function getEnrollmentDeadlineText(): string {
   const end = new Date(CAMPAIGN_CONFIG.enrollmentEnd)
-  const month = end.toLocaleString('en-US', { month: 'short', timeZone: 'Europe/London' })
-  const day = end.getDate()
+
+  // Use Intl.DateTimeFormat for consistent timezone handling
+  const formatter = new Intl.DateTimeFormat('en-GB', {
+    month: 'short',
+    day: 'numeric',
+    timeZone: 'Europe/London'
+  })
+
+  const parts = formatter.formatToParts(end)
+  const month = parts.find(p => p.type === 'month')?.value
+  const day = parseInt(parts.find(p => p.type === 'day')?.value || '1')
 
   // Add ordinal suffix
   const suffix = day === 1 || day === 21 || day === 31 ? 'st'
     : day === 2 || day === 22 ? 'nd'
-      : day === 3 || day === 23 ? 'rd'
-        : 'th'
+    : day === 3 || day === 23 ? 'rd'
+    : 'th'
 
   return `${month} ${day}${suffix} at Midnight UK`
 }

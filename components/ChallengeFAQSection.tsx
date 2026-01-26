@@ -271,6 +271,81 @@ export default function ChallengeFAQSection() {
                 </p>
               </div>
             </FAQItem>
+
+            {/* FAQ 5 - Can't make live sessions */}
+            <FAQItem
+              question="What if I can't make the live sessions?"
+              isOpen={openIndex === 4}
+              onToggle={() => setOpenIndex(openIndex === 4 ? null : 4)}
+            >
+              <div className="space-y-3">
+                <p>
+                  We run <span className="text-[#37322F] font-medium">11 live classes per week</span> across multiple timezones, so there's usually a time that works for most schedules.
+                </p>
+                <p>
+                  If you genuinely can't make any of the live sessions, you can still participate by submitting video of your training for feedback. The coaches review every submission personally.
+                </p>
+                <p>
+                  That said, the live classes are where the real learning happens—real-time corrections, drilling with others, and immediate feedback from coaches.
+                </p>
+              </div>
+            </FAQItem>
+
+            {/* FAQ 6 - Equipment */}
+            <FAQItem
+              question="Do I need any equipment?"
+              isOpen={openIndex === 5}
+              onToggle={() => setOpenIndex(openIndex === 5 ? null : 5)}
+            >
+              <div className="space-y-3">
+                <p>
+                  <span className="text-[#37322F] font-medium">No equipment required to start.</span> You can train with shadowboxing alone.
+                </p>
+                <p>
+                  If you want to level up, a heavy bag, slip bag, or mirror can help—but they're optional. Most members start with nothing and add equipment as they progress.
+                </p>
+              </div>
+            </FAQItem>
+
+            {/* FAQ 7 - Experience level */}
+            <FAQItem
+              question="What experience level do I need?"
+              isOpen={openIndex === 6}
+              onToggle={() => setOpenIndex(openIndex === 6 ? null : 6)}
+            >
+              <div className="space-y-3">
+                <p>
+                  The 21-Day Challenge is designed for <span className="text-[#37322F] font-medium">beginners and late starters</span>—people who want to learn boxing properly from the ground up.
+                </p>
+                <p>
+                  If you've trained for years and already have solid fundamentals, this might not be the right fit. But if you're just starting out, coming back after a break, or feel like you've built bad habits, you're exactly who we built this for.
+                </p>
+              </div>
+            </FAQItem>
+
+            {/* FAQ 8 - Money-back guarantee */}
+            <FAQItem
+              question="How does the money-back guarantee work?"
+              isOpen={openIndex === 7}
+              onToggle={() => setOpenIndex(openIndex === 7 ? null : 7)}
+            >
+              <div className="space-y-3">
+                <p>
+                  <span className="text-[#37322F] font-medium">Complete the challenge, get your money back.</span> It's that simple.
+                </p>
+                <p>
+                  Here's what "completing" means:
+                </p>
+                <ul className="list-disc list-inside space-y-1 ml-2">
+                  <li>Attend at least 2 live classes per week</li>
+                  <li>Submit 1 training video for feedback</li>
+                  <li>Complete your graduation call at the end</li>
+                </ul>
+                <p>
+                  Do those three things, and we'll refund your full $147. No tricks, no catches. We want people who show up and put in the work.
+                </p>
+              </div>
+            </FAQItem>
           </div>
         </div>
 
