@@ -294,6 +294,8 @@ export function PhoneInput({
           placeholder={placeholder}
           required={required}
           disabled={disabled}
+          aria-invalid={displayError ? 'true' : undefined}
+          aria-describedby={displayError ? `${id || 'phone'}-error` : undefined}
           className={cn(
             'flex-1 px-4 py-3 bg-white rounded-r-lg text-[#37322F]',
             'placeholder:text-[#9A918A]',
@@ -306,7 +308,13 @@ export function PhoneInput({
 
       {/* Error message */}
       {displayError && (
-        <p className="text-red-500 text-xs mt-1">{displayError}</p>
+        <p
+          id={`${id || 'phone'}-error`}
+          role="alert"
+          className="text-red-500 text-xs mt-1"
+        >
+          {displayError}
+        </p>
       )}
 
       {/* Country dropdown */}

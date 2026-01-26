@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import { ShoppingBag } from 'lucide-react'
 
 interface ShopProduct {
@@ -47,7 +48,7 @@ export default function ShopPage() {
       <header className="border-b border-gray-200 py-6 px-6">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-2xl font-semibold text-[#37322F] font-sans flex items-center gap-3">
-            <ShoppingBag className="w-6 h-6" />
+            <ShoppingBag className="w-6 h-6" aria-hidden="true" />
             Shop
           </h1>
           <p className="text-gray-500 text-sm mt-1">Courses and gear to level up your training</p>
@@ -56,18 +57,20 @@ export default function ShopPage() {
 
       {/* Products */}
       <div className="max-w-4xl mx-auto p-6">
-        <div className="space-y-6">
+        <ul className="space-y-6" role="list" aria-label="Products">
           {SHOP_PRODUCTS.map((product) => (
-            <div
+            <li
               key={product.id}
               className="border border-gray-200 rounded-xl p-6 flex flex-col sm:flex-row gap-6"
             >
               {/* Image */}
-              <div className="w-full sm:w-48 h-48 sm:h-32 flex-shrink-0 rounded-lg overflow-hidden bg-gray-100">
-                <img
+              <div className="w-full sm:w-48 h-48 sm:h-32 flex-shrink-0 rounded-lg overflow-hidden bg-gray-100 relative">
+                <Image
                   src={product.image}
                   alt={product.title}
-                  className="w-full h-full object-cover"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 640px) 100vw, 192px"
                 />
               </div>
 
@@ -96,9 +99,9 @@ export default function ShopPage() {
                   </a>
                 </div>
               </div>
-            </div>
+            </li>
           ))}
-        </div>
+        </ul>
 
         {/* Footer note */}
         <p className="text-center text-gray-400 text-sm mt-12">

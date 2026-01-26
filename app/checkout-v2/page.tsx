@@ -2,15 +2,33 @@
 
 import { useState, useEffect, useRef, useCallback, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
+import nextDynamic from 'next/dynamic'
 import { useCurrency } from '@/contexts/CurrencyContext'
 import { getTrackingParams, getCookie } from '@/lib/tracking-cookies'
 import { CheckoutForm } from '@/components/checkout-v2/CheckoutForm'
-import { StripeCheckout } from '@/components/checkout-v2/StripeCheckout'
 import { trackInitiateCheckout } from '@/lib/webhook-tracking'
 import { getProductPrice } from '@/lib/currency'
 import { useAnalytics } from '@/hooks/useAnalytics'
+import { Loader2 } from 'lucide-react'
+import { CheckoutFormSkeleton } from '@/components/ui/skeleton'
 
 export const dynamic = 'force-dynamic'
+
+// Dynamic import for StripeCheckout - only loaded after customer info is collected
+const StripeCheckout = nextDynamic(
+  () => import('@/components/checkout-v2/StripeCheckout').then(mod => ({ default: mod.StripeCheckout })),
+  {
+    loading: () => (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="flex items-center gap-3 text-[#37322F]">
+          <Loader2 className="w-5 h-5 animate-spin" />
+          <span>Loading payment options...</span>
+        </div>
+      </div>
+    ),
+    ssr: false
+  }
+)
 
 interface CustomerInfo {
   firstName: string
@@ -42,8 +60,8 @@ interface TrackingParams {
 export default function CheckoutV2Page() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <div className="animate-pulse text-[#37322F]">Loading...</div>
+      <div className="min-h-screen bg-white">
+        <CheckoutFormSkeleton />
       </div>
     }>
       <CheckoutV2Content />
@@ -399,8 +417,8 @@ function CheckoutV2Content() {
   // Show loading while currency is being detected or auto-submitting from URL params
   if (currencyLoading || isAutoSubmitting) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <div className="animate-pulse text-[#37322F]">Loading...</div>
+      <div className="min-h-screen bg-white">
+        <CheckoutFormSkeleton />
       </div>
     )
   }

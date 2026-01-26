@@ -58,6 +58,7 @@ export default function HomepageHeader() {
             width={80}
             height={16}
             className="h-4 w-auto"
+            priority
           />
         </Link>
 
@@ -69,6 +70,7 @@ export default function HomepageHeader() {
             width={40}
             height={40}
             className="w-10 h-auto"
+            priority
           />
         </Link>
 

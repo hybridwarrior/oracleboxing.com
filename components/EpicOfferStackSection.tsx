@@ -93,29 +93,29 @@ export default function EpicOfferStackSection({ onCTAClick }: EpicOfferStackSect
           </div>
 
           {/* Payment Methods */}
-          <div className="payment_icons-group">
+          <div className="payment_icons-group" role="group" aria-label="Accepted payment methods">
             <img
               loading="lazy"
-              alt=""
+              alt="Visa and Mastercard accepted"
               src="https://sb.oracleboxing.com/Website/payment1.svg"
               className="image-55"
             />
             <img
               loading="lazy"
-              alt=""
+              alt="American Express accepted"
               src="https://sb.oracleboxing.com/Website/payment2.svg"
               className="image-55 second"
             />
             <img
               loading="lazy"
-              alt=""
+              alt="PayPal accepted"
               src="https://sb.oracleboxing.com/Website/paypal2.svg"
               className="image-55 bigger"
             />
             <img
               loading="lazy"
               src="https://sb.oracleboxing.com/Website/klarna.svg"
-              alt=""
+              alt="Klarna accepted"
               className="image-55 bigger-mobile"
             />
           </div>

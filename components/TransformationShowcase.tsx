@@ -81,7 +81,7 @@ function LazyVideo({
         // Show poster as placeholder
         <img
           src={poster}
-          alt=""
+          alt={`${label} transformation preview`}
           className={className}
           loading="lazy"
         />

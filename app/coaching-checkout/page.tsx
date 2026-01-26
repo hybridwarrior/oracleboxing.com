@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { loadStripe, Stripe, StripeElements } from '@stripe/stripe-js'
 import { Loader2, ShieldCheck, Star, Check } from 'lucide-react'
+import { PaymentFormSkeleton, OrderSummarySkeleton } from '@/components/ui/skeleton'
 
 // Initialize Stripe outside component
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!)
@@ -11,8 +12,13 @@ const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
 export default function CoachingCheckoutPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <div className="animate-pulse text-[#37322F]">Loading...</div>
+      <div className="min-h-screen bg-white">
+        <div className="max-w-6xl mx-auto px-4 lg:px-8 xl:px-12 py-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16">
+            <PaymentFormSkeleton />
+            <OrderSummarySkeleton />
+          </div>
+        </div>
       </div>
     }>
       <CoachingCheckoutContent />
@@ -64,46 +70,38 @@ function CoachingCheckoutContent() {
   // Determine which intent we're working with
   const intentId = paymentIntentId || setupIntentId
 
-  // Fetch coaching details from PaymentIntent or SetupIntent
+  // Fetch coaching details AND initialize Stripe in parallel
   useEffect(() => {
-    const fetchDetails = async () => {
-      if (!intentId) return
-
-      try {
-        // Use different endpoints for PaymentIntent vs SetupIntent
-        const endpoint = setupIntentId
-          ? `/api/coaching-checkout/details?setup=${setupIntentId}`
-          : `/api/coaching-checkout/details?pi=${paymentIntentId}`
-
-        const response = await fetch(endpoint)
-        const data = await response.json()
-
-        if (!response.ok) {
-          throw new Error(data.error || 'Failed to fetch session details')
-        }
-
-        setCoachingDetails(data)
-      } catch (err: any) {
-        console.error('Failed to fetch coaching details:', err)
-        setError('Unable to load checkout. Please contact support.')
-      }
-    }
-
-    fetchDetails()
-  }, [intentId, paymentIntentId, setupIntentId])
-
-  // Initialize Stripe Elements - wait for coachingDetails to load first
-  useEffect(() => {
-    if (hasInitializedRef.current || !clientSecret || !coachingDetails) return
+    if (hasInitializedRef.current || !intentId || !clientSecret) return
     hasInitializedRef.current = true
 
-    const initStripe = async () => {
+    const initializeCheckout = async () => {
       try {
-        const stripeInstance = await stripePromise
+        // Fetch details and load Stripe in parallel
+        const [detailsResult, stripeInstance] = await Promise.all([
+          // Fetch coaching details
+          (async () => {
+            const endpoint = setupIntentId
+              ? `/api/coaching-checkout/details?setup=${setupIntentId}`
+              : `/api/coaching-checkout/details?pi=${paymentIntentId}`
+
+            const response = await fetch(endpoint)
+            const data = await response.json()
+
+            if (!response.ok) {
+              throw new Error(data.error || 'Failed to fetch session details')
+            }
+            return data as CoachingDetails
+          })(),
+          // Load Stripe
+          stripePromise
+        ])
+
         if (!stripeInstance) {
           throw new Error('Stripe failed to load')
         }
 
+        setCoachingDetails(detailsResult)
         setStripe(stripeInstance)
 
         // Create Elements instance
@@ -155,7 +153,7 @@ function CoachingCheckoutContent() {
             phone: 'never',
           },
           defaultValues: {
-            name: coachingDetails?.customerName || '',
+            name: detailsResult?.customerName || '',
           },
         })
 
@@ -169,14 +167,14 @@ function CoachingCheckoutContent() {
 
         setIsLoading(false)
       } catch (err: any) {
-        console.error('Stripe init error:', err)
-        setError(err.message || 'Failed to initialize payment')
+        console.error('Checkout initialization error:', err)
+        setError(err.message || 'Unable to load checkout. Please contact support.')
         setIsLoading(false)
       }
     }
 
-    initStripe()
-  }, [clientSecret, coachingDetails])
+    initializeCheckout()
+  }, [intentId, clientSecret, paymentIntentId, setupIntentId])
 
   // Handle payment confirmation
   const handleConfirm = async () => {

@@ -99,7 +99,7 @@ export function CheckoutForm({ onSubmit, isLoading, error, currency }: CheckoutF
       <div className="w-full max-w-md lg:max-w-3xl bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl p-4 sm:p-8 lg:p-12 relative z-10">
         <form onSubmit={handleSubmit} className="max-w-xl mx-auto">
           {/* Progress Indicator */}
-          <div className="flex items-center gap-2 mb-4 sm:mb-6">
+          <div className="flex items-center justify-center gap-2 mb-4 sm:mb-6">
             <div className="flex items-center gap-1.5">
               <div className="w-6 h-6 rounded-full bg-[#37322F] text-white text-xs font-medium flex items-center justify-center">1</div>
               <span className="text-xs sm:text-sm font-medium text-[#37322F]">Your Details</span>
