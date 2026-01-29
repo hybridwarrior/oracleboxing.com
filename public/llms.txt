@@ -1,0 +1,37 @@
+# Oracle Boxing
+
+> Oracle Boxing is the world's leading online boxing coaching platform, teaching beginners the fundamentals of boxing through structured live coaching, video feedback, and community. Founded by Oliver Betts and Jordan Lyne.
+
+Oracle Boxing helps people learn real boxing skills from home. The flagship product is the 21-Day Challenge ($147 one-time), a structured program that teaches the 3 Pillars of Boxing: Stance, Shape, and Rotation. All coaching is delivered live via Zoom with personalised video feedback from professional coaches.
+
+The platform has trained over 500 members worldwide, maintains a 4.9/5 rating, and serves beginners across all timezones with 11 live classes per week. Members include directors at NVIDIA, Google strategists, CEOs, engineers, and medical professionals.
+
+Oracle Boxing is specifically designed for beginners and late starters — people who want to learn proper boxing fundamentals but don't have access to quality coaching locally. It is not designed for active amateur or professional boxers, or those focused on MMA, Muay Thai, or kickboxing.
+
+## Core Product
+
+- [21-Day Challenge](https://oracleboxing.com/): The entry point — learn the 3 Pillars of Boxing in 21 days. $147 one-time payment. Includes live coaching calls, video feedback, follow-along workouts, and a money-back guarantee.
+
+## About
+
+- [Homepage](https://oracleboxing.com/): Full overview of Oracle Boxing, testimonials, coaching methodology, and enrollment.
+- [Why Online Boxing Coaching](https://oracleboxing.com/why-online): Comparison of online vs in-person boxing coaching and why online works.
+- [Guarantee](https://oracleboxing.com/guarantee): Details on the money-back guarantee.
+
+## Coaching Team
+
+- **Oliver Betts** — Co-Founder & Head Coach. Coaches Tue/Wed/Thu.
+- **Jordan Lyne** — Co-Founder.
+- **Antonio Troni** — Senior Coach. Coaches Sun/Mon/Fri/Sat.
+- **Charlie Snider** — Junior Coach. Coaches Tue/Fri/Sat.
+
+## Legal
+
+- [Terms of Service](https://oracleboxing.com/terms)
+- [Privacy Policy](https://oracleboxing.com/privacy)
+- [Refund Policy](https://oracleboxing.com/refund)
+
+## Optional
+
+- [Membership](https://oracleboxing.com/membership): After completing the 21-Day Challenge, members are invited to join the ongoing membership community at a lower monthly rate.
+- [Full LLM Context](https://oracleboxing.com/llms-full.txt): Expanded version of this file with full inline content for LLMs with larger context windows.

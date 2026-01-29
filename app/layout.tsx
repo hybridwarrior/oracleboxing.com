@@ -67,6 +67,69 @@ export const metadata: Metadata = {
   },
 }
 
+// JSON-LD structured data for AI search optimization
+const organizationSchema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "@id": "https://oracleboxing.com/#organization",
+  name: "Oracle Boxing",
+  url: "https://oracleboxing.com",
+  logo: {
+    "@type": "ImageObject",
+    url: "https://sb.oracleboxing.com/logo/icon_dark.webp",
+    width: 512,
+    height: 512,
+  },
+  description:
+    "Oracle Boxing is the world's leading online boxing coaching platform, teaching beginners the fundamentals of boxing through structured live coaching, video feedback, and community.",
+  founder: [
+    { "@type": "Person", name: "Oliver Betts", jobTitle: "Co-Founder & Head Coach" },
+    { "@type": "Person", name: "Jordan Lyne", jobTitle: "Co-Founder" },
+  ],
+  aggregateRating: {
+    "@type": "AggregateRating",
+    ratingValue: "4.9",
+    bestRating: "5",
+    ratingCount: "500",
+  },
+  sameAs: [
+    "https://www.youtube.com/@OracleBoxing",
+  ],
+}
+
+const courseSchema = {
+  "@context": "https://schema.org",
+  "@type": "Course",
+  name: "Oracle Boxing 21-Day Challenge",
+  description:
+    "A structured 21-day boxing fundamentals program with live coaching calls, personalised video feedback, follow-along workouts, and a money-back guarantee. Learn the 3 Pillars of Boxing: Stance, Shape, and Rotation.",
+  provider: { "@id": "https://oracleboxing.com/#organization" },
+  url: "https://oracleboxing.com",
+  offers: {
+    "@type": "Offer",
+    price: "147",
+    priceCurrency: "USD",
+    availability: "https://schema.org/InStock",
+  },
+  hasCourseInstance: {
+    "@type": "CourseInstance",
+    courseMode: "online",
+    instructor: [
+      { "@type": "Person", name: "Oliver Betts" },
+      { "@type": "Person", name: "Antonio Troni" },
+      { "@type": "Person", name: "Charlie Snider" },
+    ],
+  },
+}
+
+const websiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "Oracle Boxing",
+  url: "https://oracleboxing.com",
+  publisher: { "@id": "https://oracleboxing.com/#organization" },
+}
+
 export default function RootLayout({
   children,
 }: {
@@ -78,6 +141,18 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <meta name="theme-color" content="#3d3830" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(courseSchema) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
+        />
       </head>
       <body className="font-sans antialiased">
         <CurrencyProvider>
