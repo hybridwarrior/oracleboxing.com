@@ -7,7 +7,7 @@ import FooterSection from "@/components/footer-section"
 const blogPosts = [
   {
     slug: "boxing-punches-1-6-explained",
-    title: "Boxing Punches 1–6 Explained: Perfect Technique for Beginners",
+    title: "Boxing Punches 1-6 Explained: Perfect Technique for Beginners",
     excerpt:
       "Every punch in boxing comes from the same foundation: stance, shape, and rotation. Here's how to throw all six fundamental punches with proper technique.",
     date: "2025-07-16",
@@ -17,7 +17,7 @@ const blogPosts = [
     slug: "head-movement-drills",
     title: "6 Head Movement Drills That Will Make You Impossible to Hit",
     excerpt:
-      "Head movement isn't about speed — it's about positioning. Learn the slips, rolls, and pulls that give you built-in defence without thinking about it.",
+      "Head movement isn't about speed - it's about positioning. Learn the slips, rolls, and pulls that give you built-in defence without thinking about it.",
     date: "2025-07-16",
     videoId: "HVTTZI_7Lvw",
   },
@@ -25,7 +25,7 @@ const blogPosts = [
     slug: "beginner-to-boxer-complete-guide",
     title: "Beginner to Boxer: The Complete Guide to Learning Boxing Online",
     excerpt:
-      "Most beginners don't have a bad work ethic — they have a bad roadmap. Here's the complete path from your first stance to throwing real combinations.",
+      "Most beginners don't have a bad work ethic - they have a bad roadmap. Here's the complete path from your first stance to throwing real combinations.",
     date: "2025-07-16",
     videoId: "oZOXsO_LN7M",
   },
@@ -47,7 +47,7 @@ export default function BlogIndexPage() {
         <div className="max-w-[1100px] mx-auto flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <Image
-              src="https://sb.oracleboxing.com/Website/icon.webp"
+              src="https://sb.oracleboxing.com/logo/icon_dark.webp"
               alt="Oracle Boxing"
               width={32}
               height={32}

@@ -15,6 +15,11 @@ const nextConfig = {
         hostname: 'sb.oracleboxing.com',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'img.youtube.com',
+        pathname: '/**',
+      },
     ],
     // Optimize image loading
     formats: ['image/webp'],
