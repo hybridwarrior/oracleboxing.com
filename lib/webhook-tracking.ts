@@ -352,7 +352,7 @@ export async function trackPageView(page: string, referrer: string): Promise<voi
         utm_campaign: data.utmCampaign,
         utm_content: data.utmContent,
       })
-      .then(({ error }) => {
+      .then(({ error }: { error: any }) => {
         if (error) {
           console.error('Failed to save page view to Supabase:', error);
         } else {
@@ -496,7 +496,7 @@ export async function trackPurchase(
         utm_campaign: cookieData.first_utm_campaign || data.utmCampaign || utmFallback?.utm_campaign || null,
         utm_content: cookieData.first_utm_content || data.utmContent || utmFallback?.utm_content || null,
       })
-      .then(({ error }) => {
+      .then(({ error }: { error: any }) => {
         if (error) {
           console.error('Failed to save purchase to Supabase:', error);
         } else {
@@ -669,7 +669,7 @@ export async function trackInitiateCheckout(
     supabase
       .from('initiate_checkouts')
       .insert(insertData)
-      .then(({ error, status, statusText }) => {
+      .then(({ error, status, statusText }: { error: any, status: any, statusText: any }) => {
         if (error) {
           console.error('❌ Failed to save initiate checkout to Supabase:', {
             error,
@@ -845,7 +845,7 @@ export async function trackWaitlistSignup(
     supabase
       .from('waitlist')
       .insert(insertData)
-      .then(({ error }) => {
+      .then(({ error }: { error: any }) => {
         if (error) {
           console.error('❌ Failed to save waitlist signup to Supabase:', error);
         } else {

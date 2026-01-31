@@ -2,9 +2,10 @@ import { createClient } from '@supabase/supabase-js'
 
 // Browser client (uses anon key - for client-side tracking)
 // Uses lazy initialization to avoid build errors when env vars aren't set
-let _supabase: ReturnType<typeof createClient> | null = null
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let _supabase: any = null
 
-export function getSupabase() {
+export function getSupabase(): any {
   if (!_supabase) {
     const url = process.env.NEXT_PUBLIC_SUPABASE_URL
     const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
@@ -15,17 +16,19 @@ export function getSupabase() {
 }
 
 // Backwards-compatible export (lazy getter)
-export const supabase = new Proxy({} as ReturnType<typeof createClient>, {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const supabase: any = new Proxy({}, {
   get(_target, prop) {
-    return (getSupabase() as any)[prop]
+    return getSupabase()[prop]
   },
 })
 
 // Server client (uses service key - for API routes and migrations)
 // Only use this on the server side
-let _supabaseServer: ReturnType<typeof createClient> | null = null
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let _supabaseServer: any = null
 
-export function getSupabaseServerClient() {
+export function getSupabaseServerClient(): any {
   if (!_supabaseServer) {
     const url = process.env.NEXT_PUBLIC_SUPABASE_URL
     const serviceKey = process.env.SUPABASE_SERVICE_KEY

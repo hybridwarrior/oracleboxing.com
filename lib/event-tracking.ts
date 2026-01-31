@@ -163,7 +163,7 @@ export async function trackEvent(data: EventData): Promise<void> {
         utm_medium: event.utm_medium,
         utm_campaign: event.utm_campaign,
       })
-      .then(({ error }) => {
+      .then(({ error }: { error: any }) => {
         if (error) {
           console.error('Failed to track event:', error)
         } else {
