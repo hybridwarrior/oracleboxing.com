@@ -13,7 +13,7 @@ export const CAMPAIGN_CONFIG = {
   enrollmentStart: '2026-01-22T00:00:00Z',      // Jan 22nd midnight UTC
   enrollmentEnd: '2026-02-02T11:00:00+00:00',   // Feb 2nd 7:00 PM Bali time (extended)
 
-  totalSpots: 30,
+  totalSpots: 40,
 
   // Spot decrease schedule
   // Decreases gradually over the enrollment window
