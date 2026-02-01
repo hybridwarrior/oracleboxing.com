@@ -13,9 +13,19 @@ const fs = require('fs')
 const path = require('path')
 const { createClient } = require('@supabase/supabase-js')
 
-// Supabase credentials
-const SUPABASE_URL = 'https://cyifqhjdsniiitssqkrt.supabase.co'
-const SUPABASE_SERVICE_KEY = 'sb_secret_hIjREZ5pSxp0jIVxMiF5bA_0cIA-8I7'
+// Supabase credentials - loaded from environment variables
+// Set these in .env.local or pass them when running the script:
+//   NEXT_PUBLIC_SUPABASE_URL=https://xxx.supabase.co SUPABASE_SERVICE_KEY=sb_secret_xxx node scripts/migrate-csv-to-supabase.js
+require('dotenv').config({ path: path.join(__dirname, '..', '.env.local') })
+
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL
+const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY
+
+if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
+  console.error('Missing required environment variables: NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_KEY')
+  console.error('Set them in .env.local or pass them as environment variables')
+  process.exit(1)
+}
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY)
 
