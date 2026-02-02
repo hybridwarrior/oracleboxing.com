@@ -2,7 +2,7 @@
 import React, { useState } from 'react'
 
 interface Props {
-  onSubmit?: (name: string, email: string) => void;
+  onSubmit?: (name: string, email: string) => Promise<void> | void;
 }
 
 export function EmailCaptureForm({ onSubmit }: Props) {
@@ -10,15 +10,18 @@ export function EmailCaptureForm({ onSubmit }: Props) {
   const [email, setEmail] = useState('')
   const [submitted, setSubmitted] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (loading) return
     setLoading(true)
+    setError(null)
     try {
       if (onSubmit) await onSubmit(name, email)
       setSubmitted(true)
     } catch {
+      setError('Something went wrong. Please try again.')
       setLoading(false)
     }
   }
@@ -44,6 +47,7 @@ export function EmailCaptureForm({ onSubmit }: Props) {
         value={name}
         onChange={(e) => setName(e.target.value)}
         required
+        autoComplete="given-name"
         className="w-full px-4 py-3 border border-neutral-200 rounded-xl bg-white text-neutral-900 placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-900/20 focus:border-neutral-400 transition-all text-sm"
       />
       <input
@@ -52,8 +56,12 @@ export function EmailCaptureForm({ onSubmit }: Props) {
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         required
+        autoComplete="email"
         className="w-full px-4 py-3 border border-neutral-200 rounded-xl bg-white text-neutral-900 placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-900/20 focus:border-neutral-400 transition-all text-sm"
       />
+      {error && (
+        <p className="text-red-500 text-xs">{error}</p>
+      )}
       <button
         type="submit"
         disabled={loading || !name.trim() || !email.trim()}

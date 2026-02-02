@@ -111,18 +111,17 @@ export default function QuizLandingPage() {
         {/* Social Proof */}
         <section className="px-4 py-10">
           <div className="max-w-xl mx-auto text-center">
-            <p className="text-sm text-neutral-400 mb-6 uppercase tracking-wider font-medium">Trusted by boxers worldwide</p>
             <div className="flex justify-center gap-8 sm:gap-12 text-center">
               <div>
-                <p className="text-3xl font-bold text-neutral-900">2,400+</p>
-                <p className="text-sm text-neutral-500">Quizzes taken</p>
+                <p className="text-3xl font-bold text-neutral-900">10</p>
+                <p className="text-sm text-neutral-500">Questions</p>
               </div>
               <div>
                 <p className="text-3xl font-bold text-neutral-900">6</p>
-                <p className="text-sm text-neutral-500">Skill dimensions</p>
+                <p className="text-sm text-neutral-500">Dimensions</p>
               </div>
               <div>
-                <p className="text-3xl font-bold text-neutral-900">2 min</p>
+                <p className="text-3xl font-bold text-neutral-900">&lt;2 min</p>
                 <p className="text-sm text-neutral-500">To complete</p>
               </div>
             </div>

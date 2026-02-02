@@ -1,5 +1,5 @@
 "use client"
-import React, { useState, useCallback, useRef } from 'react'
+import React, { useState, useCallback, useRef, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import QuizHeader from '../components/QuizHeader'
@@ -8,6 +8,33 @@ import { QuizResponses } from '@/lib/quiz-types'
 import { QuizQuestionComponent } from '../components/QuizQuestion'
 import { ProgressBar } from '../components/ProgressBar'
 
+const STORAGE_KEY = 'ob-quiz-progress'
+
+function loadProgress(): { responses: QuizResponses; current: number } | null {
+  if (typeof window === 'undefined') return null
+  try {
+    const raw = sessionStorage.getItem(STORAGE_KEY)
+    if (!raw) return null
+    const data = JSON.parse(raw)
+    if (data && typeof data.responses === 'object' && typeof data.current === 'number') {
+      return data
+    }
+  } catch { /* ignore */ }
+  return null
+}
+
+function saveProgress(responses: QuizResponses, current: number) {
+  try {
+    sessionStorage.setItem(STORAGE_KEY, JSON.stringify({ responses, current }))
+  } catch { /* ignore */ }
+}
+
+function clearProgress() {
+  try {
+    sessionStorage.removeItem(STORAGE_KEY)
+  } catch { /* ignore */ }
+}
+
 export default function QuizTakePage() {
   const router = useRouter()
   const total = questions.length
@@ -15,8 +42,26 @@ export default function QuizTakePage() {
   const [responses, setResponses] = useState<QuizResponses>({})
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [direction, setDirection] = useState(1) // 1 = forward, -1 = back
+  const [direction, setDirection] = useState(1)
+  const [hydrated, setHydrated] = useState(false)
   const autoAdvanceTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  // Restore progress on mount
+  useEffect(() => {
+    const saved = loadProgress()
+    if (saved) {
+      setResponses(saved.responses)
+      setCurrent(saved.current)
+    }
+    setHydrated(true)
+  }, [])
+
+  // Save progress when answers or position change
+  useEffect(() => {
+    if (hydrated) {
+      saveProgress(responses, current)
+    }
+  }, [responses, current, hydrated])
 
   const q = questions[current]
 
@@ -36,6 +81,7 @@ export default function QuizTakePage() {
         })
         if (!res.ok) throw new Error('Failed to submit quiz')
         const json = await res.json()
+        clearProgress()
         router.push(`/quiz/results?id=${json.id}`)
       } catch {
         setError('Something went wrong. Please try again.')
@@ -45,12 +91,9 @@ export default function QuizTakePage() {
   }, [current, total, responses, router])
 
   const handleAnswer = useCallback((id: number, value: number) => {
-    setResponses((prev: QuizResponses) => {
-      const next = { ...prev, [id]: value }
-      return next
-    })
+    setResponses((prev: QuizResponses) => ({ ...prev, [id]: value }))
 
-    // Auto-advance after a short delay for better UX
+    // Auto-advance after a short delay (except on last question)
     if (autoAdvanceTimer.current) clearTimeout(autoAdvanceTimer.current)
     autoAdvanceTimer.current = setTimeout(() => {
       if (current < total - 1) {
@@ -87,7 +130,7 @@ export default function QuizTakePage() {
         </div>
 
         {/* Question card */}
-        <div className="w-full max-w-xl mt-4 sm:mt-6 relative" style={{ minHeight: '320px' }}>
+        <div className="w-full max-w-xl mt-4 sm:mt-6 relative" style={{ minHeight: '340px' }}>
           <AnimatePresence initial={false} mode="wait" custom={direction}>
             <motion.div
               key={q.id}
@@ -108,7 +151,12 @@ export default function QuizTakePage() {
               />
 
               {error && (
-                <p className="mt-3 text-red-500 text-sm bg-red-50 px-3 py-2 rounded-lg">{error}</p>
+                <div className="mt-3 text-red-600 text-sm bg-red-50 border border-red-100 px-3 py-2 rounded-lg flex items-center gap-2">
+                  <svg className="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                  </svg>
+                  {error}
+                </div>
               )}
 
               <div className="mt-5 flex gap-3">
