@@ -100,7 +100,7 @@ export default function QuizTakePage() {
         setDirection(1)
         setCurrent((i) => i + 1)
       }
-    }, 500)
+    }, 300)
   }, [current, total])
 
   const goBack = useCallback(() => {
@@ -138,7 +138,7 @@ export default function QuizTakePage() {
               initial={{ opacity: 0, x: direction * 60 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: direction * -60 }}
-              transition={{ duration: 0.25, ease: 'easeInOut' }}
+              transition={{ duration: 0.15, ease: 'easeOut' }}
               className="w-full bg-white border border-neutral-200 shadow-sm p-5 sm:p-6 rounded-xl"
             >
               <p className="text-xs text-neutral-400 mb-1 uppercase tracking-wider font-medium">

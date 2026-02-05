@@ -4,19 +4,18 @@ import Image from 'next/image'
 
 export default function QuizHeader() {
   return (
-    <header className="w-full bg-[#171717] text-[#F5F5F5] py-4">
-      <div className="max-w-6xl mx-auto px-4 flex items-center">
-        <Link href="/" className="flex-shrink-0">
+    <header className="w-full py-4 px-4 bg-[#171717]">
+      <div className="max-w-xl mx-auto flex justify-center">
+        <Link href="/">
           <Image
-            src="https://sb.oracleboxing.com/logo/icon_dark.webp"
+            src="https://sb.oracleboxing.com/logo/long_light.webp"
             alt="Oracle Boxing"
-            width={40}
-            height={40}
-            className="w-10 h-auto"
+            width={140}
+            height={28}
+            className="h-5 w-auto"
             priority
           />
         </Link>
-        <span className="ml-4 text-lg font-semibold">Boxing Level Quiz</span>
       </div>
     </header>
   )
