@@ -1,0 +1,258 @@
+{
+  "totalCorrect": 12,
+  "totalQuestions": 23,
+  "percentage": 52,
+  "categoryScores": [
+    {
+      "category": "Combinations & Flow",
+      "correct": 0,
+      "total": 1,
+      "percentage": 0,
+      "gaps": [
+        {
+          "gap": "Incorrect on: What makes combinations more effective than throwing single ",
+          "category": "Combinations & Flow",
+          "questionId": "combo-001",
+          "remedialVideos": [
+            "-mwJKSlrYrQ",
+            "oRSqcEMVws8",
+            "Z005mv9QCs8"
+          ]
+        }
+      ]
+    },
+    {
+      "category": "footwork",
+      "correct": 0,
+      "total": 1,
+      "percentage": 0,
+      "gaps": [
+        {
+          "gap": "Fundamental misunderstanding of boxing principles",
+          "category": "footwork",
+          "questionId": "FW004",
+          "remedialVideos": []
+        }
+      ]
+    },
+    {
+      "category": "uppercut",
+      "correct": 0,
+      "total": 1,
+      "percentage": 0,
+      "gaps": [
+        {
+          "gap": "Mistakenly believes bigger wind-up = more power. Actually makes punch slower and predictable.",
+          "category": "uppercut",
+          "questionId": "uppercut-002",
+          "remedialVideos": []
+        }
+      ]
+    },
+    {
+      "category": "Defense - Movement",
+      "correct": 1,
+      "total": 3,
+      "percentage": 33,
+      "gaps": [
+        {
+          "gap": "Incorrect on: A boxer is slipping punches but keeps getting hit anyway. Lo",
+          "category": "Defense - Movement",
+          "questionId": "defense-002",
+          "remedialVideos": []
+        },
+        {
+          "gap": "Incorrect on: When slipping a jab from an orthodox opponent (you're also o",
+          "category": "Defense - Movement",
+          "questionId": "defense-003",
+          "remedialVideos": []
+        }
+      ]
+    },
+    {
+      "category": "STANCE_FOUNDATION",
+      "correct": 1,
+      "total": 3,
+      "percentage": 33,
+      "gaps": [
+        {
+          "gap": "Speed vs. stability confusion",
+          "category": "STANCE_FOUNDATION",
+          "questionId": "stance-004",
+          "remedialVideos": [
+            "4s5Cu8ttouM",
+            "KwnJu9iHpoY"
+          ]
+        },
+        {
+          "gap": "Punch speed understanding",
+          "category": "STANCE_FOUNDATION",
+          "questionId": "stance-005",
+          "remedialVideos": [
+            "GnV2lZhsac8",
+            "4s5Cu8ttouM"
+          ]
+        }
+      ]
+    },
+    {
+      "category": "DISTANCE/RANGE",
+      "correct": 1,
+      "total": 2,
+      "percentage": 50,
+      "gaps": [
+        {
+          "gap": "Incorrect on: Look at the diagram showing two boxers. Based on the distanc",
+          "category": "DISTANCE/RANGE",
+          "questionId": "range-001",
+          "remedialVideos": []
+        }
+      ]
+    },
+    {
+      "category": "Power Generation",
+      "correct": 1,
+      "total": 2,
+      "percentage": 50,
+      "gaps": [
+        {
+          "gap": "Incorrect on: Your punches feel 'arm-heavy' with no snap. You notice your ",
+          "category": "Power Generation",
+          "questionId": "power-003",
+          "remedialVideos": []
+        }
+      ]
+    },
+    {
+      "category": "Defense - Hands",
+      "correct": 2,
+      "total": 3,
+      "percentage": 67,
+      "gaps": [
+        {
+          "gap": "Incorrect on: During sparring, body shots keep landing on your liver and r",
+          "category": "Defense - Hands",
+          "questionId": "dh-004",
+          "remedialVideos": []
+        }
+      ]
+    },
+    {
+      "category": "HOOK",
+      "correct": 2,
+      "total": 3,
+      "percentage": 67,
+      "gaps": [
+        {
+          "gap": "Incorrect on: Why do we transfer weight BACKWARDS (from front foot to rear",
+          "category": "HOOK",
+          "questionId": "hook-001",
+          "remedialVideos": []
+        }
+      ]
+    },
+    {
+      "category": "cross",
+      "correct": 2,
+      "total": 2,
+      "percentage": 100,
+      "gaps": []
+    },
+    {
+      "category": "jab",
+      "correct": 2,
+      "total": 2,
+      "percentage": 100,
+      "gaps": []
+    }
+  ],
+  "allGaps": [
+    {
+      "gap": "Incorrect on: What makes combinations more effective than throwing single ",
+      "category": "Combinations & Flow",
+      "questionId": "combo-001",
+      "remedialVideos": [
+        "-mwJKSlrYrQ",
+        "oRSqcEMVws8",
+        "Z005mv9QCs8"
+      ]
+    },
+    {
+      "gap": "Incorrect on: During sparring, body shots keep landing on your liver and r",
+      "category": "Defense - Hands",
+      "questionId": "dh-004",
+      "remedialVideos": []
+    },
+    {
+      "gap": "Incorrect on: A boxer is slipping punches but keeps getting hit anyway. Lo",
+      "category": "Defense - Movement",
+      "questionId": "defense-002",
+      "remedialVideos": []
+    },
+    {
+      "gap": "Incorrect on: When slipping a jab from an orthodox opponent (you're also o",
+      "category": "Defense - Movement",
+      "questionId": "defense-003",
+      "remedialVideos": []
+    },
+    {
+      "gap": "Incorrect on: Look at the diagram showing two boxers. Based on the distanc",
+      "category": "DISTANCE/RANGE",
+      "questionId": "range-001",
+      "remedialVideos": []
+    },
+    {
+      "gap": "Fundamental misunderstanding of boxing principles",
+      "category": "footwork",
+      "questionId": "FW004",
+      "remedialVideos": []
+    },
+    {
+      "gap": "Incorrect on: Why do we transfer weight BACKWARDS (from front foot to rear",
+      "category": "HOOK",
+      "questionId": "hook-001",
+      "remedialVideos": []
+    },
+    {
+      "gap": "Incorrect on: Your punches feel 'arm-heavy' with no snap. You notice your ",
+      "category": "Power Generation",
+      "questionId": "power-003",
+      "remedialVideos": []
+    },
+    {
+      "gap": "Speed vs. stability confusion",
+      "category": "STANCE_FOUNDATION",
+      "questionId": "stance-004",
+      "remedialVideos": [
+        "4s5Cu8ttouM",
+        "KwnJu9iHpoY"
+      ]
+    },
+    {
+      "gap": "Punch speed understanding",
+      "category": "STANCE_FOUNDATION",
+      "questionId": "stance-005",
+      "remedialVideos": [
+        "GnV2lZhsac8",
+        "4s5Cu8ttouM"
+      ]
+    },
+    {
+      "gap": "Mistakenly believes bigger wind-up = more power. Actually makes punch slower and predictable.",
+      "category": "uppercut",
+      "questionId": "uppercut-002",
+      "remedialVideos": []
+    }
+  ],
+  "prescribedVideos": [
+    "-mwJKSlrYrQ",
+    "oRSqcEMVws8",
+    "Z005mv9QCs8",
+    "4s5Cu8ttouM",
+    "KwnJu9iHpoY",
+    "GnV2lZhsac8"
+  ],
+  "level": "developing",
+  "id": "66d0870e",
+  "createdAt": "2026-02-05T07:04:58.504Z"
+}

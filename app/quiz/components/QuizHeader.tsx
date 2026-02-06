@@ -4,7 +4,7 @@ import Image from 'next/image'
 
 export default function QuizHeader() {
   return (
-    <header className="w-full py-4 px-4 bg-[#171717]">
+    <header className="w-full py-4 px-4 bg-[#37322F]">
       <div className="max-w-xl mx-auto flex justify-center">
         <Link href="/">
           <Image

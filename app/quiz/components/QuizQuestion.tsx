@@ -1,6 +1,11 @@
 "use client"
 import React from 'react'
-import { QuizQuestion } from '@/lib/quiz-types'
+
+interface QuizQuestion {
+  id: number
+  question: string
+  options: { label: string; value: number }[]
+}
 
 interface Props {
   question: QuizQuestion
@@ -25,7 +30,7 @@ export function QuizQuestionComponent({ question, value = 0, onAnswer }: Props) 
               className={`
                 w-full text-left transition-all duration-200 flex items-start gap-3 p-3.5 rounded-xl cursor-pointer border
                 ${selected
-                  ? 'bg-neutral-900 text-white border-neutral-900 shadow-md scale-[1.01]'
+                  ? 'bg-[#37322F] text-white border-[#37322F] shadow-md scale-[1.01]'
                   : 'bg-white text-neutral-900 border-neutral-200 hover:border-neutral-400 hover:shadow-sm active:scale-[0.99]'
                 }
               `}

@@ -1,0 +1,325 @@
+{
+  "totalCorrect": 5,
+  "totalQuestions": 23,
+  "percentage": 22,
+  "categoryScores": [
+    {
+      "category": "Combinations & Flow",
+      "correct": 0,
+      "total": 1,
+      "percentage": 0,
+      "gaps": [
+        {
+          "gap": "Incorrect on: What makes combinations more effective than throwing single ",
+          "category": "Combinations & Flow",
+          "questionId": "combo-001",
+          "remedialVideos": [
+            "-mwJKSlrYrQ",
+            "oRSqcEMVws8",
+            "Z005mv9QCs8"
+          ]
+        }
+      ]
+    },
+    {
+      "category": "cross",
+      "correct": 0,
+      "total": 2,
+      "percentage": 0,
+      "gaps": [
+        {
+          "gap": "Arm punching without body rotation",
+          "category": "cross",
+          "questionId": "cross-001",
+          "remedialVideos": []
+        },
+        {
+          "gap": "Not recognizing the difference between power and timing/stealth",
+          "category": "cross",
+          "questionId": "cross-004",
+          "remedialVideos": []
+        }
+      ]
+    },
+    {
+      "category": "Defense - Movement",
+      "correct": 0,
+      "total": 3,
+      "percentage": 0,
+      "gaps": [
+        {
+          "gap": "Incorrect on: A boxer is slipping punches but keeps getting hit anyway. Lo",
+          "category": "Defense - Movement",
+          "questionId": "defense-002",
+          "remedialVideos": []
+        },
+        {
+          "gap": "Incorrect on: When slipping a jab from an orthodox opponent (you're also o",
+          "category": "Defense - Movement",
+          "questionId": "defense-003",
+          "remedialVideos": []
+        }
+      ]
+    },
+    {
+      "category": "DISTANCE/RANGE",
+      "correct": 0,
+      "total": 2,
+      "percentage": 0,
+      "gaps": [
+        {
+          "gap": "Incorrect on: Why is controlling distance (range management) considered on",
+          "category": "DISTANCE/RANGE",
+          "questionId": "range-002",
+          "remedialVideos": []
+        }
+      ]
+    },
+    {
+      "category": "footwork",
+      "correct": 0,
+      "total": 1,
+      "percentage": 0,
+      "gaps": [
+        {
+          "gap": "Fundamental misunderstanding of boxing principles",
+          "category": "footwork",
+          "questionId": "FW004",
+          "remedialVideos": []
+        }
+      ]
+    },
+    {
+      "category": "STANCE_FOUNDATION",
+      "correct": 0,
+      "total": 3,
+      "percentage": 0,
+      "gaps": [
+        {
+          "gap": "External blame pattern",
+          "category": "STANCE_FOUNDATION",
+          "questionId": "stance-004",
+          "remedialVideos": [
+            "KwnJu9iHpoY",
+            "hLa7FYJGQpg"
+          ]
+        },
+        {
+          "gap": "Hook mechanics understanding",
+          "category": "STANCE_FOUNDATION",
+          "questionId": "stance-005",
+          "remedialVideos": [
+            "n1fYlnnfQrs",
+            "l1hO2zoTWPQ"
+          ]
+        },
+        {
+          "gap": "Training transfer understanding",
+          "category": "STANCE_FOUNDATION",
+          "questionId": "stance-006",
+          "remedialVideos": [
+            "4s5Cu8ttouM",
+            "ZUqn8Hdqie0"
+          ]
+        }
+      ]
+    },
+    {
+      "category": "uppercut",
+      "correct": 0,
+      "total": 1,
+      "percentage": 0,
+      "gaps": [
+        {
+          "gap": "Focusing on wrong element - stance width isn't the issue here.",
+          "category": "uppercut",
+          "questionId": "uppercut-002",
+          "remedialVideos": []
+        }
+      ]
+    },
+    {
+      "category": "Defense - Hands",
+      "correct": 1,
+      "total": 3,
+      "percentage": 33,
+      "gaps": [
+        {
+          "gap": "Incorrect on: When would you use a PARRY instead of a CATCH?",
+          "category": "Defense - Hands",
+          "questionId": "dh-003",
+          "remedialVideos": []
+        }
+      ]
+    },
+    {
+      "category": "jab",
+      "correct": 1,
+      "total": 2,
+      "percentage": 50,
+      "gaps": [
+        {
+          "gap": "shoulder_protection",
+          "category": "jab",
+          "questionId": "jab-01",
+          "remedialVideos": [
+            "DGeuo7KjRLo",
+            "xm8_uF0J1MU"
+          ]
+        }
+      ]
+    },
+    {
+      "category": "Power Generation",
+      "correct": 1,
+      "total": 2,
+      "percentage": 50,
+      "gaps": [
+        {
+          "gap": "Incorrect on: Your punches feel 'arm-heavy' with no snap. You notice your ",
+          "category": "Power Generation",
+          "questionId": "power-003",
+          "remedialVideos": []
+        }
+      ]
+    },
+    {
+      "category": "HOOK",
+      "correct": 2,
+      "total": 3,
+      "percentage": 67,
+      "gaps": [
+        {
+          "gap": "Incorrect on: You throw lead hooks but constantly feel off-balance and fin",
+          "category": "HOOK",
+          "questionId": "hook-004",
+          "remedialVideos": []
+        }
+      ]
+    }
+  ],
+  "allGaps": [
+    {
+      "gap": "Incorrect on: What makes combinations more effective than throwing single ",
+      "category": "Combinations & Flow",
+      "questionId": "combo-001",
+      "remedialVideos": [
+        "-mwJKSlrYrQ",
+        "oRSqcEMVws8",
+        "Z005mv9QCs8"
+      ]
+    },
+    {
+      "gap": "Arm punching without body rotation",
+      "category": "cross",
+      "questionId": "cross-001",
+      "remedialVideos": []
+    },
+    {
+      "gap": "Not recognizing the difference between power and timing/stealth",
+      "category": "cross",
+      "questionId": "cross-004",
+      "remedialVideos": []
+    },
+    {
+      "gap": "Incorrect on: When would you use a PARRY instead of a CATCH?",
+      "category": "Defense - Hands",
+      "questionId": "dh-003",
+      "remedialVideos": []
+    },
+    {
+      "gap": "Incorrect on: A boxer is slipping punches but keeps getting hit anyway. Lo",
+      "category": "Defense - Movement",
+      "questionId": "defense-002",
+      "remedialVideos": []
+    },
+    {
+      "gap": "Incorrect on: When slipping a jab from an orthodox opponent (you're also o",
+      "category": "Defense - Movement",
+      "questionId": "defense-003",
+      "remedialVideos": []
+    },
+    {
+      "gap": "Incorrect on: Why is controlling distance (range management) considered on",
+      "category": "DISTANCE/RANGE",
+      "questionId": "range-002",
+      "remedialVideos": []
+    },
+    {
+      "gap": "Fundamental misunderstanding of boxing principles",
+      "category": "footwork",
+      "questionId": "FW004",
+      "remedialVideos": []
+    },
+    {
+      "gap": "Incorrect on: You throw lead hooks but constantly feel off-balance and fin",
+      "category": "HOOK",
+      "questionId": "hook-004",
+      "remedialVideos": []
+    },
+    {
+      "gap": "shoulder_protection",
+      "category": "jab",
+      "questionId": "jab-01",
+      "remedialVideos": [
+        "DGeuo7KjRLo",
+        "xm8_uF0J1MU"
+      ]
+    },
+    {
+      "gap": "Incorrect on: Your punches feel 'arm-heavy' with no snap. You notice your ",
+      "category": "Power Generation",
+      "questionId": "power-003",
+      "remedialVideos": []
+    },
+    {
+      "gap": "External blame pattern",
+      "category": "STANCE_FOUNDATION",
+      "questionId": "stance-004",
+      "remedialVideos": [
+        "KwnJu9iHpoY",
+        "hLa7FYJGQpg"
+      ]
+    },
+    {
+      "gap": "Hook mechanics understanding",
+      "category": "STANCE_FOUNDATION",
+      "questionId": "stance-005",
+      "remedialVideos": [
+        "n1fYlnnfQrs",
+        "l1hO2zoTWPQ"
+      ]
+    },
+    {
+      "gap": "Training transfer understanding",
+      "category": "STANCE_FOUNDATION",
+      "questionId": "stance-006",
+      "remedialVideos": [
+        "4s5Cu8ttouM",
+        "ZUqn8Hdqie0"
+      ]
+    },
+    {
+      "gap": "Focusing on wrong element - stance width isn't the issue here.",
+      "category": "uppercut",
+      "questionId": "uppercut-002",
+      "remedialVideos": []
+    }
+  ],
+  "prescribedVideos": [
+    "-mwJKSlrYrQ",
+    "oRSqcEMVws8",
+    "Z005mv9QCs8",
+    "DGeuo7KjRLo",
+    "xm8_uF0J1MU",
+    "KwnJu9iHpoY",
+    "hLa7FYJGQpg",
+    "n1fYlnnfQrs",
+    "l1hO2zoTWPQ",
+    "4s5Cu8ttouM",
+    "ZUqn8Hdqie0"
+  ],
+  "level": "beginner",
+  "id": "0fc714d0",
+  "createdAt": "2026-02-05T06:49:28.678Z"
+}

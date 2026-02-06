@@ -1,0 +1,246 @@
+{
+  "totalCorrect": 8,
+  "totalQuestions": 23,
+  "percentage": 35,
+  "categoryScores": [
+    {
+      "category": "DISTANCE/RANGE",
+      "correct": 0,
+      "total": 2,
+      "percentage": 0,
+      "gaps": [
+        {
+          "gap": "Incorrect on: Look at the diagram showing two boxers. Based on the distanc",
+          "category": "DISTANCE/RANGE",
+          "questionId": "range-001",
+          "remedialVideos": []
+        },
+        {
+          "gap": "Incorrect on: Why is controlling distance (range management) considered on",
+          "category": "DISTANCE/RANGE",
+          "questionId": "range-002",
+          "remedialVideos": []
+        }
+      ]
+    },
+    {
+      "category": "HOOK",
+      "correct": 0,
+      "total": 3,
+      "percentage": 0,
+      "gaps": [
+        {
+          "gap": "Incorrect on: When throwing a hook to the body, which palm orientation is ",
+          "category": "HOOK",
+          "questionId": "hook-003",
+          "remedialVideos": []
+        },
+        {
+          "gap": "Incorrect on: You throw lead hooks but constantly feel off-balance and fin",
+          "category": "HOOK",
+          "questionId": "hook-004",
+          "remedialVideos": []
+        }
+      ]
+    },
+    {
+      "category": "jab",
+      "correct": 0,
+      "total": 2,
+      "percentage": 0,
+      "gaps": [
+        {
+          "gap": "shoulder_protection",
+          "category": "jab",
+          "questionId": "jab-01",
+          "remedialVideos": [
+            "DGeuo7KjRLo",
+            "xm8_uF0J1MU"
+          ]
+        }
+      ]
+    },
+    {
+      "category": "Power Generation",
+      "correct": 0,
+      "total": 2,
+      "percentage": 0,
+      "gaps": [
+        {
+          "gap": "Incorrect on: Your punches feel 'arm-heavy' with no snap. You notice your ",
+          "category": "Power Generation",
+          "questionId": "power-003",
+          "remedialVideos": []
+        }
+      ]
+    },
+    {
+      "category": "Defense - Hands",
+      "correct": 1,
+      "total": 3,
+      "percentage": 33,
+      "gaps": [
+        {
+          "gap": "Incorrect on: When would you use a PARRY instead of a CATCH?",
+          "category": "Defense - Hands",
+          "questionId": "dh-003",
+          "remedialVideos": []
+        },
+        {
+          "gap": "Incorrect on: During sparring, body shots keep landing on your liver and r",
+          "category": "Defense - Hands",
+          "questionId": "dh-004",
+          "remedialVideos": []
+        }
+      ]
+    },
+    {
+      "category": "Defense - Movement",
+      "correct": 1,
+      "total": 3,
+      "percentage": 33,
+      "gaps": [
+        {
+          "gap": "Incorrect on: A boxer is slipping punches but keeps getting hit anyway. Lo",
+          "category": "Defense - Movement",
+          "questionId": "defense-002",
+          "remedialVideos": []
+        },
+        {
+          "gap": "Incorrect on: When slipping a jab from an orthodox opponent (you're also o",
+          "category": "Defense - Movement",
+          "questionId": "defense-003",
+          "remedialVideos": []
+        }
+      ]
+    },
+    {
+      "category": "cross",
+      "correct": 1,
+      "total": 2,
+      "percentage": 50,
+      "gaps": []
+    },
+    {
+      "category": "STANCE_FOUNDATION",
+      "correct": 2,
+      "total": 3,
+      "percentage": 67,
+      "gaps": [
+        {
+          "gap": "Hook mechanics understanding",
+          "category": "STANCE_FOUNDATION",
+          "questionId": "stance-005",
+          "remedialVideos": [
+            "n1fYlnnfQrs",
+            "l1hO2zoTWPQ"
+          ]
+        }
+      ]
+    },
+    {
+      "category": "Combinations & Flow",
+      "correct": 1,
+      "total": 1,
+      "percentage": 100,
+      "gaps": []
+    },
+    {
+      "category": "footwork",
+      "correct": 1,
+      "total": 1,
+      "percentage": 100,
+      "gaps": []
+    },
+    {
+      "category": "uppercut",
+      "correct": 1,
+      "total": 1,
+      "percentage": 100,
+      "gaps": []
+    }
+  ],
+  "allGaps": [
+    {
+      "gap": "Incorrect on: When would you use a PARRY instead of a CATCH?",
+      "category": "Defense - Hands",
+      "questionId": "dh-003",
+      "remedialVideos": []
+    },
+    {
+      "gap": "Incorrect on: During sparring, body shots keep landing on your liver and r",
+      "category": "Defense - Hands",
+      "questionId": "dh-004",
+      "remedialVideos": []
+    },
+    {
+      "gap": "Incorrect on: A boxer is slipping punches but keeps getting hit anyway. Lo",
+      "category": "Defense - Movement",
+      "questionId": "defense-002",
+      "remedialVideos": []
+    },
+    {
+      "gap": "Incorrect on: When slipping a jab from an orthodox opponent (you're also o",
+      "category": "Defense - Movement",
+      "questionId": "defense-003",
+      "remedialVideos": []
+    },
+    {
+      "gap": "Incorrect on: Look at the diagram showing two boxers. Based on the distanc",
+      "category": "DISTANCE/RANGE",
+      "questionId": "range-001",
+      "remedialVideos": []
+    },
+    {
+      "gap": "Incorrect on: Why is controlling distance (range management) considered on",
+      "category": "DISTANCE/RANGE",
+      "questionId": "range-002",
+      "remedialVideos": []
+    },
+    {
+      "gap": "Incorrect on: When throwing a hook to the body, which palm orientation is ",
+      "category": "HOOK",
+      "questionId": "hook-003",
+      "remedialVideos": []
+    },
+    {
+      "gap": "Incorrect on: You throw lead hooks but constantly feel off-balance and fin",
+      "category": "HOOK",
+      "questionId": "hook-004",
+      "remedialVideos": []
+    },
+    {
+      "gap": "shoulder_protection",
+      "category": "jab",
+      "questionId": "jab-01",
+      "remedialVideos": [
+        "DGeuo7KjRLo",
+        "xm8_uF0J1MU"
+      ]
+    },
+    {
+      "gap": "Incorrect on: Your punches feel 'arm-heavy' with no snap. You notice your ",
+      "category": "Power Generation",
+      "questionId": "power-003",
+      "remedialVideos": []
+    },
+    {
+      "gap": "Hook mechanics understanding",
+      "category": "STANCE_FOUNDATION",
+      "questionId": "stance-005",
+      "remedialVideos": [
+        "n1fYlnnfQrs",
+        "l1hO2zoTWPQ"
+      ]
+    }
+  ],
+  "prescribedVideos": [
+    "DGeuo7KjRLo",
+    "xm8_uF0J1MU",
+    "n1fYlnnfQrs",
+    "l1hO2zoTWPQ"
+  ],
+  "level": "beginner",
+  "id": "bd202c9b",
+  "createdAt": "2026-02-05T07:16:04.005Z"
+}

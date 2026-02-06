@@ -1,0 +1,281 @@
+{
+  "totalCorrect": 6,
+  "totalQuestions": 19,
+  "percentage": 32,
+  "categoryScores": [
+    {
+      "category": "Combinations & Flow",
+      "correct": 0,
+      "total": 1,
+      "percentage": 0,
+      "gaps": [
+        {
+          "gap": "Incorrect on: What makes combinations more effective than throwing single ",
+          "category": "Combinations & Flow",
+          "questionId": "combo-001",
+          "remedialVideos": [
+            "-mwJKSlrYrQ",
+            "oRSqcEMVws8",
+            "Z005mv9QCs8"
+          ]
+        }
+      ]
+    },
+    {
+      "category": "cross",
+      "correct": 0,
+      "total": 1,
+      "percentage": 0,
+      "gaps": [
+        {
+          "gap": "Confusing visibility with power - different problems",
+          "category": "cross",
+          "questionId": "cross-004",
+          "remedialVideos": []
+        }
+      ]
+    },
+    {
+      "category": "Defense - Hands",
+      "correct": 0,
+      "total": 3,
+      "percentage": 0,
+      "gaps": [
+        {
+          "gap": "Incorrect on: Which defensive technique is being demonstrated in this imag",
+          "category": "Defense - Hands",
+          "questionId": "dh-001",
+          "remedialVideos": []
+        },
+        {
+          "gap": "Incorrect on: When would you use a PARRY instead of a CATCH?",
+          "category": "Defense - Hands",
+          "questionId": "dh-003",
+          "remedialVideos": []
+        },
+        {
+          "gap": "Incorrect on: During sparring, body shots keep landing on your liver and r",
+          "category": "Defense - Hands",
+          "questionId": "dh-004",
+          "remedialVideos": []
+        }
+      ]
+    },
+    {
+      "category": "Defense - Movement",
+      "correct": 0,
+      "total": 3,
+      "percentage": 0,
+      "gaps": [
+        {
+          "gap": "Incorrect on: A boxer is slipping punches but keeps getting hit anyway. Lo",
+          "category": "Defense - Movement",
+          "questionId": "defense-002",
+          "remedialVideos": []
+        },
+        {
+          "gap": "Incorrect on: When slipping a jab from an orthodox opponent (you're also o",
+          "category": "Defense - Movement",
+          "questionId": "defense-003",
+          "remedialVideos": []
+        },
+        {
+          "gap": "Incorrect on: What's the key difference between a ROLL and a WEAVE?",
+          "category": "Defense - Movement",
+          "questionId": "defense-005",
+          "remedialVideos": []
+        }
+      ]
+    },
+    {
+      "category": "HOOK",
+      "correct": 0,
+      "total": 2,
+      "percentage": 0,
+      "gaps": [
+        {
+          "gap": "Incorrect on: When throwing a hook to the body, which palm orientation is ",
+          "category": "HOOK",
+          "questionId": "hook-003",
+          "remedialVideos": []
+        },
+        {
+          "gap": "Incorrect on: You throw lead hooks but constantly feel off-balance and fin",
+          "category": "HOOK",
+          "questionId": "hook-004",
+          "remedialVideos": []
+        }
+      ]
+    },
+    {
+      "category": "uppercut",
+      "correct": 0,
+      "total": 1,
+      "percentage": 0,
+      "gaps": [
+        {
+          "gap": "Focusing on wrong element - stance width isn't the issue here.",
+          "category": "uppercut",
+          "questionId": "uppercut-002",
+          "remedialVideos": []
+        }
+      ]
+    },
+    {
+      "category": "STANCE_FOUNDATION",
+      "correct": 1,
+      "total": 3,
+      "percentage": 33,
+      "gaps": [
+        {
+          "gap": "Fundamental knowledge gap",
+          "category": "STANCE_FOUNDATION",
+          "questionId": "stance-004",
+          "remedialVideos": [
+            "VpiPD4IDvyQ",
+            "KwnJu9iHpoY"
+          ]
+        },
+        {
+          "gap": "Training transfer understanding",
+          "category": "STANCE_FOUNDATION",
+          "questionId": "stance-006",
+          "remedialVideos": [
+            "4s5Cu8ttouM",
+            "ZUqn8Hdqie0"
+          ]
+        }
+      ]
+    },
+    {
+      "category": "DISTANCE/RANGE",
+      "correct": 2,
+      "total": 2,
+      "percentage": 100,
+      "gaps": []
+    },
+    {
+      "category": "footwork",
+      "correct": 1,
+      "total": 1,
+      "percentage": 100,
+      "gaps": []
+    },
+    {
+      "category": "jab",
+      "correct": 1,
+      "total": 1,
+      "percentage": 100,
+      "gaps": []
+    },
+    {
+      "category": "Power Generation",
+      "correct": 1,
+      "total": 1,
+      "percentage": 100,
+      "gaps": []
+    }
+  ],
+  "allGaps": [
+    {
+      "gap": "Incorrect on: What makes combinations more effective than throwing single ",
+      "category": "Combinations & Flow",
+      "questionId": "combo-001",
+      "remedialVideos": [
+        "-mwJKSlrYrQ",
+        "oRSqcEMVws8",
+        "Z005mv9QCs8"
+      ]
+    },
+    {
+      "gap": "Confusing visibility with power - different problems",
+      "category": "cross",
+      "questionId": "cross-004",
+      "remedialVideos": []
+    },
+    {
+      "gap": "Incorrect on: Which defensive technique is being demonstrated in this imag",
+      "category": "Defense - Hands",
+      "questionId": "dh-001",
+      "remedialVideos": []
+    },
+    {
+      "gap": "Incorrect on: When would you use a PARRY instead of a CATCH?",
+      "category": "Defense - Hands",
+      "questionId": "dh-003",
+      "remedialVideos": []
+    },
+    {
+      "gap": "Incorrect on: During sparring, body shots keep landing on your liver and r",
+      "category": "Defense - Hands",
+      "questionId": "dh-004",
+      "remedialVideos": []
+    },
+    {
+      "gap": "Incorrect on: A boxer is slipping punches but keeps getting hit anyway. Lo",
+      "category": "Defense - Movement",
+      "questionId": "defense-002",
+      "remedialVideos": []
+    },
+    {
+      "gap": "Incorrect on: When slipping a jab from an orthodox opponent (you're also o",
+      "category": "Defense - Movement",
+      "questionId": "defense-003",
+      "remedialVideos": []
+    },
+    {
+      "gap": "Incorrect on: What's the key difference between a ROLL and a WEAVE?",
+      "category": "Defense - Movement",
+      "questionId": "defense-005",
+      "remedialVideos": []
+    },
+    {
+      "gap": "Incorrect on: When throwing a hook to the body, which palm orientation is ",
+      "category": "HOOK",
+      "questionId": "hook-003",
+      "remedialVideos": []
+    },
+    {
+      "gap": "Incorrect on: You throw lead hooks but constantly feel off-balance and fin",
+      "category": "HOOK",
+      "questionId": "hook-004",
+      "remedialVideos": []
+    },
+    {
+      "gap": "Fundamental knowledge gap",
+      "category": "STANCE_FOUNDATION",
+      "questionId": "stance-004",
+      "remedialVideos": [
+        "VpiPD4IDvyQ",
+        "KwnJu9iHpoY"
+      ]
+    },
+    {
+      "gap": "Training transfer understanding",
+      "category": "STANCE_FOUNDATION",
+      "questionId": "stance-006",
+      "remedialVideos": [
+        "4s5Cu8ttouM",
+        "ZUqn8Hdqie0"
+      ]
+    },
+    {
+      "gap": "Focusing on wrong element - stance width isn't the issue here.",
+      "category": "uppercut",
+      "questionId": "uppercut-002",
+      "remedialVideos": []
+    }
+  ],
+  "prescribedVideos": [
+    "-mwJKSlrYrQ",
+    "oRSqcEMVws8",
+    "Z005mv9QCs8",
+    "VpiPD4IDvyQ",
+    "KwnJu9iHpoY",
+    "4s5Cu8ttouM",
+    "ZUqn8Hdqie0"
+  ],
+  "level": "beginner",
+  "id": "f6d8d5a8",
+  "createdAt": "2026-02-06T03:46:55.906Z"
+}

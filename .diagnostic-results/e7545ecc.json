@@ -1,0 +1,103 @@
+{
+  "totalCorrect": 18,
+  "totalQuestions": 19,
+  "percentage": 95,
+  "categoryScores": [
+    {
+      "category": "Power Generation",
+      "correct": 0,
+      "total": 1,
+      "percentage": 0,
+      "gaps": [
+        {
+          "gap": "Incorrect on: Your punches feel 'arm-heavy' with no snap. You notice your ",
+          "category": "Power Generation",
+          "questionId": "power-003",
+          "remedialVideos": []
+        }
+      ]
+    },
+    {
+      "category": "Combinations & Flow",
+      "correct": 1,
+      "total": 1,
+      "percentage": 100,
+      "gaps": []
+    },
+    {
+      "category": "cross",
+      "correct": 1,
+      "total": 1,
+      "percentage": 100,
+      "gaps": []
+    },
+    {
+      "category": "Defense - Hands",
+      "correct": 3,
+      "total": 3,
+      "percentage": 100,
+      "gaps": []
+    },
+    {
+      "category": "Defense - Movement",
+      "correct": 3,
+      "total": 3,
+      "percentage": 100,
+      "gaps": []
+    },
+    {
+      "category": "DISTANCE/RANGE",
+      "correct": 2,
+      "total": 2,
+      "percentage": 100,
+      "gaps": []
+    },
+    {
+      "category": "footwork",
+      "correct": 1,
+      "total": 1,
+      "percentage": 100,
+      "gaps": []
+    },
+    {
+      "category": "HOOK",
+      "correct": 2,
+      "total": 2,
+      "percentage": 100,
+      "gaps": []
+    },
+    {
+      "category": "jab",
+      "correct": 1,
+      "total": 1,
+      "percentage": 100,
+      "gaps": []
+    },
+    {
+      "category": "STANCE_FOUNDATION",
+      "correct": 3,
+      "total": 3,
+      "percentage": 100,
+      "gaps": []
+    },
+    {
+      "category": "uppercut",
+      "correct": 1,
+      "total": 1,
+      "percentage": 100,
+      "gaps": []
+    }
+  ],
+  "allGaps": [
+    {
+      "gap": "Incorrect on: Your punches feel 'arm-heavy' with no snap. You notice your ",
+      "category": "Power Generation",
+      "questionId": "power-003",
+      "remedialVideos": []
+    }
+  ],
+  "prescribedVideos": [],
+  "level": "advanced",
+  "id": "e7545ecc",
+  "createdAt": "2026-02-06T03:18:07.616Z"
+}
