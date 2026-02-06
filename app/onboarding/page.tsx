@@ -62,7 +62,7 @@ function OnboardingContent() {
                 Hey {firstName}, let&apos;s get you started
               </h1>
               <p className="text-lg text-[#605A57]">
-                There&apos;s one thing you need to do right now.
+                There&apos;s <span className="underline decoration-2 underline-offset-4">one thing you need to do right now</span>.
               </p>
             </div>
 
@@ -96,7 +96,7 @@ function OnboardingContent() {
             </div>
 
             {/* Arrows pointing down */}
-            <div className="flex justify-center mb-2">
+            <div className="flex justify-center mb-5">
               <div className="flex gap-6">
                 {[0, 1, 2].map((i) => (
                   <svg
@@ -135,7 +135,7 @@ function OnboardingContent() {
             </div>
 
             {/* Arrows pointing up */}
-            <div className="flex justify-center mt-2">
+            <div className="flex justify-center mt-5">
               <div className="flex gap-6">
                 {[0, 1, 2].map((i) => (
                   <svg
