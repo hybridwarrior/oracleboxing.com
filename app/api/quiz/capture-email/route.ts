@@ -38,9 +38,6 @@ async function sendResultsEmail(email: string, firstName: string, resultId: stri
     subject: `${firstName}, your boxing quiz results`,
     html: `
       <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 520px; margin: 0 auto; padding: 40px 20px;">
-        <div style="text-align: center; margin-bottom: 32px;">
-          <img src="https://oracleboxing.com/oraclelogo.svg" alt="Oracle Boxing" style="height: 40px;" />
-        </div>
         <h1 style="font-size: 24px; color: #1a1a1a; margin-bottom: 16px;">Thanks for taking the quiz, ${firstName}.</h1>
         <p style="font-size: 16px; color: #525252; line-height: 1.6; margin-bottom: 24px;">
           Your results are ready. Bookmark this link so you can come back to them anytime:
