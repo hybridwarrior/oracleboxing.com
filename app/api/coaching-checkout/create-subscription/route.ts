@@ -8,6 +8,7 @@ import {
   MONTHLY_RATES_BY_COACH,
   MONTHLY_PRICE_IDS_BY_COACH,
 } from '@/lib/coaching-pricing'
+import { notifyOps } from '@/lib/slack-notify'
 
 export async function POST(req: NextRequest) {
   try {
@@ -116,12 +117,15 @@ export async function POST(req: NextRequest) {
       coach,
     })
 
+    notifyOps(`🥊 Coaching subscription created - ${metadata.customer_email || customerId} (${coach} ${tier}, $${monthlyAmount / 100}/mo)`)
+
     return NextResponse.json({
       subscriptionId: subscription.id,
       status: subscription.status,
     })
   } catch (error: any) {
     console.error('Route /api/coaching-checkout/create-subscription failed:', error)
+    notifyOps(`❌ Coaching subscription creation failed - ${error.message}`)
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

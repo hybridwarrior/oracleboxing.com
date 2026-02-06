@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { stripe } from '@/lib/stripe/client'
+import { notifyOps } from '@/lib/slack-notify'
 
 export async function GET(req: NextRequest) {
   try {
@@ -47,6 +48,8 @@ export async function GET(req: NextRequest) {
       hasClientSecret: !!paymentIntent.client_secret,
     })
 
+    notifyOps(`🔄 Cart recovery - ${customerInfo.email || 'unknown'}`)
+
     return NextResponse.json({
       customerInfo,
       addOns,
@@ -57,6 +60,7 @@ export async function GET(req: NextRequest) {
     })
   } catch (error: any) {
     console.error('Route /api/checkout-v2/recover failed:', error)
+    notifyOps(`❌ Cart recovery failed - ${error.message}`)
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

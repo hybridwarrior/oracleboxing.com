@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { stripe } from '@/lib/stripe/client'
+import { notifyOps } from '@/lib/slack-notify'
 
 /**
  * GET /api/payment-intent?pi=pi_xxx
@@ -28,6 +29,8 @@ export async function GET(req: NextRequest) {
       }
 
       const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId)
+
+      notifyOps(`💳 Payment intent created - ${paymentIntentId}`)
 
       return NextResponse.json({
         clientSecret: paymentIntent.client_secret,
@@ -63,6 +66,8 @@ export async function GET(req: NextRequest) {
         { status: 404 }
       )
     }
+
+    notifyOps(`❌ Payment intent retrieval failed - ${error.message}`)
 
     return NextResponse.json(
       { error: 'Failed to retrieve payment details' },

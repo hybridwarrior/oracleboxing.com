@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSupabaseServerClient, CoachingSplitPaymentRecord } from '@/lib/supabase'
+import { notifyOps } from '@/lib/slack-notify'
 
 /**
  * Save split payment info to Supabase after first payment succeeds
@@ -87,6 +88,8 @@ export async function POST(req: NextRequest) {
 
     console.log('✅ Split payment saved to Supabase:', (data as any).id)
 
+    notifyOps(`📋 Split payment saved - ${customerEmail} ($${secondPaymentAmount / 100} due ${dueDate.toISOString().split('T')[0]})`)
+
     return NextResponse.json({
       success: true,
       id: (data as any).id,
@@ -94,6 +97,7 @@ export async function POST(req: NextRequest) {
     })
   } catch (error: any) {
     console.error('Route /api/coaching-checkout/save-split-payment failed:', error)
+    notifyOps(`❌ Save split payment failed - ${error.message}`)
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

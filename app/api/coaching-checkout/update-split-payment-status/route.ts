@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSupabaseServerClient } from '@/lib/supabase'
+import { notifyOps } from '@/lib/slack-notify'
 
 /**
  * Update split payment status - called by Make.com after processing the second payment
@@ -75,6 +76,8 @@ export async function POST(req: NextRequest) {
 
     console.log(`✅ Split payment ${split_payment_id} updated to: ${status}`)
 
+    notifyOps(`📋 Split payment status updated - ${split_payment_id} → ${status}`)
+
     return NextResponse.json({
       success: true,
       id: data.id,
@@ -82,6 +85,7 @@ export async function POST(req: NextRequest) {
     })
   } catch (error: any) {
     console.error('Route /api/coaching-checkout/update-split-payment-status failed:', error)
+    notifyOps(`❌ Update split payment status failed - ${error.message}`)
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { notifyOps } from '@/lib/slack-notify'
 
 const CLAIM_ACCESS_WEBHOOK_URL = process.env.MAKE_CLAIM_ACCESS_WEBHOOK_URL?.replace(/^["'\s]+|["'\s]+$/g, '') || ''
 
@@ -32,11 +33,13 @@ export async function POST(req: NextRequest) {
 
     if (response.ok) {
       console.log('✅ Course access claim sent successfully')
+      notifyOps(`🔓 Access claimed - ${email}`)
       return NextResponse.json({ success: true })
     } else {
       console.error('❌ Webhook responded with error:', response.status)
       const responseText = await response.text()
       console.error('Response:', responseText)
+      notifyOps(`❌ Claim access failed - ${email} (webhook ${response.status})`)
       return NextResponse.json(
         { error: 'Failed to process request' },
         { status: 500 }
@@ -44,6 +47,7 @@ export async function POST(req: NextRequest) {
     }
   } catch (error: any) {
     console.error('❌ Failed to send course access claim:', error)
+    notifyOps(`❌ Claim access failed - ${error.message}`)
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { extractFacebookParams, normalizeAndHashEmail, normalizeAndHashPhone } from '@/lib/fb-param-builder';
+import { notifyOps } from '@/lib/slack-notify';
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -177,10 +178,12 @@ export async function POST(req: NextRequest) {
     }
 
     console.log('✅ Facebook CAPI Purchase success:', fbResult);
+    notifyOps(`📊 FB Purchase event fired - ${customer_email || 'unknown'} ($${value} ${currency})`)
     return NextResponse.json({ success: true, result: fbResult });
 
   } catch (error) {
     console.error('❌ Failed to send Purchase to Facebook CAPI:', error);
+    notifyOps(`❌ FB Purchase event failed - ${String(error)}`)
     return NextResponse.json(
       { success: false, error: String(error) },
       { status: 500 }

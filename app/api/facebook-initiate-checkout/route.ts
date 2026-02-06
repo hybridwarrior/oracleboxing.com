@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { extractFacebookParams } from '@/lib/fb-param-builder';
+import { notifyOps } from '@/lib/slack-notify';
 
 const FB_PIXEL_ID = process.env.NEXT_PUBLIC_FB_PIXEL_ID || '1474540100541059';
 const FB_ACCESS_TOKEN = process.env.FB_ACCESS_TOKEN || '';
@@ -127,9 +128,11 @@ export async function POST(request: NextRequest) {
         }
 
         console.log('✅ Facebook CAPI InitiateCheckout success:', result);
+        notifyOps(`📊 FB Initiate Checkout event fired - ${email}`)
         return NextResponse.json({ success: true, result });
     } catch (error) {
         console.error('Error sending InitiateCheckout to Facebook CAPI:', error);
+        notifyOps(`❌ FB Initiate Checkout event failed - ${String(error)}`)
         return NextResponse.json(
             { success: false, error: 'Internal server error' },
             { status: 500 }

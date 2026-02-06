@@ -5,6 +5,7 @@ import { Currency } from '@/lib/currency'
 import { sendInitiatedCheckout } from '@/lib/simple-webhook'
 import { getProductById } from '@/lib/products'
 import { extractFacebookParams } from '@/lib/fb-param-builder'
+import { notifyOps } from '@/lib/slack-notify'
 
 export async function POST(req: NextRequest) {
   try {
@@ -160,9 +161,13 @@ export async function POST(req: NextRequest) {
       });
     }
 
+    const productNames = serverSideItems.map(i => i.product.title).join(', ')
+    notifyOps(`💳 Checkout session created - ${customerInfo?.email || 'unknown'} for ${productNames}`)
+
     return NextResponse.json({ url: session.url })
   } catch (error: any) {
     console.error('Route /api/checkout/session failed:', error)
+    notifyOps(`❌ Checkout session failed - ${error.message}`)
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

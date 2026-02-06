@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { stripe } from '@/lib/stripe/client';
 import { getProductByMetadata } from '@/lib/products';
 import { Currency, getStripePriceId } from '@/lib/currency';
+import { notifyOps } from '@/lib/slack-notify';
 
 // Helper function to flatten cookie data into individual Stripe metadata fields
 // Each cookie field becomes a separate metadata field with "cookie_" prefix
@@ -120,9 +121,12 @@ export async function POST(req: NextRequest) {
       },
     });
 
+    notifyOps(`⬆️ Coaching upsell - ${customerEmail}`)
+
     return NextResponse.json({ url: session.url });
   } catch (error: any) {
     console.error('Route /api/upsell/coaching failed:', error);
+    notifyOps(`❌ Coaching upsell failed - ${error.message}`)
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

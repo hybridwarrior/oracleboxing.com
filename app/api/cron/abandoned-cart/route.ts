@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSupabaseServerClient } from '@/lib/supabase'
 import { stripe } from '@/lib/stripe/client'
+import { notifyOps } from '@/lib/slack-notify'
 
 // Test checkout credentials - bypasses abandoned cart automations
 const TEST_EMAILS = ['jt@gmail.com']
@@ -149,6 +150,8 @@ export async function GET(req: NextRequest) {
       }
     }
 
+    notifyOps(`🛒 Abandoned cart cron ran - ${abandonedCount} abandoned, ${paidCount} paid, ${skippedCooldown} skipped (${checkouts.length} total)`)
+
     return NextResponse.json({
       message: 'Abandoned cart cron completed',
       processed: checkouts.length,
@@ -158,6 +161,7 @@ export async function GET(req: NextRequest) {
     })
   } catch (error: any) {
     console.error('Route /api/cron/abandoned-cart failed:', error)
+    notifyOps(`❌ Abandoned cart cron failed - ${error.message}`)
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

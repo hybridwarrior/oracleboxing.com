@@ -20,6 +20,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server'
+import { notifyOps } from '@/lib/slack-notify'
 
 // Simple in-memory rate limiting
 // Maps IP -> { count, resetTime }
@@ -148,15 +149,19 @@ export async function POST(req: NextRequest) {
     if (!response.ok) {
       // Log error without exposing webhook URL
       console.error('Make.com webhook returned non-2xx status:', response.status)
+      notifyOps(`❌ Progress tracker failed - webhook returned ${response.status}`)
       return NextResponse.json(
         { ok: false, error: 'Failed to process request. Please try again.' },
         { status: 500 }
       )
     }
 
+    notifyOps(`📈 Progress tracked - ${sanitizedName} (${sanitizedEmail}), ${parsedTarget}x/week`)
+
     return NextResponse.json({ ok: true })
   } catch (error) {
     console.error('Progress tracker API error:', error instanceof Error ? error.message : 'Unknown error')
+    notifyOps(`❌ Progress tracker failed - ${error instanceof Error ? error.message : 'Unknown error'}`)
     return NextResponse.json(
       { ok: false, error: 'Failed to process request' },
       { status: 500 }

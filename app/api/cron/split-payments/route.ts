@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSupabaseServerClient } from '@/lib/supabase'
 import { stripe } from '@/lib/stripe/client'
+import { notifyOps } from '@/lib/slack-notify'
 
 // Vercel cron job endpoint - runs daily at 9am
 // Checks for split payments due today, creates PaymentIntent, and sends to Make.com for human confirmation
@@ -208,6 +209,8 @@ export async function GET(req: NextRequest) {
       }
     }
 
+    notifyOps(`💰 Split payments cron ran - ${successCount} success, ${failCount} failed (${duePayments.length} total)`)
+
     return NextResponse.json({
       message: 'Split payments cron completed',
       total: duePayments.length,
@@ -216,6 +219,7 @@ export async function GET(req: NextRequest) {
     })
   } catch (error: any) {
     console.error('Route /api/cron/split-payments failed:', error)
+    notifyOps(`❌ Split payments cron failed - ${error.message}`)
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

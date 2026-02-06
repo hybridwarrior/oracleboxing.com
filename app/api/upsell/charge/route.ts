@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { stripe } from '@/lib/stripe/client'
 import { products } from '@/lib/products'
+import { notifyOps } from '@/lib/slack-notify'
 
 // Helper function to flatten cookie data into individual Stripe metadata fields
 // Each cookie field becomes a separate metadata field with "cookie_" prefix
@@ -194,6 +195,8 @@ export async function POST(req: NextRequest) {
 
       console.log('✅ UPSELL: Subscription created:', subscription.id)
 
+      notifyOps(`⬆️ Upsell charge - ${customerEmail} for 6-Week Membership (subscription)`)
+
       return NextResponse.json({
         success: true,
         subscription_id: subscription.id,
@@ -279,6 +282,8 @@ export async function POST(req: NextRequest) {
       // Check if succeeded
       if (upsellPaymentIntent.status === 'succeeded') {
         console.log('✅ UPSELL: Payment succeeded:', upsellPaymentIntent.id)
+
+        notifyOps(`⬆️ Upsell charge - ${customerEmail} for ${priceObj.nickname || product_id} ($${amount / 100})`)
 
         // Send Facebook Purchase event for upsell
         try {
@@ -380,6 +385,8 @@ export async function POST(req: NextRequest) {
     if (error.type === 'StripeInvalidRequestError') {
       console.error('❌ UPSELL: Invalid request - check session ID format')
     }
+
+    notifyOps(`❌ Upsell charge failed - ${error.message}`)
 
     return NextResponse.json(
       { error: 'Internal server error' },

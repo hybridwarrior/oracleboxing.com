@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { stripe } from '@/lib/stripe/client'
+import { notifyOps } from '@/lib/slack-notify'
 
 /**
  * Process second payment for split pay coaching customers
@@ -114,6 +115,8 @@ export async function POST(req: NextRequest) {
 
       console.log('✅ Second payment processed:', secondPayment.id)
 
+      notifyOps(`💰 Split payment processed - ${metadata.customer_email || customerIdFromPI} ($${secondPaymentAmount / 100})`)
+
       return NextResponse.json({
         success: true,
         paymentIntentId: secondPayment.id,
@@ -160,6 +163,8 @@ export async function POST(req: NextRequest) {
         },
       })
 
+      notifyOps(`💰 Split payment processed - ${customerId} ($${amount})`)
+
       return NextResponse.json({
         success: true,
         paymentIntentId: payment.id,
@@ -173,6 +178,7 @@ export async function POST(req: NextRequest) {
     )
   } catch (error: any) {
     console.error('❌ Error processing second payment:', error)
+    notifyOps(`❌ Split payment processing failed - ${error.message}`)
 
     // Handle specific Stripe errors
     if (error.type === 'StripeCardError') {

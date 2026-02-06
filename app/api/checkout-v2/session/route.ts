@@ -3,6 +3,7 @@ import { stripe } from '@/lib/stripe/client'
 import { Currency, getStripePriceId } from '@/lib/currency'
 import { getProductById } from '@/lib/products'
 import { extractFacebookParams } from '@/lib/fb-param-builder'
+import { notifyOps } from '@/lib/slack-notify'
 import Stripe from 'stripe'
 
 // Helper function to flatten cookie data into individual Stripe metadata fields
@@ -223,6 +224,9 @@ export async function POST(req: NextRequest) {
 
     console.log('Created PaymentIntent:', paymentIntent.id, 'Amount:', totalAmount, currency)
 
+    const addOnNames = addOnMetadata.length > 0 ? ` + ${addOnMetadata.join(', ')}` : ''
+    notifyOps(`💳 Checkout v2 session created - ${customerInfo.email} for ${mainProduct.title}${addOnNames}`)
+
     // Return client_secret for Payment Element
     return NextResponse.json({
       clientSecret: paymentIntent.client_secret,
@@ -231,6 +235,7 @@ export async function POST(req: NextRequest) {
     })
   } catch (error: any) {
     console.error('Checkout-v2 session creation failed:', error)
+    notifyOps(`❌ Checkout v2 session failed - ${error.message}`)
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
