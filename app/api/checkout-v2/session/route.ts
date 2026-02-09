@@ -4,6 +4,8 @@ import { Currency, getStripePriceId } from '@/lib/currency'
 import { getProductById } from '@/lib/products'
 import { extractFacebookParams } from '@/lib/fb-param-builder'
 import { notifyOps } from '@/lib/slack-notify'
+import { start } from 'workflow/api'
+import { abandonedCartRecovery } from '@/app/api/workflows/abandoned-cart/route'
 import Stripe from 'stripe'
 
 // Helper function to flatten cookie data into individual Stripe metadata fields
@@ -226,6 +228,22 @@ export async function POST(req: NextRequest) {
 
     const addOnNames = addOnMetadata.length > 0 ? ` + ${addOnMetadata.join(', ')}` : ''
     notifyOps(`💳 Checkout v2 session created - ${customerInfo.email} for ${mainProduct.title}${addOnNames}`)
+
+    // Trigger abandoned cart recovery workflow (fire-and-forget)
+    // The workflow will sleep 90 minutes then check if payment completed
+    if (customerInfo.email && phone) {
+      start(abandonedCartRecovery, [
+        JSON.stringify({
+          paymentIntentId: paymentIntent.id,
+          email: customerInfo.email,
+          phone: phone,
+          firstName: firstName,
+          lastName: lastName,
+        }),
+      ]).catch((err) => {
+        console.error('Failed to trigger abandoned cart workflow:', err.message)
+      })
+    }
 
     // Return client_secret for Payment Element
     return NextResponse.json({

@@ -33,7 +33,7 @@ export async function abandonedCartRecovery(input: string) {
   }
 
   // Durable sleep for 90 minutes — no compute consumed
-  await sleep('1h30m')
+  await sleep('90m')
 
   // Check if payment was completed during the wait
   const paymentStatus = await checkPaymentStatus(data.paymentIntentId)

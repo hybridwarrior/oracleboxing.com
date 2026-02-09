@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
 
     const run = await start(abandonedCartRecovery, [JSON.stringify(body)])
 
-    return NextResponse.json({ success: true, runId: run.id })
+    return NextResponse.json({ success: true, runId: run.runId })
   } catch (error: any) {
     console.error('Failed to start abandoned cart workflow:', error)
     return NextResponse.json(

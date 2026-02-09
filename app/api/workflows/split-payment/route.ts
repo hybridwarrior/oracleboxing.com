@@ -165,12 +165,13 @@ async function notifyAwaitingApproval(
   'use step'
 
   await notifyOps(
-    `Split payment awaiting approval:\n` +
+    `💰 Split payment awaiting approval:\n` +
       `- Customer: ${customerEmail}\n` +
       `- Amount: $${(amount / 100).toFixed(2)}\n` +
       `- PaymentIntent: ${paymentIntentId}\n` +
-      `- Approve: POST /api/workflows/split-payment/approve { splitPaymentId: "${splitPaymentId}", approved: true }\n` +
-      `- Reject: POST /api/workflows/split-payment/approve { splitPaymentId: "${splitPaymentId}", approved: false }`
+      `- Approve: POST /api/workflows/split-payment/approve (Authorization: Bearer $CRON_SECRET)\n` +
+      `  Body: { "splitPaymentId": "${splitPaymentId}", "approved": true }\n` +
+      `- Reject: Same URL with "approved": false`
   )
 }
 

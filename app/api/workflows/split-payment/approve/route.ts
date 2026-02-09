@@ -3,6 +3,15 @@ import { resumeHook } from 'workflow/api'
 
 export async function POST(req: NextRequest) {
   try {
+    // Verify authorization in production
+    const authHeader = req.headers.get('authorization')
+    if (
+      process.env.NODE_ENV === 'production' &&
+      authHeader !== `Bearer ${process.env.CRON_SECRET}`
+    ) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
     const { splitPaymentId, approved, comment } = await req.json()
 
     if (!splitPaymentId || typeof approved !== 'boolean') {
