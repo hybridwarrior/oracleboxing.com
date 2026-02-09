@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { stripe } from '@/lib/stripe/client'
 import { products } from '@/lib/products'
 import { notifyOps } from '@/lib/slack-notify'
+import { createWorkflowLogger } from '@/lib/workflow-logger'
 
 // Helper function to flatten cookie data into individual Stripe metadata fields
 // Each cookie field becomes a separate metadata field with "cookie_" prefix
@@ -22,10 +23,12 @@ function prepareCookieDataForStripe(cookieData: any): Record<string, string> {
 }
 
 export async function POST(req: NextRequest) {
+  const logger = createWorkflowLogger({ workflowName: 'upsell-charge', workflowType: 'checkout', notifySlack: true });
   console.log('🔍 UPSELL: Request received')
   try {
     const body = await req.json()
     const { session_id, price_id, product_id, trackingParams, cookieData } = body
+    try { await logger.started('Upsell charge requested', { session_id, price_id, product_id }); } catch {}
 
     console.log('🔍 UPSELL: Body parsed:', { session_id, price_id, product_id, trackingParams })
 
@@ -195,6 +198,8 @@ export async function POST(req: NextRequest) {
 
       console.log('✅ UPSELL: Subscription created:', subscription.id)
 
+      try { await logger.completed(`Upsell subscription created for ${customerEmail}`, { subscriptionId: subscription.id, email: customerEmail, productId: product_id, type: 'subscription' }); } catch {}
+
       notifyOps(`⬆️ Upsell charge - ${customerEmail} for 6-Week Membership (subscription)`)
 
       return NextResponse.json({
@@ -282,6 +287,8 @@ export async function POST(req: NextRequest) {
       // Check if succeeded
       if (upsellPaymentIntent.status === 'succeeded') {
         console.log('✅ UPSELL: Payment succeeded:', upsellPaymentIntent.id)
+
+        try { await logger.completed(`Upsell payment succeeded for ${customerEmail}`, { paymentIntentId: upsellPaymentIntent.id, email: customerEmail, amount: amount / 100, currency, productId: product_id, type: 'one-time' }); } catch {}
 
         notifyOps(`⬆️ Upsell charge - ${customerEmail} for ${priceObj.nickname || product_id} ($${amount / 100})`)
 
@@ -386,6 +393,7 @@ export async function POST(req: NextRequest) {
       console.error('❌ UPSELL: Invalid request - check session ID format')
     }
 
+    try { await logger.failed(error.message, { type: error.type, code: error.code }); } catch {}
     notifyOps(`❌ Upsell charge failed - ${error.message}`)
 
     return NextResponse.json(

@@ -13,12 +13,14 @@ import {
   formatPrice,
 } from '@/lib/coaching-pricing'
 import { requireAdmin } from '@/lib/auth'
+import { createWorkflowLogger } from '@/lib/workflow-logger'
 
 export async function POST(req: NextRequest) {
   // Require admin authentication
   const authError = await requireAdmin()
   if (authError) return authError
 
+  const logger = createWorkflowLogger({ workflowName: 'admin-coaching-session', workflowType: 'action', notifySlack: true });
   try {
     const body = await req.json()
     const {
@@ -50,6 +52,8 @@ export async function POST(req: NextRequest) {
         event_id?: string
       }
     }
+
+    try { await logger.started('Admin coaching session creation', { email, name, tier, coach, paymentPlan, customerDiscount, sixMonthCommitment }); } catch {}
 
     console.log('🎯 Creating internal coaching session:', {
       tier,
@@ -193,6 +197,8 @@ export async function POST(req: NextRequest) {
 
       console.log('✅ PaymentIntent created:', paymentIntent.id)
 
+      try { await logger.completed(`Coaching session created (full) for ${email}`, { paymentIntentId: paymentIntent.id, email, tier, coach, paymentPlan, amount: calculation.finalPrice }); } catch {}
+
       // Build custom checkout URL with payment intent info
       const checkoutUrl = `${baseUrl}/coaching-checkout?pi=${paymentIntent.id}`
 
@@ -232,6 +238,8 @@ export async function POST(req: NextRequest) {
 
       console.log('✅ Split Pay PaymentIntent created:', paymentIntent.id)
 
+      try { await logger.completed(`Coaching session created (split) for ${email}`, { paymentIntentId: paymentIntent.id, email, tier, coach, paymentPlan, amount: calculation.monthlyAmount }); } catch {}
+
       // Build custom checkout URL with payment intent info
       const checkoutUrl = `${baseUrl}/coaching-checkout?pi=${paymentIntent.id}`
 
@@ -268,6 +276,8 @@ export async function POST(req: NextRequest) {
 
       console.log('✅ SetupIntent created for subscription:', setupIntent.id)
 
+      try { await logger.completed(`Coaching session created (monthly) for ${email}`, { setupIntentId: setupIntent.id, email, tier, coach, paymentPlan, monthlyAmount: calculation.monthlyAmount }); } catch {}
+
       // Build custom checkout URL with setup intent info
       const checkoutUrl = `${baseUrl}/coaching-checkout?setup=${setupIntent.id}&monthly=true`
 
@@ -288,6 +298,7 @@ export async function POST(req: NextRequest) {
     )
   } catch (error: any) {
     console.error('Route /api/admin/create-coaching-session failed:', error)
+    try { await logger.failed(error.message, { stack: error.stack }); } catch {}
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

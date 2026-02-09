@@ -4,6 +4,7 @@ import { Currency, getStripePriceId } from '@/lib/currency'
 import { getProductById } from '@/lib/products'
 import { extractFacebookParams } from '@/lib/fb-param-builder'
 import { notifyOps } from '@/lib/slack-notify'
+import { createWorkflowLogger } from '@/lib/workflow-logger'
 import { start } from 'workflow/api'
 import { abandonedCartRecovery } from '@/app/api/workflows/abandoned-cart/route'
 import Stripe from 'stripe'
@@ -43,6 +44,7 @@ function prepareCookieDataForStripe(cookieData: any, existingKeyCount: number = 
 }
 
 export async function POST(req: NextRequest) {
+  const logger = createWorkflowLogger({ workflowName: 'checkout-v2-session', workflowType: 'checkout', notifySlack: true });
   try {
     // Extract Facebook parameters
     const fbParams = extractFacebookParams(req)
@@ -85,6 +87,8 @@ export async function POST(req: NextRequest) {
       addOns?: string[]
     } = body
 
+    try { await logger.started('Checkout v2 session requested', { email: customerInfo?.email, name: `${customerInfo?.firstName} ${customerInfo?.lastName}`, currency, addOns }); } catch {}
+
     // Validate customer info
     if (!customerInfo?.firstName || !customerInfo?.lastName || !customerInfo?.email) {
       return NextResponse.json(
@@ -124,6 +128,7 @@ export async function POST(req: NextRequest) {
     })
 
     console.log('Created Stripe Customer:', customer.id)
+    try { await logger.step('stripe-customer-created', 'Stripe customer created', { customerId: customer.id, email: customerInfo.email }); } catch {}
 
     // Build line items - main product first
     const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] = [
@@ -225,6 +230,7 @@ export async function POST(req: NextRequest) {
     })
 
     console.log('Created PaymentIntent:', paymentIntent.id, 'Amount:', totalAmount, currency)
+    try { await logger.step('payment-intent-created', 'PaymentIntent created', { paymentIntentId: paymentIntent.id, amount: totalAmount, currency, customerId: customer.id }); } catch {}
 
     const addOnNames = addOnMetadata.length > 0 ? ` + ${addOnMetadata.join(', ')}` : ''
     notifyOps(`💳 Checkout v2 session created - ${customerInfo.email} for ${mainProduct.title}${addOnNames}`)
@@ -245,6 +251,8 @@ export async function POST(req: NextRequest) {
       })
     }
 
+    try { await logger.completed(`Checkout session created for ${customerInfo.email}`, { paymentIntentId: paymentIntent.id, amount: totalAmount, currency, email: customerInfo.email, name: fullName, product: mainProduct.title, addOns: addOnMetadata }); } catch {}
+
     // Return client_secret for Payment Element
     return NextResponse.json({
       clientSecret: paymentIntent.client_secret,
@@ -253,6 +261,7 @@ export async function POST(req: NextRequest) {
     })
   } catch (error: any) {
     console.error('Checkout-v2 session creation failed:', error)
+    try { await logger.failed(error.message, { stack: error.stack }); } catch {}
     notifyOps(`❌ Checkout v2 session failed - ${error.message}`)
     return NextResponse.json(
       { error: 'Internal server error' },

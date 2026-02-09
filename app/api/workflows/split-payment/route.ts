@@ -2,9 +2,12 @@ import { createHook, FatalError, RetryableError } from 'workflow'
 import { getSupabaseServerClient } from '@/lib/supabase'
 import { stripe } from '@/lib/stripe/client'
 import { notifyOps } from '@/lib/slack-notify'
+import { createWorkflowLogger } from '@/lib/workflow-logger'
 
 export async function processSplitPayment(splitPaymentId: string) {
   'use workflow'
+
+  try { const l = createWorkflowLogger({ workflowName: 'split-payment-processor', workflowType: 'workflow', notifySlack: true }); await l.started('Split payment workflow started', { splitPaymentId }); } catch {}
 
   const payment = await fetchSplitPayment(splitPaymentId)
 
@@ -32,6 +35,7 @@ export async function processSplitPayment(splitPaymentId: string) {
 
   if (decision.approved) {
     await confirmPayment(splitPaymentId, secondPaymentIntentId)
+    try { const l = createWorkflowLogger({ workflowName: 'split-payment-processor', workflowType: 'workflow', notifySlack: true }); await l.completed(`Split payment approved and confirmed for ${payment.customer_email}`, { splitPaymentId, email: payment.customer_email, amount: payment.second_payment_amount / 100 }); } catch {}
     await notifyResult(
       splitPaymentId,
       payment.customer_email,
@@ -41,6 +45,7 @@ export async function processSplitPayment(splitPaymentId: string) {
     )
   } else {
     await cancelPayment(splitPaymentId, secondPaymentIntentId)
+    try { const l = createWorkflowLogger({ workflowName: 'split-payment-processor', workflowType: 'workflow', notifySlack: true }); await l.failed(`Split payment rejected for ${payment.customer_email}`, { splitPaymentId, email: payment.customer_email, comment: decision.comment }); } catch {}
     await notifyResult(
       splitPaymentId,
       payment.customer_email,

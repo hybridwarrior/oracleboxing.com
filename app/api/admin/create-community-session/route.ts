@@ -11,12 +11,14 @@ import {
   COMMUNITY_PRODUCT_ID,
 } from '@/lib/community-pricing'
 import { requireAdmin } from '@/lib/auth'
+import { createWorkflowLogger } from '@/lib/workflow-logger'
 
 export async function POST(req: NextRequest) {
   // Require admin authentication
   const authError = await requireAdmin()
   if (authError) return authError
 
+  const logger = createWorkflowLogger({ workflowName: 'admin-community-session', workflowType: 'action', notifySlack: true });
   try {
     const body = await req.json()
     const {
@@ -42,6 +44,8 @@ export async function POST(req: NextRequest) {
         event_id?: string
       }
     }
+
+    try { await logger.started('Admin community session creation', { email, name, tier, discount }); } catch {}
 
     console.log('🎯 Creating community checkout session:', {
       tier,
@@ -164,6 +168,8 @@ export async function POST(req: NextRequest) {
     console.log('✅ Community session created:', session.id)
     console.log('🔗 Checkout URL:', session.url)
 
+    try { await logger.completed(`Community session created for ${email}`, { sessionId: session.id, email, tier, discount, finalPrice: calculation.finalPrice }); } catch {}
+
     return NextResponse.json({
       url: session.url,
       sessionId: session.id,
@@ -171,6 +177,7 @@ export async function POST(req: NextRequest) {
     })
   } catch (error: any) {
     console.error('Route /api/admin/create-community-session failed:', error)
+    try { await logger.failed(error.message, { stack: error.stack }); } catch {}
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

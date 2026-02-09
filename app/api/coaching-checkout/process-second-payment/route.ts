@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { stripe } from '@/lib/stripe/client'
 import { notifyOps } from '@/lib/slack-notify'
+import { createWorkflowLogger } from '@/lib/workflow-logger'
 
 /**
  * Process second payment for split pay coaching customers
@@ -14,9 +15,11 @@ import { notifyOps } from '@/lib/slack-notify'
  * - customerId + amount: Direct charge to customer
  */
 export async function POST(req: NextRequest) {
+  const logger = createWorkflowLogger({ workflowName: 'coaching-second-payment', workflowType: 'checkout', notifySlack: true });
   try {
     const body = await req.json()
     const { paymentIntentId, customerId, amount, scheduleFor } = body
+    try { await logger.started('Second payment processing requested', { paymentIntentId, customerId, amount }); } catch {}
 
     // Option 1: Create second payment from first payment's metadata
     if (paymentIntentId) {
@@ -115,6 +118,8 @@ export async function POST(req: NextRequest) {
 
       console.log('✅ Second payment processed:', secondPayment.id)
 
+      try { await logger.completed(`Second payment processed for ${metadata.customer_email || customerIdFromPI}`, { paymentIntentId: secondPayment.id, amount: secondPaymentAmount / 100, email: metadata.customer_email, originalPaymentIntentId: paymentIntentId }); } catch {}
+
       notifyOps(`💰 Split payment processed - ${metadata.customer_email || customerIdFromPI} ($${secondPaymentAmount / 100})`)
 
       return NextResponse.json({
@@ -163,6 +168,8 @@ export async function POST(req: NextRequest) {
         },
       })
 
+      try { await logger.completed(`Direct second payment processed for ${customerId}`, { paymentIntentId: payment.id, amount, customerId }); } catch {}
+
       notifyOps(`💰 Split payment processed - ${customerId} ($${amount})`)
 
       return NextResponse.json({
@@ -178,6 +185,7 @@ export async function POST(req: NextRequest) {
     )
   } catch (error: any) {
     console.error('❌ Error processing second payment:', error)
+    try { await logger.failed(error.message, { stack: error.stack, type: error.type, code: error.code }); } catch {}
     notifyOps(`❌ Split payment processing failed - ${error.message}`)
 
     // Handle specific Stripe errors

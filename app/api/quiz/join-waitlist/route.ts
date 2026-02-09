@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import client from '@sendgrid/client'
+import { createWorkflowLogger } from '@/lib/workflow-logger'
 
 const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY || ''
 const SLACK_BOT_TOKEN = process.env.SLACK_BOT_TOKEN || ''
@@ -28,6 +29,7 @@ async function notifySlack(text: string) {
 }
 
 export async function POST(request: Request): Promise<NextResponse> {
+  const logger = createWorkflowLogger({ workflowName: 'waitlist-signup', workflowType: 'action', notifySlack: true });
   try {
     const { name, email } = await request.json()
 
@@ -35,6 +37,8 @@ export async function POST(request: Request): Promise<NextResponse> {
     if (!name?.trim() || !email || !emailRegex.test(email)) {
       return NextResponse.json({ error: 'Invalid input' }, { status: 400 })
     }
+
+    try { await logger.started('Waitlist signup requested', { email, name }); } catch {}
 
     const firstName = name.trim().split(' ')[0]
 
@@ -53,12 +57,17 @@ export async function POST(request: Request): Promise<NextResponse> {
       },
     })
 
+    try { await logger.step('sendgrid-added', 'Added to SendGrid waitlist', { email, firstName }); } catch {}
+
     // Notify Slack
     await notifySlack(`📋 *21DC Waitlist* — ${firstName} (${email}) just joined the 21-Day Challenge waitlist via quiz results`)
 
+    try { await logger.completed(`Waitlist signup completed for ${email}`, { email, name: firstName }); } catch {}
+
     return NextResponse.json({ success: true })
-  } catch (e) {
+  } catch (e: any) {
     console.error('Error in join-waitlist:', e)
+    try { await logger.failed(e.message || 'Unknown error'); } catch {}
     return NextResponse.json({ error: 'Failed to join waitlist' }, { status: 500 })
   }
 }

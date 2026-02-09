@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { stripe } from '@/lib/stripe/client'
 import { notifyOps } from '@/lib/slack-notify'
+import { createWorkflowLogger } from '@/lib/workflow-logger'
 
 /**
  * GET /api/payment-intent?pi=pi_xxx
@@ -17,6 +18,7 @@ export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url)
   const paymentIntentId = searchParams.get('pi')
   const setupIntentId = searchParams.get('setup')
+  const logger = createWorkflowLogger({ workflowName: 'payment-intent-create', workflowType: 'checkout', notifySlack: true });
 
   try {
     if (paymentIntentId) {
@@ -29,6 +31,8 @@ export async function GET(req: NextRequest) {
       }
 
       const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId)
+
+      try { await logger.completed(`Payment intent retrieved: ${paymentIntentId}`, { paymentIntentId, amount: paymentIntent.amount, currency: paymentIntent.currency }); } catch {}
 
       notifyOps(`💳 Payment intent created - ${paymentIntentId}`)
 
@@ -67,6 +71,7 @@ export async function GET(req: NextRequest) {
       )
     }
 
+    try { await logger.failed(error.message, { paymentIntentId, setupIntentId, type: error.type }); } catch {}
     notifyOps(`❌ Payment intent retrieval failed - ${error.message}`)
 
     return NextResponse.json(

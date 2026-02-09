@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import sgMail from '@sendgrid/mail'
 import client from '@sendgrid/client'
 import { getSupabaseServerClient } from '@/lib/supabase'
+import { createWorkflowLogger } from '@/lib/workflow-logger'
 
 const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY || ''
 const SLACK_BOT_TOKEN = process.env.SLACK_BOT_TOKEN || ''
@@ -84,6 +85,7 @@ async function notifySlack(text: string) {
 }
 
 export async function POST(request: Request): Promise<NextResponse> {
+  const wfLogger = createWorkflowLogger({ workflowName: 'quiz-email-capture', workflowType: 'action', notifySlack: true });
   try {
     const { id, name, email } = await request.json()
 
@@ -92,6 +94,8 @@ export async function POST(request: Request): Promise<NextResponse> {
     if (!id || !name?.trim() || !email || !emailRegex.test(email)) {
       return NextResponse.json({ error: 'Invalid input' }, { status: 400 })
     }
+
+    try { await wfLogger.started('Quiz email capture', { email, name, quizResultId: id }); } catch {}
 
     const firstName = name.trim().split(' ')[0]
 
@@ -106,9 +110,12 @@ export async function POST(request: Request): Promise<NextResponse> {
       notifySlack(`🥊 *Quiz completed* — ${firstName} (${email}) just took the boxing quiz`),
     ])
 
+    try { await wfLogger.completed(`Quiz email captured for ${email}`, { email, name: firstName, quizResultId: id }); } catch {}
+
     return NextResponse.json({ success: true })
-  } catch (e) {
+  } catch (e: any) {
     console.error('Error in quiz capture-email:', e)
+    try { await wfLogger.failed(e.message || 'Unknown error'); } catch {}
     return NextResponse.json({ error: 'Failed to process' }, { status: 500 })
   }
 }

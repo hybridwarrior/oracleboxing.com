@@ -3,6 +3,7 @@ import { stripe } from '@/lib/stripe/client';
 import { getProductByMetadata } from '@/lib/products';
 import { Currency, getStripePriceId } from '@/lib/currency';
 import { notifyOps } from '@/lib/slack-notify';
+import { createWorkflowLogger } from '@/lib/workflow-logger';
 
 // Helper function to flatten cookie data into individual Stripe metadata fields
 // Each cookie field becomes a separate metadata field with "cookie_" prefix
@@ -23,9 +24,11 @@ function prepareCookieDataForStripe(cookieData: any): Record<string, string> {
 }
 
 export async function POST(req: NextRequest) {
+  const logger = createWorkflowLogger({ workflowName: 'upsell-coaching', workflowType: 'checkout', notifySlack: true });
   try {
     const body = await req.json();
     const { customerEmail, customerName, originalSessionId, isMembership = false, currency = 'USD', trackingParams, cookieData } = body;
+    try { await logger.started('Coaching upsell requested', { email: customerEmail, name: customerName, isMembership, currency, originalSessionId }); } catch {}
 
     console.log('🎯 Creating coaching upsell:', { customerEmail, isMembership, currency });
 
@@ -121,11 +124,14 @@ export async function POST(req: NextRequest) {
       },
     });
 
+    try { await logger.completed(`Coaching upsell session created for ${customerEmail}`, { sessionId: session.id, email: customerEmail, isMembership, priceId }); } catch {}
+
     notifyOps(`⬆️ Coaching upsell - ${customerEmail}`)
 
     return NextResponse.json({ url: session.url });
   } catch (error: any) {
     console.error('Route /api/upsell/coaching failed:', error);
+    try { await logger.failed(error.message, { stack: error.stack }); } catch {}
     notifyOps(`❌ Coaching upsell failed - ${error.message}`)
     return NextResponse.json(
       { error: 'Internal server error' },

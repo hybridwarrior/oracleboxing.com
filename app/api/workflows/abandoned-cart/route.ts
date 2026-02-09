@@ -2,6 +2,7 @@ import { sleep } from 'workflow'
 import { getSupabaseServerClient } from '@/lib/supabase'
 import { stripe } from '@/lib/stripe/client'
 import { notifyOps } from '@/lib/slack-notify'
+import { createWorkflowLogger } from '@/lib/workflow-logger'
 
 const TEST_EMAILS = ['jt@gmail.com']
 const TEST_PHONES = ['+12222222222']
@@ -29,8 +30,11 @@ export async function abandonedCartRecovery(input: string) {
 
   // Skip test checkouts immediately
   if (isTestCheckout(data.email, data.phone)) {
+    try { const l = createWorkflowLogger({ workflowName: 'abandoned-cart-recovery', workflowType: 'workflow', notifySlack: false }); await l.skipped('Test checkout skipped', { email: data.email }); } catch {}
     return { status: 'skipped', reason: 'test_checkout' }
   }
+
+  try { const l = createWorkflowLogger({ workflowName: 'abandoned-cart-recovery', workflowType: 'workflow', notifySlack: true }); await l.started('Abandoned cart recovery started', { email: data.email, phone: data.phone, paymentIntentId: data.paymentIntentId }); } catch {}
 
   // Durable sleep for 90 minutes — no compute consumed
   await sleep('90m')
@@ -38,6 +42,7 @@ export async function abandonedCartRecovery(input: string) {
   // Check if payment was completed during the wait
   const paymentStatus = await checkPaymentStatus(data.paymentIntentId)
   if (paymentStatus === 'succeeded') {
+    try { const l = createWorkflowLogger({ workflowName: 'abandoned-cart-recovery', workflowType: 'workflow', notifySlack: false }); await l.completed('Payment completed during wait period', { email: data.email, paymentIntentId: data.paymentIntentId }); } catch {}
     return { status: 'paid' }
   }
 
@@ -45,6 +50,7 @@ export async function abandonedCartRecovery(input: string) {
   if (data.phone) {
     const onCooldown = await checkCooldown(data.phone)
     if (onCooldown) {
+      try { const l = createWorkflowLogger({ workflowName: 'abandoned-cart-recovery', workflowType: 'workflow', notifySlack: false }); await l.skipped('Phone on cooldown', { email: data.email, phone: data.phone }); } catch {}
       return { status: 'skipped', reason: 'cooldown' }
     }
   }
@@ -52,6 +58,7 @@ export async function abandonedCartRecovery(input: string) {
   // Send recovery webhook to Make.com
   const webhookSent = await sendRecoveryWebhook(data)
   if (!webhookSent) {
+    try { const l = createWorkflowLogger({ workflowName: 'abandoned-cart-recovery', workflowType: 'workflow', notifySlack: true }); await l.failed('Recovery webhook failed', { email: data.email, phone: data.phone }); } catch {}
     return { status: 'error', reason: 'webhook_failed' }
   }
 
@@ -62,6 +69,8 @@ export async function abandonedCartRecovery(input: string) {
 
   // Notify ops
   await notifyOpsStep(data)
+
+  try { const l = createWorkflowLogger({ workflowName: 'abandoned-cart-recovery', workflowType: 'workflow', notifySlack: true }); await l.completed(`Abandoned cart recovery sent for ${data.email || data.phone}`, { email: data.email, phone: data.phone, paymentIntentId: data.paymentIntentId }); } catch {}
 
   return { status: 'abandoned', webhookSent: true }
 }

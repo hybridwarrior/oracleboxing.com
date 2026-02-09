@@ -1,12 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSupabaseServerClient, CoachingSplitPaymentRecord } from '@/lib/supabase'
 import { notifyOps } from '@/lib/slack-notify'
+import { createWorkflowLogger } from '@/lib/workflow-logger'
 
 /**
  * Save split payment info to Supabase after first payment succeeds
  * Called from the coaching checkout page after successful payment confirmation
  */
 export async function POST(req: NextRequest) {
+  const logger = createWorkflowLogger({ workflowName: 'coaching-split-payment-save', workflowType: 'checkout', notifySlack: true });
   try {
     const body = await req.json()
     const {
@@ -20,6 +22,8 @@ export async function POST(req: NextRequest) {
       coach,
       sixMonthCommitment,
     } = body
+
+    try { await logger.started('Save split payment requested', { customerEmail, stripeCustomerId, firstPaymentIntentId, secondPaymentAmount, tier, coach }); } catch {}
 
     // Validate required fields
     if (!customerEmail || !stripeCustomerId || !firstPaymentIntentId || !secondPaymentAmount) {
@@ -88,6 +92,8 @@ export async function POST(req: NextRequest) {
 
     console.log('✅ Split payment saved to Supabase:', (data as any).id)
 
+    try { await logger.completed(`Split payment saved for ${customerEmail}`, { id: (data as any).id, email: customerEmail, secondPaymentAmount: secondPaymentAmount / 100, dueDate: dueDate.toISOString(), tier, coach }); } catch {}
+
     notifyOps(`📋 Split payment saved - ${customerEmail} ($${secondPaymentAmount / 100} due ${dueDate.toISOString().split('T')[0]})`)
 
     return NextResponse.json({
@@ -97,6 +103,7 @@ export async function POST(req: NextRequest) {
     })
   } catch (error: any) {
     console.error('Route /api/coaching-checkout/save-split-payment failed:', error)
+    try { await logger.failed(error.message, { stack: error.stack }); } catch {}
     notifyOps(`❌ Save split payment failed - ${error.message}`)
     return NextResponse.json(
       { error: 'Internal server error' },
