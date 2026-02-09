@@ -23,16 +23,16 @@ function BlurredReport() {
   return (
     <div className="relative rounded-xl overflow-hidden bg-white border border-neutral-200">
       {/* Blurred content */}
-      <div className="blur-[4px] pointer-events-none select-none p-4">
+      <div className="blur-[4px] pointer-events-none select-none p-3">
         {/* Fake header */}
-        <div className="text-center mb-3">
-          <div className="text-xs font-semibold text-neutral-400 uppercase tracking-wider">Your Boxing Profile</div>
-          <div className="text-2xl font-bold text-neutral-900 mt-1">Intermediate · 62%</div>
+        <div className="text-center mb-2">
+          <div className="text-[10px] font-semibold text-neutral-400 uppercase tracking-wider">Your Boxing Profile</div>
+          <div className="text-xl font-bold text-neutral-900 mt-0.5">Intermediate · 62%</div>
         </div>
 
         {/* Fake radar chart area */}
-        <div className="flex justify-center mb-3">
-          <svg viewBox="0 0 200 200" className="w-32 h-32">
+        <div className="flex justify-center mb-2">
+          <svg viewBox="0 0 200 200" className="w-24 h-24">
             {/* Grid circles */}
             <circle cx="100" cy="100" r="80" fill="none" stroke="#e5e5e5" strokeWidth="0.5" />
             <circle cx="100" cy="100" r="60" fill="none" stroke="#e5e5e5" strokeWidth="0.5" />
@@ -129,7 +129,7 @@ export default function QuizPopup() {
             transition={{ duration: 0.25, ease: 'easeOut' }}
             className="fixed inset-0 z-[101] flex items-center justify-center px-4"
           >
-            <div className="bg-[#F5F5F5] rounded-2xl shadow-2xl max-w-md w-full overflow-hidden relative">
+            <div className="bg-[#F5F5F5] rounded-2xl shadow-2xl max-w-sm w-full max-h-[85vh] overflow-y-auto relative">
               {/* Close button */}
               <button
                 onClick={dismiss}
@@ -142,18 +142,18 @@ export default function QuizPopup() {
               </button>
 
               {/* Header */}
-              <div className="bg-[#37322F] px-6 py-4">
-                <p className="text-xs font-semibold uppercase tracking-wider text-neutral-400">New</p>
-                <h2 className="text-white font-bold text-xl leading-tight">Boxing IQ Test</h2>
+              <div className="bg-[#37322F] px-5 py-3">
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-neutral-400">New</p>
+                <h2 className="text-white font-bold text-lg leading-tight">Boxing IQ Test</h2>
               </div>
 
               {/* Content */}
-              <div className="px-5 py-5 space-y-4">
+              <div className="px-4 py-4 space-y-3">
                 <div>
-                  <h3 className="text-lg font-bold text-neutral-900 leading-snug mb-1.5">
+                  <h3 className="text-base font-bold text-neutral-900 leading-snug mb-1">
                     How well do you actually know boxing?
                   </h3>
-                  <p className="text-sm text-neutral-500 leading-relaxed">
+                  <p className="text-xs text-neutral-500 leading-relaxed">
                     19 questions. 5 minutes. Get a personalised skill radar, gap analysis, and custom training plan.
                   </p>
                 </div>
@@ -168,7 +168,7 @@ export default function QuizPopup() {
                 <Link
                   href="/quiz/take"
                   onClick={dismiss}
-                  className="block w-full text-center bg-[#37322F] text-white font-semibold py-3.5 rounded-xl hover:bg-[#49423D] transition-colors text-sm"
+                  className="block w-full text-center bg-[#37322F] text-white font-semibold py-3 rounded-xl hover:bg-[#49423D] transition-colors text-sm"
                 >
                   Take the Test
                 </Link>
