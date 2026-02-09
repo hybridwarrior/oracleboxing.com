@@ -11,7 +11,7 @@ const blogPosts = [
     excerpt:
       "Punching power doesn't come from your arms. Learn how rotation, the kinetic chain, and relaxation generate real knockout power in boxing.",
     date: "2025-07-18",
-    thumbnail: "https://sb.oracleboxing.com/Website/skool_art2.webp",
+    thumbnail: "https://sb.oracleboxing.com/Website/skool_art2.jpg",
   },
   {
     slug: "boxing-mistakes-beginners-make",
@@ -19,7 +19,7 @@ const blogPosts = [
     excerpt:
       "The real mistakes holding back your boxing aren't the obvious ones. Weight distribution, hip mechanics, shape, and relaxation - here's what's actually going wrong.",
     date: "2025-07-18",
-    thumbnail: "https://sb.oracleboxing.com/Website/skool_art2.webp",
+    thumbnail: "https://sb.oracleboxing.com/Website/skool_art2.jpg",
   },
   {
     slug: "boxing-footwork-fundamentals",
@@ -27,7 +27,7 @@ const blogPosts = [
     excerpt:
       "Boxing is a game of inches. Learn the movement patterns, pivots, angles, and the petal drill that will transform how you move in the ring.",
     date: "2025-07-18",
-    thumbnail: "https://sb.oracleboxing.com/Website/skool_art2.webp",
+    thumbnail: "https://sb.oracleboxing.com/Website/skool_art2.jpg",
   },
   {
     slug: "boxing-punches-1-6-explained",
@@ -114,7 +114,7 @@ export default function BlogIndexPage() {
                     src={
                       post.videoId
                         ? `https://img.youtube.com/vi/${post.videoId}/maxresdefault.jpg`
-                        : (post as any).thumbnail || "https://sb.oracleboxing.com/Website/skool_art2.webp"
+                        : (post as any).thumbnail || "https://sb.oracleboxing.com/Website/skool_art2.jpg"
                     }
                     alt={post.title}
                     fill

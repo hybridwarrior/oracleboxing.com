@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     type: "article",
     images: [
       {
-        url: "https://sb.oracleboxing.com/Website/skool_art2.webp",
+        url: "https://sb.oracleboxing.com/Website/skool_art2.jpg",
         width: 1200,
         height: 630,
         alt: "7 Boxing Mistakes That Ruin Your Fundamentals",
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     title: "7 Boxing Mistakes That Ruin Your Fundamentals (And How to Fix Them)",
     description:
       "The real mistakes holding back your boxing aren't the obvious ones. Here's what's actually going wrong and how to fix it.",
-    images: ["https://sb.oracleboxing.com/Website/skool_art2.webp"],
+    images: ["https://sb.oracleboxing.com/Website/skool_art2.jpg"],
   },
 }
 

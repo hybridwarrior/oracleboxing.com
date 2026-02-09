@@ -225,7 +225,7 @@ const internalProducts: Product[] = [
       cad: 'price_1SmGtPKPvH4Ddlg12vlBjV45',
       aed: 'price_1SmGtSKPvH4Ddlg1Oqmbkyo3',
     },
-    image: 'https://sb.oracleboxing.com/Website/skool_art2.webp',
+    image: 'https://sb.oracleboxing.com/Website/skool_art2.jpg',
     description: `**21-Day Challenge - Entry Package**
 
 Learn the fundamental pillars of boxing so that your technique "just looks right."

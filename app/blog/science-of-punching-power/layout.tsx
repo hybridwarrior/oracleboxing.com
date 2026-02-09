@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     type: "article",
     images: [
       {
-        url: "https://sb.oracleboxing.com/Website/skool_art2.webp",
+        url: "https://sb.oracleboxing.com/Website/skool_art2.jpg",
         width: 1200,
         height: 630,
         alt: "The Science of Punching Power",
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     title: "The Science of Punching Power: Rotation, Relaxation, and the Kinetic Chain",
     description:
       "Punching power doesn't come from your arms. Learn the real biomechanics behind knockout power.",
-    images: ["https://sb.oracleboxing.com/Website/skool_art2.webp"],
+    images: ["https://sb.oracleboxing.com/Website/skool_art2.jpg"],
   },
 }
 

@@ -197,7 +197,7 @@ export function CoachingIllustration() {
           {/* Header Image/Banner */}
           <div className="relative h-24 md:h-32 overflow-hidden">
             <Image
-              src="https://sb.oracleboxing.com/Website/skool_art2.webp"
+              src="https://sb.oracleboxing.com/Website/skool_art2.jpg"
               alt="Shape Masterclass"
               fill
               className="object-cover"

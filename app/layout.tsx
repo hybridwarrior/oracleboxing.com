@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "https://sb.oracleboxing.com/Website/skool_art2.webp",
+        url: "https://sb.oracleboxing.com/Website/skool_art2.jpg",
         width: 1200,
         height: 630,
         alt: "Oracle Boxing",
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Oracle Boxing",
     description: "Learn the fundamental pillars of boxing so that your technique just looks right. 21 days to master what matters.",
-    images: ["https://sb.oracleboxing.com/Website/skool_art2.webp"],
+    images: ["https://sb.oracleboxing.com/Website/skool_art2.jpg"],
   },
   icons: {
     icon: [

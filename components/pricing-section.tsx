@@ -122,7 +122,7 @@ export default function PricingSection() {
               {/* Thumbnail */}
               <div className="flex justify-center">
                 <img
-                  src="https://sb.oracleboxing.com/Website/skool_art2.webp"
+                  src="https://sb.oracleboxing.com/Website/skool_art2.jpg"
                   alt="21-Day Challenge"
                   className="w-full max-w-[320px] sm:max-w-[400px] rounded-xl shadow-lg"
                 />

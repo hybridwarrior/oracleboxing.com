@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "https://sb.oracleboxing.com/Website/skool_art2.webp",
+        url: "https://sb.oracleboxing.com/Website/skool_art2.jpg",
         width: 1200,
         height: 630,
         alt: "Oracle Boxing Blog",
