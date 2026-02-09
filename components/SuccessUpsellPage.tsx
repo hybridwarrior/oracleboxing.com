@@ -156,6 +156,34 @@ export const SuccessUpsellPage: React.FC<SuccessUpsellPageProps> = ({ isMembersh
           console.error('❌ Failed to send CAPI Purchase event:', error);
         });
 
+        // 3. Send Google Ads Purchase event
+        try {
+          const { gtagPurchase, gtagSetUserData } = await import('@/lib/gtag')
+
+          gtagSetUserData({
+            email: sessionData.customer_details?.email || sessionData.customer_email || sessionData.customerEmail,
+            phone_number: sessionData.customer_details?.phone,
+          })
+
+          const gtagItems = sessionData.line_items?.data?.map((item: any) => ({
+            item_id: typeof item.price?.product === 'object' ? item.price.product.id : item.price?.product || 'unknown',
+            item_name: typeof item.price?.product === 'object' ? item.price.product.name : item.description || 'Unknown Product',
+            price: item.price?.unit_amount ? item.price.unit_amount / 100 : 0,
+            quantity: item.quantity || 1,
+          })) || []
+
+          gtagPurchase({
+            transaction_id: sessionId || 'unknown',
+            value: amountTotal,
+            currency: currency,
+            items: gtagItems,
+          })
+
+          console.log('📊 Google Ads Purchase event sent (upsell page)')
+        } catch (e) {
+          console.warn('Failed to send Google Ads purchase (upsell):', e)
+        }
+
       } catch (error) {
         console.error('Error sending Purchase event:', error);
       }

@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect, useRef } from 'react'
 import { useCurrency } from '@/contexts/CurrencyContext'
 import { formatPrice, getProductPrice } from '@/lib/currency'
 import { ArrowButton } from '@/components/ui/arrow-button'
@@ -11,6 +12,27 @@ import { trackAddToCart } from '@/lib/webhook-tracking'
 export default function PricingSection() {
   const { currency } = useCurrency()
   const price = getProductPrice('21dc_entry', currency) || 147
+  const viewItemFired = useRef(false)
+
+  // Fire view_item for Google Ads when pricing section mounts
+  useEffect(() => {
+    if (viewItemFired.current) return
+    viewItemFired.current = true
+
+    try {
+      import('@/lib/gtag').then(({ gtagViewItem }) => {
+        gtagViewItem({
+          item_id: '21dc-entry',
+          item_name: '21-Day Challenge',
+          price: price,
+          currency: currency,
+          item_category: 'Boxing Course',
+        })
+      }).catch(() => {})
+    } catch (e) {
+      // silently ignore
+    }
+  }, [price, currency])
   const checkoutUrl = getCheckoutUrl()
   const spots = getCurrentSpots()
 

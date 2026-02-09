@@ -302,6 +302,43 @@ export function SuccessContent({ sessionId, isPaymentIntent = false, isSubscript
         );
         console.log('✅ Purchase tracked to Supabase (amount in USD:', amountInUSD, ')');
 
+        // 5. Send Google Ads Purchase event
+        try {
+          const { gtagPurchase, gtagSetUserData } = await import('@/lib/gtag')
+
+          // Set user data for enhanced conversions
+          const gtagEmail = sessionData.customer_details?.email || sessionData.customer_email || sessionData.customerEmail
+          const gtagPhone = sessionData.customer_details?.phone
+          const gtagFirstName = metadata.customer_first_name
+          const gtagLastName = metadata.customer_last_name
+
+          gtagSetUserData({
+            email: gtagEmail,
+            phone_number: gtagPhone,
+            first_name: gtagFirstName,
+            last_name: gtagLastName,
+          })
+
+          // Build items array from line items
+          const gtagItems = sessionData.line_items?.data?.map((item: any) => ({
+            item_id: typeof item.price?.product === 'object' ? item.price.product.id : item.price?.product || 'unknown',
+            item_name: typeof item.price?.product === 'object' ? item.price.product.name : item.description || 'Unknown Product',
+            price: item.price?.unit_amount ? item.price.unit_amount / 100 : 0,
+            quantity: item.quantity || 1,
+          })) || []
+
+          gtagPurchase({
+            transaction_id: sessionId,
+            value: amountTotal,
+            currency: currency,
+            items: gtagItems,
+          })
+
+          console.log('📊 Google Ads Purchase event sent')
+        } catch (e) {
+          console.warn('Failed to send Google Ads purchase:', e)
+        }
+
         // Mark purchase as tracked to prevent duplicates on page refresh
         markPurchaseAsTracked(sessionId);
         console.log('✅ Purchase marked as tracked for session:', sessionId);

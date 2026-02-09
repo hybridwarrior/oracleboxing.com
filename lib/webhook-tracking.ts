@@ -995,6 +995,20 @@ export function trackAddToCart(
       console.error('Failed to send AddToCart to Facebook CAPI:', error);
     });
 
+    // Track AddToCart in Google Ads gtag
+    try {
+      import('@/lib/gtag').then(({ gtagAddToCart }) => {
+        gtagAddToCart({
+          item_id: productId,
+          item_name: productName,
+          price: price,
+          currency: currency,
+        })
+      }).catch(() => {})
+    } catch (e) {
+      console.warn('Failed to send Google Ads add_to_cart:', e)
+    }
+
     console.log('🛒 AddToCart tracked:', { productId, productName, price, currency, buttonLocation });
   } catch (error) {
     console.error('Error tracking AddToCart:', error);

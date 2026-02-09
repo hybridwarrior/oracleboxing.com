@@ -367,6 +367,32 @@ function CheckoutV2Content() {
         total_items: 1,
       })
 
+      // Track begin_checkout in Google Ads gtag
+      try {
+        const { gtagBeginCheckout, gtagSetUserData } = await import('@/lib/gtag')
+
+        // Set user data for enhanced conversions
+        gtagSetUserData({
+          email: info.email,
+          phone_number: info.phone,
+          first_name: info.firstName,
+          last_name: info.lastName,
+        })
+
+        gtagBeginCheckout({
+          value: priceInUserCurrency,
+          currency: currency,
+          items: [{
+            item_id: '21dc-entry',
+            item_name: '21-Day Challenge',
+            price: priceInUserCurrency,
+            quantity: 1,
+          }],
+        })
+      } catch (e) {
+        console.warn('Failed to send Google Ads begin_checkout:', e)
+      }
+
       setStep('payment')
     } catch (err: any) {
       console.error('Session creation error:', err)
