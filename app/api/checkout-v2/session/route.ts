@@ -5,8 +5,6 @@ import { getProductById } from '@/lib/products'
 import { extractFacebookParams } from '@/lib/fb-param-builder'
 import { notifyOps } from '@/lib/slack-notify'
 import { createWorkflowLogger } from '@/lib/workflow-logger'
-import { start } from 'workflow/api'
-import { abandonedCartRecovery } from '@/app/api/workflows/abandoned-cart/workflow'
 import Stripe from 'stripe'
 
 // Helper function to flatten cookie data into individual Stripe metadata fields
@@ -235,19 +233,24 @@ export async function POST(req: NextRequest) {
     const addOnNames = addOnMetadata.length > 0 ? ` + ${addOnMetadata.join(', ')}` : ''
     notifyOps(`💳 Checkout v2 session created - ${customerInfo.email} for ${mainProduct.title}${addOnNames}`)
 
-    // Trigger abandoned cart recovery workflow (fire-and-forget)
-    // The workflow will sleep 90 minutes then check if payment completed
+    // Trigger abandoned cart recovery (fire-and-forget POST to ops dashboard)
     if (customerInfo.email && phone) {
-      start(abandonedCartRecovery, [
-        JSON.stringify({
+      const opsBase = process.env.OPS_DASHBOARD_BASE_URL || 'https://ops.oracleboxing.com'
+      fetch(`${opsBase}/api/internal/workflows/abandoned-cart/trigger`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${process.env.INTERNAL_API_TOKEN}`,
+        },
+        body: JSON.stringify({
           paymentIntentId: paymentIntent.id,
           email: customerInfo.email,
           phone: phone,
           firstName: firstName,
           lastName: lastName,
         }),
-      ]).catch((err) => {
-        console.error('Failed to trigger abandoned cart workflow:', err.message)
+      }).catch((err) => {
+        console.error('Failed to trigger abandoned cart:', err.message)
       })
     }
 
