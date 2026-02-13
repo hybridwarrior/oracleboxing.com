@@ -14,6 +14,7 @@ import {
 } from '@/lib/coaching-pricing'
 import { requireAdmin } from '@/lib/auth'
 import { createWorkflowLogger } from '@/lib/workflow-logger'
+import { mintIntentToken } from '@/lib/security/intent-token'
 
 export async function POST(req: NextRequest) {
   // Require admin authentication
@@ -176,6 +177,14 @@ export async function POST(req: NextRequest) {
       })
     }
 
+    const buildCheckoutUrl = (params: Record<string, string>) => {
+      const url = new URL('/coaching-checkout', baseUrl)
+      Object.entries(params).forEach(([key, value]) => {
+        url.searchParams.set(key, value)
+      })
+      return url.toString()
+    }
+
     // For ONE-TIME PAYMENTS (full plan), use PaymentIntent with custom checkout page
     if (paymentPlan === 'full') {
       // Create PaymentIntent for custom checkout page with automatic tax (inclusive)
@@ -196,17 +205,26 @@ export async function POST(req: NextRequest) {
       })
 
       console.log('✅ PaymentIntent created:', paymentIntent.id)
+      const paymentIntentToken = mintIntentToken({
+        intentId: paymentIntent.id,
+        purpose: 'payment_intent_client_secret_fetch',
+        customerEmail: email,
+      })
 
       try { await logger.completed(`Coaching session created (full) for ${email}`, { paymentIntentId: paymentIntent.id, email, tier, coach, paymentPlan, amount: calculation.finalPrice }); } catch {}
 
       // Build custom checkout URL with payment intent info
-      const checkoutUrl = `${baseUrl}/coaching-checkout?pi=${paymentIntent.id}`
+      const checkoutUrl = buildCheckoutUrl({
+        pi: paymentIntent.id,
+        pit: paymentIntentToken,
+      })
 
       console.log('🔗 Custom Checkout URL:', checkoutUrl)
 
       return NextResponse.json({
         url: checkoutUrl,
         paymentIntentId: paymentIntent.id,
+        paymentIntentToken,
         calculation,
         useCustomCheckout: true,
       })
@@ -237,17 +255,26 @@ export async function POST(req: NextRequest) {
       })
 
       console.log('✅ Split Pay PaymentIntent created:', paymentIntent.id)
+      const paymentIntentToken = mintIntentToken({
+        intentId: paymentIntent.id,
+        purpose: 'payment_intent_client_secret_fetch',
+        customerEmail: email,
+      })
 
       try { await logger.completed(`Coaching session created (split) for ${email}`, { paymentIntentId: paymentIntent.id, email, tier, coach, paymentPlan, amount: calculation.monthlyAmount }); } catch {}
 
       // Build custom checkout URL with payment intent info
-      const checkoutUrl = `${baseUrl}/coaching-checkout?pi=${paymentIntent.id}`
+      const checkoutUrl = buildCheckoutUrl({
+        pi: paymentIntent.id,
+        pit: paymentIntentToken,
+      })
 
       console.log('🔗 Custom Checkout URL:', checkoutUrl)
 
       return NextResponse.json({
         url: checkoutUrl,
         paymentIntentId: paymentIntent.id,
+        paymentIntentToken,
         calculation,
         useCustomCheckout: true,
         splitPayment: true,
@@ -275,17 +302,27 @@ export async function POST(req: NextRequest) {
       })
 
       console.log('✅ SetupIntent created for subscription:', setupIntent.id)
+      const setupIntentToken = mintIntentToken({
+        intentId: setupIntent.id,
+        purpose: 'payment_intent_client_secret_fetch',
+        customerEmail: email,
+      })
 
       try { await logger.completed(`Coaching session created (monthly) for ${email}`, { setupIntentId: setupIntent.id, email, tier, coach, paymentPlan, monthlyAmount: calculation.monthlyAmount }); } catch {}
 
       // Build custom checkout URL with setup intent info
-      const checkoutUrl = `${baseUrl}/coaching-checkout?setup=${setupIntent.id}&monthly=true`
+      const checkoutUrl = buildCheckoutUrl({
+        setup: setupIntent.id,
+        monthly: 'true',
+        pit: setupIntentToken,
+      })
 
       console.log('🔗 Custom Checkout URL:', checkoutUrl)
 
       return NextResponse.json({
         url: checkoutUrl,
         setupIntentId: setupIntent.id,
+        setupIntentToken,
         calculation,
         useCustomCheckout: true,
         setupForSubscription: true,

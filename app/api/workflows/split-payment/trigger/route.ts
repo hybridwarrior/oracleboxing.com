@@ -1,62 +1,59 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { start } from 'workflow/api'
-import { getSupabaseServerClient } from '@/lib/supabase'
-import { processSplitPayment } from '../workflow'
+
+const OPS_BASE_URL =
+  process.env.OPS_DASHBOARD_BASE_URL?.trim() || 'https://ops.oracleboxing.com'
+const DEPRECATION_DATE = 'Thu, 13 Feb 2026 00:00:00 GMT'
+const SUNSET_DATE = 'Fri, 27 Feb 2026 00:00:00 GMT'
+
+function withCompatibilityHeaders(response: NextResponse): NextResponse {
+  response.headers.set('Deprecation', DEPRECATION_DATE)
+  response.headers.set('Sunset', SUNSET_DATE)
+  response.headers.set(
+    'Link',
+    '</api/internal/workflows/split-payment/trigger>; rel="successor-version"'
+  )
+  response.headers.set('X-API-Deprecated', 'true')
+  return response
+}
 
 export async function GET(req: NextRequest) {
   try {
-    const authHeader = req.headers.get('authorization')
-    if (
-      process.env.NODE_ENV === 'production' &&
-      authHeader !== `Bearer ${process.env.CRON_SECRET}`
-    ) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
+    const upstreamAuthHeader =
+      req.headers.get('authorization') ||
+      (process.env.INTERNAL_API_TOKEN
+        ? `Bearer ${process.env.INTERNAL_API_TOKEN}`
+        : '')
 
-    const supabase = getSupabaseServerClient()
-
-    const today = new Date()
-    today.setHours(23, 59, 59, 999)
-
-    const { data: duePayments, error: fetchError } = await supabase
-      .from('coaching_split_payments')
-      .select('id, customer_email')
-      .eq('second_payment_status', 'pending')
-      .lte('second_payment_due_date', today.toISOString())
-
-    if (fetchError) {
-      console.error('Failed to fetch due payments:', fetchError)
-      return NextResponse.json({ error: 'Failed to fetch due payments' }, { status: 500 })
-    }
-
-    if (!duePayments || duePayments.length === 0) {
-      return NextResponse.json({ message: 'No payments due', started: 0 })
-    }
-
-    const results: { id: string; email: string; status: string }[] = []
-
-    for (const payment of duePayments) {
-      try {
-        await start(processSplitPayment, [payment.id])
-        results.push({ id: payment.id, email: payment.customer_email, status: 'started' })
-      } catch (err: any) {
-        console.error(`Failed to start workflow for ${payment.id}:`, err.message)
-        results.push({ id: payment.id, email: payment.customer_email, status: `error: ${err.message}` })
+    const upstream = await fetch(
+      `${OPS_BASE_URL}/api/internal/workflows/split-payment/trigger`,
+      {
+        method: 'GET',
+        headers: {
+          authorization: upstreamAuthHeader,
+        },
+        cache: 'no-store',
       }
-    }
+    )
 
-    const started = results.filter((r) => r.status === 'started').length
-    const failed = results.filter((r) => r.status !== 'started').length
-
-    return NextResponse.json({
-      message: 'Split payment workflows triggered',
-      total: duePayments.length,
-      started,
-      failed,
-      details: results,
-    })
-  } catch (error: any) {
-    console.error('Split payment trigger failed:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    const responseText = await upstream.text()
+    return withCompatibilityHeaders(
+      new NextResponse(responseText, {
+        status: upstream.status,
+        headers: {
+          'content-type':
+            upstream.headers.get('content-type') || 'application/json',
+        },
+      })
+    )
+  } catch (error) {
+    return withCompatibilityHeaders(
+      NextResponse.json(
+        {
+          error: 'Deprecated endpoint proxy failed',
+          details: error instanceof Error ? error.message : 'Unknown error',
+        },
+        { status: 502 }
+      )
+    )
   }
 }

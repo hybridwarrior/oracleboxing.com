@@ -2,6 +2,18 @@ import { NextRequest, NextResponse } from 'next/server'
 import { stripe } from '@/lib/stripe/client'
 import { notifyOps } from '@/lib/slack-notify'
 import { createWorkflowLogger } from '@/lib/workflow-logger'
+import { verifyIntentToken } from '@/lib/security/intent-token'
+import { z } from 'zod'
+
+const querySchema = z.object({
+  pi: z.string().trim().optional(),
+  setup: z.string().trim().optional(),
+  pit: z.string().trim().optional(),
+})
+
+type StripeLikeError = Error & {
+  type?: string
+}
 
 /**
  * GET /api/payment-intent?pi=pi_xxx
@@ -16,11 +28,32 @@ import { createWorkflowLogger } from '@/lib/workflow-logger'
  */
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url)
-  const paymentIntentId = searchParams.get('pi')
-  const setupIntentId = searchParams.get('setup')
+  const parsedQuery = querySchema.safeParse({
+    pi: searchParams.get('pi') ?? undefined,
+    setup: searchParams.get('setup') ?? undefined,
+    pit: searchParams.get('pit') ?? undefined,
+  })
+  if (!parsedQuery.success) {
+    return NextResponse.json(
+      { error: 'Invalid query parameters' },
+      { status: 400 }
+    )
+  }
+
+  const paymentIntentId = parsedQuery.data.pi || null
+  const setupIntentId = parsedQuery.data.setup || null
+  const proofToken = parsedQuery.data.pit || req.headers.get('x-payment-intent-proof')
+  const tokenRequired = process.env.PAYMENT_INTENT_TOKEN_REQUIRED !== 'false'
   const logger = createWorkflowLogger({ workflowName: 'payment-intent-create', workflowType: 'checkout', notifySlack: true });
 
   try {
+    if (!proofToken && tokenRequired) {
+      return NextResponse.json(
+        { error: 'Unauthorized payment intent access' },
+        { status: 401 }
+      )
+    }
+
     if (paymentIntentId) {
       // Validate PaymentIntent ID format
       if (!paymentIntentId.startsWith('pi_')) {
@@ -28,6 +61,20 @@ export async function GET(req: NextRequest) {
           { error: 'Invalid PaymentIntent ID' },
           { status: 400 }
         )
+      }
+
+      if (proofToken) {
+        const verified = verifyIntentToken({
+          token: proofToken,
+          intentId: paymentIntentId,
+          purpose: 'payment_intent_client_secret_fetch',
+        })
+        if (!verified.ok) {
+          return NextResponse.json(
+            { error: 'Unauthorized payment intent access' },
+            { status: 401 }
+          )
+        }
       }
 
       const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId)
@@ -50,6 +97,20 @@ export async function GET(req: NextRequest) {
         )
       }
 
+      if (proofToken) {
+        const verified = verifyIntentToken({
+          token: proofToken,
+          intentId: setupIntentId,
+          purpose: 'payment_intent_client_secret_fetch',
+        })
+        if (!verified.ok) {
+          return NextResponse.json(
+            { error: 'Unauthorized payment intent access' },
+            { status: 401 }
+          )
+        }
+      }
+
       const setupIntent = await stripe.setupIntents.retrieve(setupIntentId)
 
       return NextResponse.json({
@@ -61,18 +122,19 @@ export async function GET(req: NextRequest) {
       { error: 'Missing pi or setup parameter' },
       { status: 400 }
     )
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error retrieving intent:', error)
+    const stripeError = error as StripeLikeError
 
-    if (error.type === 'StripeInvalidRequestError') {
+    if (stripeError.type === 'StripeInvalidRequestError') {
       return NextResponse.json(
         { error: 'Payment session not found' },
         { status: 404 }
       )
     }
 
-    try { await logger.failed(error.message, { paymentIntentId, setupIntentId, type: error.type }); } catch {}
-    notifyOps(`❌ Payment intent retrieval failed - ${error.message}`)
+    try { await logger.failed(stripeError.message, { paymentIntentId, setupIntentId, type: stripeError.type }); } catch {}
+    notifyOps(`❌ Payment intent retrieval failed - ${stripeError.message}`)
 
     return NextResponse.json(
       { error: 'Failed to retrieve payment details' },

@@ -1,40 +1,61 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { resumeHook } from 'workflow/api'
+
+const OPS_BASE_URL =
+  process.env.OPS_DASHBOARD_BASE_URL?.trim() || 'https://ops.oracleboxing.com'
+const DEPRECATION_DATE = 'Thu, 13 Feb 2026 00:00:00 GMT'
+const SUNSET_DATE = 'Fri, 27 Feb 2026 00:00:00 GMT'
+
+function withCompatibilityHeaders(response: NextResponse): NextResponse {
+  response.headers.set('Deprecation', DEPRECATION_DATE)
+  response.headers.set('Sunset', SUNSET_DATE)
+  response.headers.set(
+    'Link',
+    '</api/internal/workflows/split-payment/approve>; rel="successor-version"'
+  )
+  response.headers.set('X-API-Deprecated', 'true')
+  return response
+}
 
 export async function POST(req: NextRequest) {
   try {
-    // Verify authorization in production
-    const authHeader = req.headers.get('authorization')
-    if (
-      process.env.NODE_ENV === 'production' &&
-      authHeader !== `Bearer ${process.env.CRON_SECRET}`
-    ) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
+    const upstreamAuthHeader =
+      req.headers.get('authorization') ||
+      (process.env.INTERNAL_API_TOKEN
+        ? `Bearer ${process.env.INTERNAL_API_TOKEN}`
+        : '')
 
-    const { splitPaymentId, approved, comment } = await req.json()
+    const upstream = await fetch(
+      `${OPS_BASE_URL}/api/internal/workflows/split-payment/approve`,
+      {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          authorization: upstreamAuthHeader,
+        },
+        body: await req.text(),
+        cache: 'no-store',
+      }
+    )
 
-    if (!splitPaymentId || typeof approved !== 'boolean') {
-      return NextResponse.json(
-        { error: 'Missing required fields: splitPaymentId (string), approved (boolean)' },
-        { status: 400 }
+    const responseText = await upstream.text()
+    return withCompatibilityHeaders(
+      new NextResponse(responseText, {
+        status: upstream.status,
+        headers: {
+          'content-type':
+            upstream.headers.get('content-type') || 'application/json',
+        },
+      })
+    )
+  } catch (error) {
+    return withCompatibilityHeaders(
+      NextResponse.json(
+        {
+          error: 'Deprecated endpoint proxy failed',
+          details: error instanceof Error ? error.message : 'Unknown error',
+        },
+        { status: 502 }
       )
-    }
-
-    const token = `split-payment:${splitPaymentId}`
-
-    await resumeHook(token, { approved, comment })
-
-    return NextResponse.json({
-      message: `Split payment ${splitPaymentId} ${approved ? 'approved' : 'rejected'}`,
-      splitPaymentId,
-      approved,
-    })
-  } catch (error: any) {
-    console.error('Error resuming split payment hook:', error)
-    return NextResponse.json(
-      { error: error.message || 'Failed to resume workflow' },
-      { status: 500 }
     )
   }
 }

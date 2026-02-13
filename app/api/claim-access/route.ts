@@ -1,20 +1,25 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { notifyOps } from '@/lib/slack-notify'
 import { createWorkflowLogger } from '@/lib/workflow-logger'
+import { z } from 'zod'
+import { validateJsonBody } from '@/lib/security/request-validation'
 
 const CLAIM_ACCESS_WEBHOOK_URL = process.env.MAKE_CLAIM_ACCESS_WEBHOOK_URL?.replace(/^["'\s]+|["'\s]+$/g, '') || ''
+const claimAccessSchema = z.object({
+  email: z.string().trim().email(),
+})
 
 export async function POST(req: NextRequest) {
   const logger = createWorkflowLogger({ workflowName: 'claim-access', workflowType: 'action', notifySlack: true });
   try {
-    const body = await req.json()
-    const { email } = body
+    const parsed = await validateJsonBody(req, claimAccessSchema)
+    if (!parsed.success) return parsed.response
+    const { email } = parsed.data
 
-    // Validate email
-    if (!email || typeof email !== 'string' || !email.includes('@')) {
+    if (!CLAIM_ACCESS_WEBHOOK_URL) {
       return NextResponse.json(
-        { error: 'Valid email is required' },
-        { status: 400 }
+        { error: 'Claim access webhook is not configured' },
+        { status: 500 }
       )
     }
 
@@ -51,10 +56,12 @@ export async function POST(req: NextRequest) {
         { status: 500 }
       )
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('❌ Failed to send course access claim:', error)
-    try { await logger.failed(error.message, { stack: error.stack }); } catch {}
-    notifyOps(`❌ Claim access failed - ${error.message}`)
+    const message = error instanceof Error ? error.message : 'Unknown error'
+    const stack = error instanceof Error ? error.stack : undefined
+    try { await logger.failed(message, { stack }); } catch {}
+    notifyOps(`❌ Claim access failed - ${message}`)
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

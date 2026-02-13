@@ -64,6 +64,7 @@ function CoachingCheckoutContent() {
 
   const paymentIntentId = searchParams.get('pi')
   const setupIntentId = searchParams.get('setup')
+  const paymentIntentProof = searchParams.get('pit')
   const isMonthlySetup = searchParams.get('monthly') === 'true'
 
   // Determine which intent we're working with
@@ -94,9 +95,12 @@ function CoachingCheckoutContent() {
           })(),
           // Fetch client secret via API (not from URL params)
           (async () => {
-            const secretEndpoint = setupIntentId
-              ? `/api/payment-intent?setup=${setupIntentId}`
-              : `/api/payment-intent?pi=${paymentIntentId}`
+            const query = new URLSearchParams()
+            if (setupIntentId) query.set('setup', setupIntentId)
+            if (paymentIntentId) query.set('pi', paymentIntentId)
+            if (paymentIntentProof) query.set('pit', paymentIntentProof)
+
+            const secretEndpoint = `/api/payment-intent?${query.toString()}`
 
             const response = await fetch(secretEndpoint)
             const data = await response.json()
@@ -189,7 +193,7 @@ function CoachingCheckoutContent() {
     }
 
     initializeCheckout()
-  }, [intentId, paymentIntentId, setupIntentId])
+  }, [intentId, paymentIntentId, setupIntentId, paymentIntentProof])
 
   // Handle payment confirmation
   const handleConfirm = async () => {

@@ -103,7 +103,7 @@ async function testAbandonedCart() {
   console.log(JSON.stringify(webhookPayload, null, 2));
   console.log('');
 
-  const response = await fetch('https://hook.eu2.make.com/6yxyxeuqeowhk7st10oqqmofcezmu928', {
+  const response = await fetch(process.env.MAKE_NOTIFICATION_WEBHOOK_URL, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

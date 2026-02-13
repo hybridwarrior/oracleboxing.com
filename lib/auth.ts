@@ -1,4 +1,5 @@
 import { getServerSession as getNextAuthSession } from 'next-auth'
+import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
 import { authOptions } from '@/lib/auth-options'
 
@@ -55,4 +56,23 @@ export async function requireAdmin(): Promise<NextResponse | null> {
   }
 
   return null // authorized
+}
+
+/**
+ * Require either an authenticated admin session or a valid internal bearer token.
+ */
+export async function requireAdminOrServiceToken(
+  req: NextRequest
+): Promise<NextResponse | null> {
+  const internalApiToken = process.env.INTERNAL_API_TOKEN
+  const authHeader = req.headers.get('authorization') || ''
+
+  if (internalApiToken && authHeader.startsWith('Bearer ')) {
+    const providedToken = authHeader.slice('Bearer '.length).trim()
+    if (providedToken && providedToken === internalApiToken) {
+      return null
+    }
+  }
+
+  return requireAdmin()
 }
