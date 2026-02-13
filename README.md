@@ -64,6 +64,9 @@ Create `.env.local` with the following:
 | `NEXT_PUBLIC_MAKE_UNLOCK_COURSE_WEBHOOK` | Client | Make.com course unlock webhook |
 | `NEXT_PUBLIC_MAKE_CHALLENGE_SIGNUP_WEBHOOK` | Client | Make.com challenge signup webhook |
 | `NEXT_PUBLIC_MAKE_INITIATED_CHECKOUT_WEBHOOK` | Client | Make.com checkout initiation webhook |
+| `NEXT_PUBLIC_AXIOM_INGEST_ENDPOINT` | Client | Axiom logging endpoint |
+| `GOOGLE_CLIENT_ID` | Server | Google OAuth client ID (NextAuth) |
+| `GOOGLE_CLIENT_SECRET` | Server | Google OAuth client secret (NextAuth) |
 | `SLACK_BOT_TOKEN` | Server | Slack notifications |
 | `SLACK_OPS_CHANNEL_ID` | Server | Slack ops channel ID |
 | `OPS_DASHBOARD_BASE_URL` | Server | Workflow proxy target |
@@ -71,6 +74,8 @@ Create `.env.local` with the following:
 | `MAKE_CLAIM_ACCESS_WEBHOOK_URL` | Server | Make.com course claim webhook |
 | `MAKE_PROGRESS_TRACKER_WEBHOOK_URL` | Server | Make.com progress tracker webhook |
 | `MAKE_NOTIFICATION_WEBHOOK_URL` | Server | Make.com server-side notifications |
+| `MAKE_SPLIT_PAYMENT_WEBHOOK_URL` | Server | Split payment Make.com webhook |
+| `CRON_SECRET` | Server | Vercel cron job authentication |
 | `PAYMENT_INTENT_TOKEN_REQUIRED` | Server | Feature flag for intent token security |
 | `PAYMENT_INTENT_PROOF_SECRET` | Server | Payment intent proof HMAC secret |
 
