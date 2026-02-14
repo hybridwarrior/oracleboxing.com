@@ -79,9 +79,17 @@ export async function GET(req: NextRequest) {
 
       const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId)
 
+      const clientName = paymentIntent.metadata?.customer_first_name
+        ? `${paymentIntent.metadata.customer_first_name} ${paymentIntent.metadata.customer_last_name || ''}`.trim()
+        : paymentIntent.metadata?.customer_email || paymentIntentId;
+      const amount = (paymentIntent.amount / 100).toFixed(0);
+      const product = paymentIntent.metadata?.product_name || paymentIntent.metadata?.type || 'checkout';
+
       try { await logger.completed(`Payment intent retrieved: ${paymentIntentId}`, { paymentIntentId, amount: paymentIntent.amount, currency: paymentIntent.currency }); } catch {}
 
-      notifyOps(`💳 Payment intent created - ${paymentIntentId}`)
+      notifyOps(`Checkout opened by ${clientName}`, { blocks: [
+        { type: 'context', elements: [{ type: 'mrkdwn', text: `👀 *Checkout opened* — *${clientName}* | ${product} | $${amount} ${paymentIntent.currency?.toUpperCase()}` }] }
+      ]})
 
       return NextResponse.json({
         clientSecret: paymentIntent.client_secret,
