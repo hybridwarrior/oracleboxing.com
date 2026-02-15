@@ -202,7 +202,7 @@ export default function AboutPage() {
                 <ArrowButton href="/membership" className="min-w-[240px]">
                   Learn About Membership
                 </ArrowButton>
-                <ArrowButton href="/pricing" variant="secondary" className="min-w-[240px]">
+                <ArrowButton href="/pricing" className="min-w-[240px]">
                   View Pricing
                 </ArrowButton>
               </div>
