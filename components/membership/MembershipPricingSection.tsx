@@ -94,7 +94,6 @@ export default function MembershipPricingSection() {
             <ArrowButton
               href={`/membership-checkout?product=membership-monthly`}
               className="w-full"
-              variant={selectedPlan === 'monthly' ? 'primary' : 'secondary'}
             >
               Get Started Monthly
             </ArrowButton>
@@ -168,7 +167,6 @@ export default function MembershipPricingSection() {
             <ArrowButton
               href={`/membership-checkout?product=membership-annual`}
               className="w-full"
-              variant={selectedPlan === 'annual' ? 'primary' : 'secondary'}
             >
               Get Started Annually
             </ArrowButton>

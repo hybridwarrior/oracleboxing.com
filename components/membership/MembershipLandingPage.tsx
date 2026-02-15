@@ -38,9 +38,8 @@ export default function MembershipLandingPage() {
                 >
                   View Pricing
                 </ArrowButton>
-                <ArrowButton 
+                <ArrowButton
                   href="#benefits"
-                  variant="secondary"
                   className="min-w-[240px]"
                   onClick={() => {
                     const benefitsSection = document.getElementById('benefits')
