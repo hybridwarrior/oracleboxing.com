@@ -5,7 +5,7 @@ import { useSearchParams, useRouter } from 'next/navigation'
 import { useCurrency } from '@/contexts/CurrencyContext'
 import { getProductById } from '@/lib/products'
 import { formatPrice } from '@/lib/currency'
-import { ArrowButton } from '@/components/ui/arrow-button'
+
 import HomepageHeader from '@/components/HomepageHeader'
 
 function MembershipCheckoutContent() {
@@ -194,13 +194,13 @@ function MembershipCheckoutContent() {
               )}
 
               {/* Submit Button */}
-              <ArrowButton
+              <button
                 type="submit"
                 disabled={!isFormValid || isLoading}
-                className="w-full"
+                className="w-full py-4 px-8 bg-[#C8102E] hover:bg-[#a50d25] disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium rounded-lg transition-colors text-lg"
               >
                 {isLoading ? 'Processing...' : 'Continue to Payment'}
-              </ArrowButton>
+              </button>
 
               {/* Trust Badges */}
               <div className="text-center text-sm text-[#605A57] flex items-center justify-center gap-2">
